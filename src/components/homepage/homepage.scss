@@ -1,0 +1,83 @@
+
+// Font Colour
+$fontColour: #212121;
+$secondaryFontColor: #424242;
+
+// Import Roboto Slab for Title
+// Single Use
+@import url('https://fonts.googleapis.com/css?family=Roboto:700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@800&display=swap');
+
+.hero-body {
+  background-color: white;
+}
+.is-5 {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+}
+
+.bold-title {
+  font-family: 'Roboto Slab', serif;
+  text-transform: uppercase;
+  color: $fontColour;
+}
+
+.left-landing {
+  margin-left: 3em;
+}
+
+.buttons-landing {
+  margin-top: 3%;
+}
+
+.button.button-start {
+  background-color: #e9eff5;
+  width: 80px;
+  height: 30px;
+  color: #2274ff;
+  border: none;
+  &:hover {
+    background-color: #2274ff;
+    color: #e9eff5;
+  }
+}
+
+.button.button-filter {
+  background-color: transparent;
+  width: 80px;
+  height: 30px;
+  color: $fontColour;
+  border: none;
+  &:hover {
+    color: #2274ff;
+  }
+}
+
+.landing-image {
+  padding-left: 10%;
+}
+
+#launch-dialog {
+  background: tomato;
+  border-radius: 4px;
+  color: #fff;
+  font-family: Helvetica, Arial, sans-serif;
+  padding: 0.5rem 1rem;
+  position: static;
+}
+
+/*.cover {
+  box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 15px rgba(0, 0, 0, 0.22);
+  transition: all 1.5s cubic-bezier(0.23, 1, 0.32, 1);
+  transform: rotate(5deg);
+  &:hover {
+    transform: rotate(-5deg);
+  }
+}
+
+.cover img {
+  object-fit: cover;
+}
+*/

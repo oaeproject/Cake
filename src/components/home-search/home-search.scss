@@ -1,0 +1,30 @@
+.home-search {
+  vertical-align: middle;
+}
+
+.home-search input {
+  height: 2.5em;
+  border-style: solid;
+  border-color: white;
+  background-color: #e9eff5;
+  border-width: 1px;
+  &:hover,
+  :active :focus {
+    border-style: solid;
+    border-color: white;
+    background-color: #e9eff5;
+    border-width: 1px;
+  }
+}
+
+p.control {
+	width: 20em;
+}
+
+.filter {
+  padding-left: 25px;
+}
+
+span.filter-icon {
+	margin-right: 20px;
+}

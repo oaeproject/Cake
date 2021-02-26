@@ -1,0 +1,45 @@
+
+.navbar-brand {
+  padding-left: 3em;
+}
+
+.navEnd {
+  padding-right: 3em;
+}
+
+.navbar-item img {
+  width: 100%;
+  height: 400px;
+}
+
+.home-nav {
+  background: white;
+}
+
+.register-button {
+  font-size: 1em;
+  border-radius: 25px;
+  color: #00253d;
+  background-color: white;
+  border: none;
+  &:hover {
+    color: #2e98d5;
+    background-color: transparent;
+    border: none;
+  }
+}
+
+.signIn-button {
+  font-size: 1em;
+  border-radius: 25px;
+  width: 80px;
+  height: 30px;
+  color: white;
+  background-color: #2274ff;
+  border: none;
+  &:hover {
+    color: #2e98d5;
+    background-color: transparent;
+    border: none;
+  }
+}

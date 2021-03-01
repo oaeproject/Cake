@@ -1,3 +1,4 @@
+/*
 import { newE2EPage } from '@stencil/core/testing';
 
 describe('app-profile', () => {
@@ -16,3 +17,4 @@ describe('app-profile', () => {
     expect(element.textContent).toContain('My name is Joseph.');
   });
 });
+*/

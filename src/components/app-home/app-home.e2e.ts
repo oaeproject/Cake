@@ -1,3 +1,4 @@
+/*
 import { newE2EPage } from '@stencil/core/testing';
 
 describe('app-home', () => {
@@ -17,3 +18,4 @@ describe('app-home', () => {
     expect(element.textContent).toEqual('Profile page');
   });
 });
+*/

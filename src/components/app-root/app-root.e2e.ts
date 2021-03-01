@@ -1,3 +1,4 @@
+  /*
 import { newE2EPage } from '@stencil/core/testing';
 
 describe('app-root', () => {
@@ -15,3 +16,4 @@ describe('app-root', () => {
     // expect(element).toHaveClass('hydrated');
   });
 });
+  */

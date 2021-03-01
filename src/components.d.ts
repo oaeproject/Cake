@@ -18,7 +18,16 @@ export namespace Components {
     }
     interface HomeSearch {
     }
+    interface OaeDashboard {
+    }
     interface OaeHomepage {
+    }
+    interface OaeNewsfeed {
+    }
+    interface OaeSidebar {
+        "image": string;
+    }
+    interface OaeTag {
     }
 }
 declare global {
@@ -52,11 +61,35 @@ declare global {
         prototype: HTMLHomeSearchElement;
         new (): HTMLHomeSearchElement;
     };
+    interface HTMLOaeDashboardElement extends Components.OaeDashboard, HTMLStencilElement {
+    }
+    var HTMLOaeDashboardElement: {
+        prototype: HTMLOaeDashboardElement;
+        new (): HTMLOaeDashboardElement;
+    };
     interface HTMLOaeHomepageElement extends Components.OaeHomepage, HTMLStencilElement {
     }
     var HTMLOaeHomepageElement: {
         prototype: HTMLOaeHomepageElement;
         new (): HTMLOaeHomepageElement;
+    };
+    interface HTMLOaeNewsfeedElement extends Components.OaeNewsfeed, HTMLStencilElement {
+    }
+    var HTMLOaeNewsfeedElement: {
+        prototype: HTMLOaeNewsfeedElement;
+        new (): HTMLOaeNewsfeedElement;
+    };
+    interface HTMLOaeSidebarElement extends Components.OaeSidebar, HTMLStencilElement {
+    }
+    var HTMLOaeSidebarElement: {
+        prototype: HTMLOaeSidebarElement;
+        new (): HTMLOaeSidebarElement;
+    };
+    interface HTMLOaeTagElement extends Components.OaeTag, HTMLStencilElement {
+    }
+    var HTMLOaeTagElement: {
+        prototype: HTMLOaeTagElement;
+        new (): HTMLOaeTagElement;
     };
     interface HTMLElementTagNameMap {
         "app-home": HTMLAppHomeElement;
@@ -64,7 +97,11 @@ declare global {
         "app-root": HTMLAppRootElement;
         "home-nav": HTMLHomeNavElement;
         "home-search": HTMLHomeSearchElement;
+        "oae-dashboard": HTMLOaeDashboardElement;
         "oae-homepage": HTMLOaeHomepageElement;
+        "oae-newsfeed": HTMLOaeNewsfeedElement;
+        "oae-sidebar": HTMLOaeSidebarElement;
+        "oae-tag": HTMLOaeTagElement;
     }
 }
 declare namespace LocalJSX {
@@ -80,7 +117,16 @@ declare namespace LocalJSX {
     }
     interface HomeSearch {
     }
+    interface OaeDashboard {
+    }
     interface OaeHomepage {
+    }
+    interface OaeNewsfeed {
+    }
+    interface OaeSidebar {
+        "image"?: string;
+    }
+    interface OaeTag {
     }
     interface IntrinsicElements {
         "app-home": AppHome;
@@ -88,7 +134,11 @@ declare namespace LocalJSX {
         "app-root": AppRoot;
         "home-nav": HomeNav;
         "home-search": HomeSearch;
+        "oae-dashboard": OaeDashboard;
         "oae-homepage": OaeHomepage;
+        "oae-newsfeed": OaeNewsfeed;
+        "oae-sidebar": OaeSidebar;
+        "oae-tag": OaeTag;
     }
 }
 export { LocalJSX as JSX };
@@ -100,7 +150,11 @@ declare module "@stencil/core" {
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
             "home-nav": LocalJSX.HomeNav & JSXBase.HTMLAttributes<HTMLHomeNavElement>;
             "home-search": LocalJSX.HomeSearch & JSXBase.HTMLAttributes<HTMLHomeSearchElement>;
+            "oae-dashboard": LocalJSX.OaeDashboard & JSXBase.HTMLAttributes<HTMLOaeDashboardElement>;
             "oae-homepage": LocalJSX.OaeHomepage & JSXBase.HTMLAttributes<HTMLOaeHomepageElement>;
+            "oae-newsfeed": LocalJSX.OaeNewsfeed & JSXBase.HTMLAttributes<HTMLOaeNewsfeedElement>;
+            "oae-sidebar": LocalJSX.OaeSidebar & JSXBase.HTMLAttributes<HTMLOaeSidebarElement>;
+            "oae-tag": LocalJSX.OaeTag & JSXBase.HTMLAttributes<HTMLOaeTagElement>;
         }
     }
 }

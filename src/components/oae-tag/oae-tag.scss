@@ -1,0 +1,33 @@
+
+.tag-structure {
+  margin-right: 5px;
+}
+.tag-buttons {
+  margin-right: 5px;
+}
+
+.tag-button-colors {
+  background-color: #E8EAF6;
+  border-color: #1A237E;
+  height: 15px;
+  color: #1A237E;
+  font-weight: 600;
+  &:hover {
+    background-color: #FFCDD2;
+    border-color: #D32F2F;
+    color: #D32F2F;
+  }
+}
+
+.tag-buttons {
+  margin-top: 10px;
+}
+
+.tag-icons {
+  margin-left: 5px;
+  transform: rotate(225deg);
+}
+
+.tag-label {
+  margin-left: 5px;
+}

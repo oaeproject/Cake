@@ -82,6 +82,7 @@ body {
   height: 100%;
   font-family: 'Open Sans', sans-serif;
   font-size: 1em;
+  background-color: #FAFAFA;
 }
 
 * {
@@ -246,12 +247,23 @@ button.button.dropdown-sidebar {
   border: none;
 }
 
+.logout-button {
+  background-color: transparent;
+  border: none;
+}
+
+.logout-button-text {
+  padding-left: 10px;
+  text-transform: capitalize;
+}
+
 // Footer
 .footer.sidebar-footer {
   position: absolute;
   bottom: 0;
   padding: 0;
   background-color: transparent;
+  margin-left: 3%;
 }
 
 // Sidebar Avatar
@@ -356,5 +368,3 @@ ul.breadcrumb li a:hover {
   color: #01447e;
   text-decoration: underline;
 }
-
-

@@ -1,0 +1,18 @@
+.filter-feed {
+  color: #0060df;
+  margin-right: 15px;
+  font-size: 13px;
+  height: 20px;
+  width: 6em;
+  border-radius: 25px;
+  border: none;
+  background-color: transparent;
+}
+
+.filter-active-feed {
+    background-color: #0060df;
+    color: white;
+    &:hover {
+        color: white;
+    }
+}

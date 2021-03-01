@@ -1,0 +1,10 @@
+.library-button {
+	border-radius: 50%;
+	padding:0 15px 0 15px;
+	background: transparent;
+	border-color: transparent;
+	&:hover{
+		background: #E3F2FD;
+		border-color: transparent;
+	}
+}

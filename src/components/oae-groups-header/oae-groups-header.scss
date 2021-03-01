@@ -1,0 +1,12 @@
+h1{
+  font-weight: bolder;
+  font-size: 1.5em;
+}
+
+.about-header a {
+  color: #2962ff;
+  &:hover {
+    color: #0d47a1;
+  }
+}
+

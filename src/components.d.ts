@@ -20,7 +20,23 @@ export namespace Components {
     }
     interface OaeDashboard {
     }
+    interface OaeGroups {
+    }
+    interface OaeGroupsAvatar {
+    }
+    interface OaeGroupsBanner {
+    }
+    interface OaeGroupsHeader {
+    }
+    interface OaeGroupsTabs {
+    }
     interface OaeHomepage {
+    }
+    interface OaeLayout {
+    }
+    interface OaeLibrary {
+    }
+    interface OaeLibraryTable {
     }
     interface OaeNewsfeed {
     }
@@ -67,11 +83,59 @@ declare global {
         prototype: HTMLOaeDashboardElement;
         new (): HTMLOaeDashboardElement;
     };
+    interface HTMLOaeGroupsElement extends Components.OaeGroups, HTMLStencilElement {
+    }
+    var HTMLOaeGroupsElement: {
+        prototype: HTMLOaeGroupsElement;
+        new (): HTMLOaeGroupsElement;
+    };
+    interface HTMLOaeGroupsAvatarElement extends Components.OaeGroupsAvatar, HTMLStencilElement {
+    }
+    var HTMLOaeGroupsAvatarElement: {
+        prototype: HTMLOaeGroupsAvatarElement;
+        new (): HTMLOaeGroupsAvatarElement;
+    };
+    interface HTMLOaeGroupsBannerElement extends Components.OaeGroupsBanner, HTMLStencilElement {
+    }
+    var HTMLOaeGroupsBannerElement: {
+        prototype: HTMLOaeGroupsBannerElement;
+        new (): HTMLOaeGroupsBannerElement;
+    };
+    interface HTMLOaeGroupsHeaderElement extends Components.OaeGroupsHeader, HTMLStencilElement {
+    }
+    var HTMLOaeGroupsHeaderElement: {
+        prototype: HTMLOaeGroupsHeaderElement;
+        new (): HTMLOaeGroupsHeaderElement;
+    };
+    interface HTMLOaeGroupsTabsElement extends Components.OaeGroupsTabs, HTMLStencilElement {
+    }
+    var HTMLOaeGroupsTabsElement: {
+        prototype: HTMLOaeGroupsTabsElement;
+        new (): HTMLOaeGroupsTabsElement;
+    };
     interface HTMLOaeHomepageElement extends Components.OaeHomepage, HTMLStencilElement {
     }
     var HTMLOaeHomepageElement: {
         prototype: HTMLOaeHomepageElement;
         new (): HTMLOaeHomepageElement;
+    };
+    interface HTMLOaeLayoutElement extends Components.OaeLayout, HTMLStencilElement {
+    }
+    var HTMLOaeLayoutElement: {
+        prototype: HTMLOaeLayoutElement;
+        new (): HTMLOaeLayoutElement;
+    };
+    interface HTMLOaeLibraryElement extends Components.OaeLibrary, HTMLStencilElement {
+    }
+    var HTMLOaeLibraryElement: {
+        prototype: HTMLOaeLibraryElement;
+        new (): HTMLOaeLibraryElement;
+    };
+    interface HTMLOaeLibraryTableElement extends Components.OaeLibraryTable, HTMLStencilElement {
+    }
+    var HTMLOaeLibraryTableElement: {
+        prototype: HTMLOaeLibraryTableElement;
+        new (): HTMLOaeLibraryTableElement;
     };
     interface HTMLOaeNewsfeedElement extends Components.OaeNewsfeed, HTMLStencilElement {
     }
@@ -98,7 +162,15 @@ declare global {
         "home-nav": HTMLHomeNavElement;
         "home-search": HTMLHomeSearchElement;
         "oae-dashboard": HTMLOaeDashboardElement;
+        "oae-groups": HTMLOaeGroupsElement;
+        "oae-groups-avatar": HTMLOaeGroupsAvatarElement;
+        "oae-groups-banner": HTMLOaeGroupsBannerElement;
+        "oae-groups-header": HTMLOaeGroupsHeaderElement;
+        "oae-groups-tabs": HTMLOaeGroupsTabsElement;
         "oae-homepage": HTMLOaeHomepageElement;
+        "oae-layout": HTMLOaeLayoutElement;
+        "oae-library": HTMLOaeLibraryElement;
+        "oae-library-table": HTMLOaeLibraryTableElement;
         "oae-newsfeed": HTMLOaeNewsfeedElement;
         "oae-sidebar": HTMLOaeSidebarElement;
         "oae-tag": HTMLOaeTagElement;
@@ -119,7 +191,23 @@ declare namespace LocalJSX {
     }
     interface OaeDashboard {
     }
+    interface OaeGroups {
+    }
+    interface OaeGroupsAvatar {
+    }
+    interface OaeGroupsBanner {
+    }
+    interface OaeGroupsHeader {
+    }
+    interface OaeGroupsTabs {
+    }
     interface OaeHomepage {
+    }
+    interface OaeLayout {
+    }
+    interface OaeLibrary {
+    }
+    interface OaeLibraryTable {
     }
     interface OaeNewsfeed {
     }
@@ -135,7 +223,15 @@ declare namespace LocalJSX {
         "home-nav": HomeNav;
         "home-search": HomeSearch;
         "oae-dashboard": OaeDashboard;
+        "oae-groups": OaeGroups;
+        "oae-groups-avatar": OaeGroupsAvatar;
+        "oae-groups-banner": OaeGroupsBanner;
+        "oae-groups-header": OaeGroupsHeader;
+        "oae-groups-tabs": OaeGroupsTabs;
         "oae-homepage": OaeHomepage;
+        "oae-layout": OaeLayout;
+        "oae-library": OaeLibrary;
+        "oae-library-table": OaeLibraryTable;
         "oae-newsfeed": OaeNewsfeed;
         "oae-sidebar": OaeSidebar;
         "oae-tag": OaeTag;
@@ -151,7 +247,15 @@ declare module "@stencil/core" {
             "home-nav": LocalJSX.HomeNav & JSXBase.HTMLAttributes<HTMLHomeNavElement>;
             "home-search": LocalJSX.HomeSearch & JSXBase.HTMLAttributes<HTMLHomeSearchElement>;
             "oae-dashboard": LocalJSX.OaeDashboard & JSXBase.HTMLAttributes<HTMLOaeDashboardElement>;
+            "oae-groups": LocalJSX.OaeGroups & JSXBase.HTMLAttributes<HTMLOaeGroupsElement>;
+            "oae-groups-avatar": LocalJSX.OaeGroupsAvatar & JSXBase.HTMLAttributes<HTMLOaeGroupsAvatarElement>;
+            "oae-groups-banner": LocalJSX.OaeGroupsBanner & JSXBase.HTMLAttributes<HTMLOaeGroupsBannerElement>;
+            "oae-groups-header": LocalJSX.OaeGroupsHeader & JSXBase.HTMLAttributes<HTMLOaeGroupsHeaderElement>;
+            "oae-groups-tabs": LocalJSX.OaeGroupsTabs & JSXBase.HTMLAttributes<HTMLOaeGroupsTabsElement>;
             "oae-homepage": LocalJSX.OaeHomepage & JSXBase.HTMLAttributes<HTMLOaeHomepageElement>;
+            "oae-layout": LocalJSX.OaeLayout & JSXBase.HTMLAttributes<HTMLOaeLayoutElement>;
+            "oae-library": LocalJSX.OaeLibrary & JSXBase.HTMLAttributes<HTMLOaeLibraryElement>;
+            "oae-library-table": LocalJSX.OaeLibraryTable & JSXBase.HTMLAttributes<HTMLOaeLibraryTableElement>;
             "oae-newsfeed": LocalJSX.OaeNewsfeed & JSXBase.HTMLAttributes<HTMLOaeNewsfeedElement>;
             "oae-sidebar": LocalJSX.OaeSidebar & JSXBase.HTMLAttributes<HTMLOaeSidebarElement>;
             "oae-tag": LocalJSX.OaeTag & JSXBase.HTMLAttributes<HTMLOaeTagElement>;

@@ -3,24 +3,28 @@ import { Component, h } from '@stencil/core';
 import '@polymer/iron-icons/iron-icons.js';
 
 @Component({
-  tag: 'oae-dashboard',
-  styleUrl: 'oae-dashboard.scss',
+  tag: 'oae-groups',
+  styleUrl: 'oae-groups.scss',
 })
 
-export class Dashboard {
+export class Groups {
   render() {
     return (
       <oae-layout>
-        <section class="column activity-dashboard">
-          <section class="is-flex">
-            <ul class="breadcrumb">
-              <li><a href="#">User Profile Area</a></li>
-              <li>Dashboard</li>
-            </ul>
-          </section>
-          <nav class="level">
+        <section class="is-flex">
+          <ul class="breadcrumb">
+            <li><a href="#">Groups</a></li>
+            <li>Open Apereo 2021</li>
+          </ul>
+        </section>
+        <oae-groups-banner></oae-groups-banner>
+        <oae-groups-avatar></oae-groups-avatar>
+        <oae-groups-header></oae-groups-header>
+        <oae-groups-tabs></oae-groups-tabs>
+        <section>
+          <div class="level">
             <div class="level-left">
-              <div class="level-item">
+              <div class="level-item activity">
                 <span class="dashboard-icon">
                   <iron-icon icon="icons:update"></iron-icon>
                 </span>
@@ -33,12 +37,12 @@ export class Dashboard {
                 <button class="button filter-feed">Oldest</button>
               </div>
             </div>
-          </nav>
-          <oae-newsfeed></oae-newsfeed>
-          <oae-newsfeed></oae-newsfeed>
-          <oae-newsfeed></oae-newsfeed>
+          </div>
         </section>
-        </oae-layout>
+        <oae-newsfeed></oae-newsfeed>
+        <oae-newsfeed></oae-newsfeed>
+        <oae-newsfeed></oae-newsfeed>
+      </oae-layout>
     );
   }
 }

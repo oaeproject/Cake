@@ -1,0 +1,74 @@
+
+.table-wrap {
+	width: 100%;
+}
+
+tr:nth-child(even) {
+    background-color: white;
+}
+
+.library-box {
+	margin: 0;
+	width: 100%;
+}
+
+.library-content {
+	margin-top: 25px;
+}
+
+.library-section {
+    margin-top: 50px;
+}
+
+.library-section tr {
+	&:hover {
+		background: #EDEDF0;
+	}
+}
+
+.library-section tr {
+	padding-top: 50px;
+}
+
+.lib-table-row td {
+	margin-top: 20px;
+}
+
+.library-columns p {
+	font-size: 1em;
+	text-transform: uppercase;
+	color: #666666;
+}
+.library-padding {
+	padding: 5px, 15px, 15px, 50px;
+}
+
+.library-designation-wrap {
+	vertical-align: middle;
+}
+
+.table p {
+	font-size: 0.9em;
+}
+
+p.library-checkbox-label-top {
+	margin-left: 10px;
+}
+
+.library-designation-tag {
+	margin-left: 15px;
+	vertical-align: middle;
+}
+
+.library-designation-hover {
+	color: #757575;
+}
+.table {
+	background: transparent;
+}
+
+.checkbox-label {
+	position: absolute;
+	opacity: 0;
+	cursor: pointer;
+}

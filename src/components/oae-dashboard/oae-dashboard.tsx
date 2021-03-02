@@ -11,34 +11,33 @@ export class Dashboard {
   render() {
     return (
       <oae-layout>
-        <section class="column activity-dashboard">
-          <section class="is-flex">
-            <ul class="breadcrumb">
-              <li><a href="#">User Profile Area</a></li>
-              <li>Dashboard</li>
+        <div>
+          <oae-newsfeed></oae-newsfeed>
+          <oae-newsfeed></oae-newsfeed>
+          <oae-newsfeed></oae-newsfeed>
+          <oae-newsfeed></oae-newsfeed>
+          <oae-newsfeed></oae-newsfeed>
+          <oae-newsfeed></oae-newsfeed>
+          <oae-newsfeed></oae-newsfeed>
+          <oae-newsfeed></oae-newsfeed>
+          <oae-newsfeed></oae-newsfeed>
+          <oae-newsfeed></oae-newsfeed>
+          <oae-newsfeed></oae-newsfeed>
+        </div>
+        <div class="column options">
+          <div class="menu sticky">
+            <p class="menu-label"><b>Quick Links</b></p>
+            <ul id="menu" class="menu-list">
+              <li><a href="#basic">Basic SEO Checklist</a></li>
+              <li><a href="#keyword">Keyword Research Checklist</a></li>
+              <li><a href="#onpage">On-Page SEO Checklist</a></li>
+              <li><a href="#content">Content Checklist</a></li>
+              <li><a href="#technical">Technical SEO Checklist</a></li>
+              <li><a href="#link">Link Building Checklist</a></li>
             </ul>
-          </section>
-          <nav class="level">
-            <div class="level-left">
-              <div class="level-item">
-                <span class="dashboard-icon">
-                  <iron-icon icon="icons:update"></iron-icon>
-                </span>
-                <h3>Recent Activity</h3>
-              </div>
-            </div>
-            <div class="level-right">
-              <div class="buttons">
-                <button class="button filter-feed filter-active-feed">Most Recent</button>
-                <button class="button filter-feed">Oldest</button>
-              </div>
-            </div>
-          </nav>
-          <oae-newsfeed></oae-newsfeed>
-          <oae-newsfeed></oae-newsfeed>
-          <oae-newsfeed></oae-newsfeed>
-        </section>
-        </oae-layout>
+          </div>
+        </div>
+      </oae-layout>
     );
   }
 }

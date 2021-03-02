@@ -8,29 +8,24 @@ import { Component, h } from '@stencil/core';
 export class MainLayout {
   render() {
     return (
-      <section class="hero is-fullheight">
-        <div class="hero-body">
-          <div class="container content-wrapResponsive is-fluid">
-            <div class="columns dasboard">
-              <div class="column is-one-fifth sidebar is-fullheight">
-                <oae-sidebar></oae-sidebar>
-              </div>
-              <div class="column content-base">
-                <div class=" column content-wrap">
-                  <div class=" columns is-flex main-content">
-                    <div class="column is-three-quarters main-left">
-                      <slot/>
-                    </div>
-                    <div class="column">
-                      <info-card></info-card>
-                    </div>
-                  </div>
-                </div>
-              </div>
+      <div class="container main-container">
+        <div class="columns columns-container">
+          <div class="column is-one-fifth sidebar">
+            <div class="menu sticky">
+              <oae-sidebar></oae-sidebar>
+            </div>
+          </div>
+          <div class="column is-three-fifths main-content">
+            <slot />
+          </div>
+          <div class="column options">
+            <div class="menu sticky">
             </div>
           </div>
         </div>
-      </section>
+      </div>
+
+
     );
   }
 }

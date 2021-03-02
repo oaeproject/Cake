@@ -8,6 +8,7 @@ import '@polymer/iron-icons/av-icons.js';
   tag: 'oae-sidebar',
   styleUrl: 'oae-sidebar.scss',
 })
+
 export class Sidebar {
   @Prop() image = 'oae-logo.svg';
   render() {
@@ -33,9 +34,7 @@ export class Sidebar {
                 <div class="dropdown-menu" id="dropdown-menu4" role="menu">
                   <div class="dropdown-content">
                     <div class="dropdown-item">
-                      <p>
-                        You can insert <strong>any type of content</strong> within the dropdown menu.
-                      </p>
+                      <p>You can insert <strong>any type of content</strong> within the dropdown menu.</p>
                     </div>
                   </div>
                 </div>
@@ -49,19 +48,25 @@ export class Sidebar {
             <span class="icon sidebar-icon">
               <iron-icon icon="cloud-upload"></iron-icon>
             </span>
-            <a class="dashboard">New File</a>
+            <a class="dashboard">
+              New File
+          </a>
           </li>
           <li>
             <span class="icon sidebar-icon">
               <iron-icon icon="create"></iron-icon>
             </span>
-            <a class="library">Create</a>
+            <a class="library">
+              Create
+          </a>
           </li>
           <li>
             <span class="icon sidebar-icon">
               <iron-icon icon="settings"></iron-icon>
             </span>
-            <a class="groups">Settings</a>
+            <a class="groups">
+              Settings
+          </a>
           </li>
         </ul>
         <hr class="navbar-divider sidebar-divider" />
@@ -70,33 +75,33 @@ export class Sidebar {
             <span class="icon sidebar-icon">
               <iron-icon icon="dashboard"></iron-icon>
             </span>
-            <a class="dashboard" href="/dashboard">
+            <a class="dashboard">
               Dashboard
-            </a>
+          </a>
           </li>
           <li>
             <span class="icon sidebar-icon">
               <iron-icon icon="av:library-books"></iron-icon>
             </span>
-            <a class="library" href="/library">
+            <a class="library">
               Library
-            </a>
+          </a>
           </li>
           <li>
             <span class="icon sidebar-icon">
               <iron-icon icon="content-paste"></iron-icon>
             </span>
-            <a class="discussions" href="/discussions">
+            <a class="discussions">
               Discussions
-            </a>
+          </a>
           </li>
           <li>
             <span class="icon sidebar-icon">
               <iron-icon icon="social:people-outline"></iron-icon>
             </span>
-            <a class="groups" href="/groups">
+            <a class="groups">
               Groups
-            </a>
+          </a>
           </li>
         </ul>
         <footer class="footer sidebar-footer">
@@ -104,7 +109,7 @@ export class Sidebar {
             <div class="level-left">
               <div class="level-item">
                 <figure class="image is-48x48">
-                  <img class="is-rounded" src="assets/images/user.jpg" />
+                  <img class="is-rounded" src="/images/user.jpg" />
                 </figure>
               </div>
               <div class="level-item">
@@ -120,7 +125,12 @@ export class Sidebar {
                   <div class="dropdown-menu" id="dropdown-menu4" role="menu">
                     <div class="dropdown-content">
                       <div class="dropdown-item">
-                        <button>Logout</button>
+                        <button class="button logout-button">
+                          <span class="icon">
+                            <iron-icon icon="power-settings-new"></iron-icon>
+                          </span>
+                          <span class="logout-button-text">Logout</span>
+                        </button>
                       </div>
                     </div>
                   </div>

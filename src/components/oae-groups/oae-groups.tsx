@@ -6,14 +6,15 @@ import '@polymer/iron-icons/iron-icons.js';
   tag: 'oae-groups',
   styleUrl: 'oae-groups.scss',
 })
-
 export class Groups {
   render() {
     return (
       <oae-layout>
         <section class="is-flex">
           <ul class="breadcrumb">
-            <li><a href="#">Groups</a></li>
+            <li>
+              <a href="#">Groups</a>
+            </li>
             <li>Open Apereo 2021</li>
           </ul>
         </section>

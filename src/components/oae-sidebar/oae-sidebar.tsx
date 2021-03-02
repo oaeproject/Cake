@@ -8,9 +8,8 @@ import '@polymer/iron-icons/av-icons.js';
   tag: 'oae-sidebar',
   styleUrl: 'oae-sidebar.scss',
 })
-
 export class Sidebar {
-  @Prop() image = "oae-logo.svg";
+  @Prop() image = 'oae-logo.svg';
   render() {
     return (
       <aside class="menu">
@@ -34,7 +33,9 @@ export class Sidebar {
                 <div class="dropdown-menu" id="dropdown-menu4" role="menu">
                   <div class="dropdown-content">
                     <div class="dropdown-item">
-                      <p>You can insert <strong>any type of content</strong> within the dropdown menu.</p>
+                      <p>
+                        You can insert <strong>any type of content</strong> within the dropdown menu.
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -48,25 +49,19 @@ export class Sidebar {
             <span class="icon sidebar-icon">
               <iron-icon icon="cloud-upload"></iron-icon>
             </span>
-            <a class="dashboard">
-              New File
-            </a>
+            <a class="dashboard">New File</a>
           </li>
           <li>
             <span class="icon sidebar-icon">
               <iron-icon icon="create"></iron-icon>
             </span>
-            <a class="library">
-              Create
-            </a>
+            <a class="library">Create</a>
           </li>
           <li>
             <span class="icon sidebar-icon">
               <iron-icon icon="settings"></iron-icon>
             </span>
-            <a class="groups">
-              Settings
-            </a>
+            <a class="groups">Settings</a>
           </li>
         </ul>
         <hr class="navbar-divider sidebar-divider" />
@@ -75,7 +70,7 @@ export class Sidebar {
             <span class="icon sidebar-icon">
               <iron-icon icon="dashboard"></iron-icon>
             </span>
-            <a class="dashboard">
+            <a class="dashboard" href="/dashboard">
               Dashboard
             </a>
           </li>
@@ -83,7 +78,7 @@ export class Sidebar {
             <span class="icon sidebar-icon">
               <iron-icon icon="av:library-books"></iron-icon>
             </span>
-            <a class="library">
+            <a class="library" href="/library">
               Library
             </a>
           </li>
@@ -91,7 +86,7 @@ export class Sidebar {
             <span class="icon sidebar-icon">
               <iron-icon icon="content-paste"></iron-icon>
             </span>
-            <a class="discussions">
+            <a class="discussions" href="/discussions">
               Discussions
             </a>
           </li>
@@ -99,7 +94,7 @@ export class Sidebar {
             <span class="icon sidebar-icon">
               <iron-icon icon="social:people-outline"></iron-icon>
             </span>
-            <a class="groups">
+            <a class="groups" href="/groups">
               Groups
             </a>
           </li>
@@ -138,4 +133,3 @@ export class Sidebar {
     );
   }
 }
-

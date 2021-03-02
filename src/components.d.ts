@@ -28,6 +28,8 @@ export namespace Components {
     }
     interface OaeGroupsHeader {
     }
+    interface OaeGroupsJoin {
+    }
     interface OaeGroupsTabs {
     }
     interface OaeHomepage {
@@ -107,6 +109,12 @@ declare global {
         prototype: HTMLOaeGroupsHeaderElement;
         new (): HTMLOaeGroupsHeaderElement;
     };
+    interface HTMLOaeGroupsJoinElement extends Components.OaeGroupsJoin, HTMLStencilElement {
+    }
+    var HTMLOaeGroupsJoinElement: {
+        prototype: HTMLOaeGroupsJoinElement;
+        new (): HTMLOaeGroupsJoinElement;
+    };
     interface HTMLOaeGroupsTabsElement extends Components.OaeGroupsTabs, HTMLStencilElement {
     }
     var HTMLOaeGroupsTabsElement: {
@@ -166,6 +174,7 @@ declare global {
         "oae-groups-avatar": HTMLOaeGroupsAvatarElement;
         "oae-groups-banner": HTMLOaeGroupsBannerElement;
         "oae-groups-header": HTMLOaeGroupsHeaderElement;
+        "oae-groups-join": HTMLOaeGroupsJoinElement;
         "oae-groups-tabs": HTMLOaeGroupsTabsElement;
         "oae-homepage": HTMLOaeHomepageElement;
         "oae-layout": HTMLOaeLayoutElement;
@@ -199,6 +208,8 @@ declare namespace LocalJSX {
     }
     interface OaeGroupsHeader {
     }
+    interface OaeGroupsJoin {
+    }
     interface OaeGroupsTabs {
     }
     interface OaeHomepage {
@@ -227,6 +238,7 @@ declare namespace LocalJSX {
         "oae-groups-avatar": OaeGroupsAvatar;
         "oae-groups-banner": OaeGroupsBanner;
         "oae-groups-header": OaeGroupsHeader;
+        "oae-groups-join": OaeGroupsJoin;
         "oae-groups-tabs": OaeGroupsTabs;
         "oae-homepage": OaeHomepage;
         "oae-layout": OaeLayout;
@@ -251,6 +263,7 @@ declare module "@stencil/core" {
             "oae-groups-avatar": LocalJSX.OaeGroupsAvatar & JSXBase.HTMLAttributes<HTMLOaeGroupsAvatarElement>;
             "oae-groups-banner": LocalJSX.OaeGroupsBanner & JSXBase.HTMLAttributes<HTMLOaeGroupsBannerElement>;
             "oae-groups-header": LocalJSX.OaeGroupsHeader & JSXBase.HTMLAttributes<HTMLOaeGroupsHeaderElement>;
+            "oae-groups-join": LocalJSX.OaeGroupsJoin & JSXBase.HTMLAttributes<HTMLOaeGroupsJoinElement>;
             "oae-groups-tabs": LocalJSX.OaeGroupsTabs & JSXBase.HTMLAttributes<HTMLOaeGroupsTabsElement>;
             "oae-homepage": LocalJSX.OaeHomepage & JSXBase.HTMLAttributes<HTMLOaeHomepageElement>;
             "oae-layout": LocalJSX.OaeLayout & JSXBase.HTMLAttributes<HTMLOaeLayoutElement>;

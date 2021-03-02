@@ -1,0 +1,29 @@
+.group-join-button {
+  border-radius: 25px;
+  width: 150px;
+  height: 20px;
+  font-weight: bold;
+  background-color: transparent;
+  border: 2px solid #2962ff;
+  color: #2962ff;
+  &:hover {
+    background-color: #ededf0;
+    color: #2962ff;
+    border: 2px solid #2962ff;
+    color: #2962ff;
+  }
+}
+
+.group-join-button {
+  text-align: center;
+}
+
+.group-name-icon {
+  padding-right: 10px;
+  color: black;
+}
+
+.group-join-icon {
+  padding-right: 10px;
+  color: #2962ff;
+}

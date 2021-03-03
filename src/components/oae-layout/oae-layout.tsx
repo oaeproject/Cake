@@ -19,8 +19,6 @@ export class MainLayout {
             <slot />
           </div>
           <div class="column options">
-            <div class="menu sticky">
-            </div>
           </div>
         </div>
       </div>

@@ -16,17 +16,6 @@ export class Dashboard {
           <oae-newsfeed></oae-newsfeed>
           <oae-newsfeed></oae-newsfeed>
           <oae-newsfeed></oae-newsfeed>
-          <oae-newsfeed></oae-newsfeed>
-          <oae-newsfeed></oae-newsfeed>
-          <oae-newsfeed></oae-newsfeed>
-          <oae-newsfeed></oae-newsfeed>
-          <oae-newsfeed></oae-newsfeed>
-          <oae-newsfeed></oae-newsfeed>
-          <oae-newsfeed></oae-newsfeed>
-        </div>
-        <div class="column options">
-          <div class="menu sticky">
-          </div>
         </div>
       </oae-layout>
     );

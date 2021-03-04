@@ -43,6 +43,7 @@ export namespace Components {
     interface OaeNewsfeed {
     }
     interface OaeSidebar {
+        "avatar": string;
         "image": string;
     }
     interface OaeTag {
@@ -223,6 +224,7 @@ declare namespace LocalJSX {
     interface OaeNewsfeed {
     }
     interface OaeSidebar {
+        "avatar"?: string;
         "image"?: string;
     }
     interface OaeTag {

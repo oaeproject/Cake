@@ -20,7 +20,7 @@ export class Sidebar {
           <div class="level-left">
             <div class="level-item">
               <figure class="image is-64x64">
-                <img src={getAssetPath(`./assets/${this.image}`)} />
+                <img src={getAssetPath(`../assets/logo/${this.image}`)} />
               </figure>
             </div>
             <div class="level-item">
@@ -111,7 +111,7 @@ export class Sidebar {
             <div class="level-left">
               <div class="level-item">
                 <figure class="image is-48x48">
-                  <img class="is-rounded" src={getAssetPath(`./assets/${this.avatar}`)} />
+                  <img class="is-rounded" src={getAssetPath(`../assets/images/${this.avatar}`)} />
                 </figure>
               </div>
               <div class="level-item">

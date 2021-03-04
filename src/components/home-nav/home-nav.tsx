@@ -36,7 +36,7 @@ export class HomeNav {
         <nav class="navbar home-nav">
           <div class="navbar-brand">
             <a class="navbar-item logo" href="#">
-              <img src={getAssetPath(`./assets/${this.image}`)} />
+              <img src={getAssetPath(`../assets/logo/${this.image}`)} />
             </a>
           </div>
           <div class="navbar-end navEnd">

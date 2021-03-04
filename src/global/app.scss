@@ -94,9 +94,44 @@ body {
   height: 100%;
 }
 
-// Main content
-.main-content {
-  height: 100%;
-  overflow: scroll;
+// Main
+
+// Main Wrapper
+.main-wrapper {
+  overflow-y: scroll;
 }
 
+// Main Content
+.main-content {
+  height: 100%;
+}
+
+// Breadcrumbs
+ul.breadcrumb {
+  margin-bottom: 1em;
+  list-style: none;
+  background-color: transparent;
+}
+
+ul.breadcrumb li {
+  display: inline;
+  font-size: 0.9em;
+  color: #424242;
+  font-weight: 500;
+}
+
+ul.breadcrumb li + li:before {
+  padding: 8px;
+  color: black;
+  content: '/\ ';
+}
+
+ul.breadcrumb li a {
+  color: #0060df;
+  text-decoration: none;
+}
+
+ul.breadcrumb li a:hover {
+  color: #01447e;
+  text-decoration: underline;
+}

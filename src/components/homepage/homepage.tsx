@@ -13,8 +13,6 @@ export class Homepage {
         return response.json();
       })
       .then(data => {
-        console.log('tenant config:');
-        console.log(data);
         this.tenantConfig = data;
       })
       .catch(err => console.error(err));

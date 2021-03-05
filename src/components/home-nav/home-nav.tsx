@@ -4,8 +4,7 @@ import '@material/mwc-dialog';
 import '@material/mwc-button';
 import '@material/mwc-textfield';
 
-import { objOf, mergeRight, curry, __, not, isEmpty, intersection, pick, and, path, length, keys, pipe, last, split, equals, defaultTo } from 'ramda';
-
+import { objOf, mergeRight, not, isEmpty, intersection, pick, and, path, length, keys, pipe, last, split, equals, defaultTo } from 'ramda';
 import { authConstants } from './constants';
 const {
   STRATEGY_CAS,
@@ -37,20 +36,12 @@ export class HomeNav {
     dialog.open = true;
   };
 
-  getConfigValue = (moduleName, featureName, settingName) => {
-    /*
-    if (!module || !config[module]) {
-      throw new Error('A valid module id should be provided when getting a config value');
-    } else if (!feature || !config[module][feature]) {
-      throw new Error('A valid feature should be provided when getting a config value');
-    } else if (!element || config[module][feature][element] === undefined) {
-      throw new Error('A valid element should be provided when getting a config value');
-    }
-
-    return config[module][feature][element];
-     */
-    return path([moduleName, featureName, settingName])(this.tenantConfig);
-  };
+  /**
+   * @function getConfigValue
+   * @param  {Array} ...args Includes `moduleName`, `featureName` and `flagName`
+   * @return {String} The tenant config for the flag / feature / module, if exists. `undefined` otherwise
+   */
+  getConfigValue = (...args) => path(args)(this.tenantConfig);
 
   /**
    * Get the list of all enabled authentication strategies for the current tenant
@@ -86,7 +77,7 @@ export class HomeNav {
     var enabledStrategies = {};
     const addStrategy = (strategy, settings) => mergeRight(enabledStrategies, objOf(strategy, settings));
 
-    const isAuthTypeEnabled = curry(this.getConfigValue)('oae-authentication', __, 'enabled');
+    const isAuthTypeEnabled = strategyType => this.getConfigValue('oae-authentication', strategyType, 'enabled');
     const isJustTheOneAuthTypeEnabled = (strategy1, strategy2) => and(isAuthTypeEnabled(strategy1), not(isAuthTypeEnabled(strategy2)));
     const areBothAuthTypesEnabled = (strategy1, strategy2) => and(isAuthTypeEnabled(strategy1), isAuthTypeEnabled(strategy2));
 

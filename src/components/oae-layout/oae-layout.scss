@@ -1,0 +1,123 @@
+// Main Content
+.main-container {
+  height: 100vh;
+  max-width: 100%;
+  margin: 0;
+}
+
+.columns-container {
+  margin-right: 0;
+}
+
+.columns:not(:last-child) {
+  margin-bottom: 0;
+}
+
+// Sidebar
+.sidebar {
+  background-color: white;
+  padding: 0;
+  margin: 0;
+}
+
+.sticky {
+  position: sticky;
+  top: 30px;
+  margin: 3%;
+}
+
+.menu {
+  margin-top: 1em;
+  min-height: 90vh;
+}
+
+.menu-list li {
+  padding: 2%;
+  margin-left: 2%;
+  margin-bottom: 1%;
+  border-radius: 5px;
+  height: 30px;
+  color: #212121;
+  display: flex;
+  align-items: center;
+  &:hover {
+    color: #0060df;
+    background-color: #f6f8f7;
+  }
+  &:active {
+    color: #0060df;
+    background-color: #f6f8f7;
+  }
+  &:focus {
+    color: #0060df;
+    background-color: #f6f8f7;
+  }
+}
+
+.menu-list a {
+  color: #212121;
+}
+
+.menu-list span {
+  padding-left: 1%;
+}
+
+a.dashboard,
+a.library,
+a.discussions,
+a.groups,
+a.user-settings,
+a.network {
+  padding-left: 0.8em;
+  &:hover {
+    color: #0060df;
+  }
+}
+.sidebar-dropdown {
+  padding: 1%;
+  margin-left: 1%;
+}
+
+// Sidebar Dropdown
+button.button.dropdown-sidebar {
+  background-color: white;
+}
+
+button.button.dropdown-sidebar {
+  background-color: transparent;
+  border: none;
+}
+
+.logout-button {
+  background-color: transparent;
+  border: none;
+}
+
+.logout-button-text {
+  padding-left: 10px;
+  text-transform: capitalize;
+}
+
+.level.sidebar-dropdown {
+  margin-bottom: 0;
+}
+
+// Sidebar Avatar
+.sidebar-avatar-logout {
+  padding-left: 2%;
+}
+
+.sidebar-notifications {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+// Footer
+.footer.sidebar-footer {
+  position: absolute;
+  bottom: 0;
+  padding: 0;
+  background-color: transparent;
+  margin-left: 3%;
+}

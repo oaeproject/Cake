@@ -15,11 +15,11 @@ export class MainLayout {
               <oae-sidebar></oae-sidebar>
             </div>
           </div>
-          <div class="column is-three-fifths main-content">
-            <slot />
-          </div>
-          <div class="column options">
-            <div class="menu sticky">
+          <div class="column main-wrapper">
+            <div class="column is-three-fifths main-content">
+              <slot />
+            </div>
+            <div class="column options">
             </div>
           </div>
         </div>

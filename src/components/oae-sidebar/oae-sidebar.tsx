@@ -11,6 +11,7 @@ import '@polymer/iron-icons/av-icons.js';
 
 export class Sidebar {
   @Prop() image = 'oae-logo.svg';
+  @Prop() avatar = 'user.jpg';
   render() {
     return (
       <aside class="menu">
@@ -18,7 +19,7 @@ export class Sidebar {
           <div class="level-left">
             <div class="level-item">
               <figure class="image is-64x64">
-                <img src={getAssetPath(`./assets/${this.image}`)} />
+                <img src={getAssetPath(`../assets/logo/${this.image}`)} />
               </figure>
             </div>
             <div class="level-item">
@@ -109,7 +110,7 @@ export class Sidebar {
             <div class="level-left">
               <div class="level-item">
                 <figure class="image is-48x48">
-                  <img class="is-rounded" src="/images/user.jpg" />
+                  <img class="is-rounded" src={getAssetPath(`../assets/images/${this.avatar}`)} />
                 </figure>
               </div>
               <div class="level-item">

@@ -7,7 +7,6 @@ import '@polymer/iron-icons/av-icons.js';
 @Component({
   tag: 'oae-sidebar',
   styleUrl: 'oae-sidebar.scss',
-  assetsDirs: ['assets'],
 })
 
 export class Sidebar {

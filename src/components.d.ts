@@ -14,7 +14,9 @@ export namespace Components {
     interface AppRoot {
     }
     interface HomeNav {
-        "image": string;
+        "authStrategyInfo": Object;
+        "tenantConfig": Object;
+        "tenantLogo": string;
     }
     interface HomeSearch {
     }
@@ -33,6 +35,7 @@ export namespace Components {
     interface OaeGroupsTabs {
     }
     interface OaeHomepage {
+        "tenantConfig": Object;
     }
     interface OaeLayout {
     }
@@ -195,7 +198,9 @@ declare namespace LocalJSX {
     interface AppRoot {
     }
     interface HomeNav {
-        "image"?: string;
+        "authStrategyInfo"?: Object;
+        "tenantConfig"?: Object;
+        "tenantLogo"?: string;
     }
     interface HomeSearch {
     }
@@ -214,6 +219,7 @@ declare namespace LocalJSX {
     interface OaeGroupsTabs {
     }
     interface OaeHomepage {
+        "tenantConfig"?: Object;
     }
     interface OaeLayout {
     }

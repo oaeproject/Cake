@@ -1,11 +1,25 @@
+/**
+ * TODO
+ *
+ * [ ] firefox debug on vscode
+ * [ ] create types for authentication etc
+ * [x] clear all linting errors
+ * [ ] store user on mobx
+ *
+ */
+/* eslint-disable new-cap, @typescript-eslint/promise-function-async */
 import { Component, h, Prop } from '@stencil/core';
+
+import { userAPI } from '../../helpers/user';
+import { authenticationAPI } from '../../helpers/authentication';
 
 @Component({
   tag: 'oae-homepage',
   styleUrl: 'homepage.scss',
 })
 export class Homepage {
-  @Prop({ mutable: true }) tenantConfig: Object = {};
+  @Prop({ mutable: true }) tenantConfig: Record<string, unknown> = {};
+  @Prop({ mutable: true }) authStrategyInfo: Record<string, unknown> = {};
 
   componentWillLoad() {
     return fetch('/api/config')
@@ -14,14 +28,45 @@ export class Homepage {
       })
       .then(data => {
         this.tenantConfig = data;
+
+        // TODO debug
+        console.log('this.tenantConfig:');
+        console.log(this.tenantConfig);
+
+        return data;
       })
-      .catch(err => console.error(err));
+      .then(tenantConfig => {
+        const askAuthAPI = authenticationAPI();
+        // Variable that holds the configured auth strategy information for the tenant
+        this.authStrategyInfo = askAuthAPI.getStrategyInfo(tenantConfig);
+
+        // TODO debug
+        console.log('this.authStrategyInfo:');
+        console.log(this.authStrategyInfo);
+
+        return this.authStrategyInfo;
+      })
+      .then(() => {
+        // Get data on the user visiting
+        const askUserAPI = userAPI();
+        return askUserAPI.getMe();
+      })
+      .then(visitingUser => {
+        console.log('visiting user: ');
+        console.log(visitingUser);
+
+        // Store this guy on mobX store
+      })
+      .catch(error => {
+        // TODO exception handling
+        console.error(error);
+      });
   }
 
   render() {
     return (
       <section class="hero is-primary is-medium">
-        <home-nav tenantConfig={this.tenantConfig}></home-nav>
+        <home-nav authStrategyInfo={this.authStrategyInfo} color="blue"></home-nav>
         <div class="hero-head"></div>
         <div class="hero-body main-area">
           <div class="container has-text-centered is-centered">

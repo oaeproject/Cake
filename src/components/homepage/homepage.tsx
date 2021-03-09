@@ -4,7 +4,7 @@
  * [ ] firefox debug on vscode
  * [ ] create types for authentication etc
  * [x] clear all linting errors
- * [ ] store user on mobx
+ * [x] store user on mobx
  *
  */
 /* eslint-disable new-cap, @typescript-eslint/promise-function-async */
@@ -12,6 +12,7 @@ import { Component, h, Prop } from '@stencil/core';
 
 import { userAPI } from '../../helpers/user';
 import { authenticationAPI } from '../../helpers/authentication';
+import { RootStore } from '../../stores/root-store';
 
 @Component({
   tag: 'oae-homepage',
@@ -56,6 +57,8 @@ export class Homepage {
         console.log(visitingUser);
 
         // Store this guy on mobX store
+        const userStore = new RootStore().userStore;
+        userStore.updateUser(visitingUser);
       })
       .catch(error => {
         // TODO exception handling

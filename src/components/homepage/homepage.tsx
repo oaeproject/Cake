@@ -14,6 +14,7 @@ export class Homepage {
           <div class="hero-head">
           </div>
           <div class="hero-body main-area">
+            
             <div class="container has-text-centered is-centered">
               <p class="title homepage-title">
                 A new way to share, explore and connect

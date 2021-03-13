@@ -8,10 +8,12 @@ $secondaryFontColor: #424242;
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@800&display=swap');
 
 .hero-body.main-area {
-  background-image: url('./imgs/home-back9.jpg');
-  background-repeat: no-repeat;
-  background-size: cover;
   height: 100px;
+}
+
+.background-img img {
+  width: 100%;
+  height: 100%;
 }
 
 .hero-body.section1-area {

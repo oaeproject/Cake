@@ -4,6 +4,7 @@ import { Component, h, Prop, getAssetPath } from '@stencil/core';
 @Component({
   tag: 'oae-homepage',
   styleUrl: 'homepage.scss',
+  assetsDirs: ['imgs'],
 })
 
 export class Homepage {
@@ -18,7 +19,7 @@ export class Homepage {
         <div class="hero-body main-area">
 
           <figure class="image background-img">
-            <img src={getAssetPath(`imgs/${this.image}`)}/>
+            <img src={getAssetPath(`./imgs/${this.image}`)}/>
           </figure>
 
             <div class="container has-text-centered is-centered">

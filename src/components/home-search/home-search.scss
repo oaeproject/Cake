@@ -1,5 +1,7 @@
 .home-search {
   vertical-align: middle;
+  z-index: 3;
+  position: relative;
 }
 
 .home-search input {
@@ -22,7 +24,7 @@
 }
 
 p.control {
-	width: 20em;
+  width: 20em;
 }
 
 .filter {
@@ -30,5 +32,5 @@ p.control {
 }
 
 span.filter-icon {
-	margin-right: 20px;
+  margin-right: 20px;
 }

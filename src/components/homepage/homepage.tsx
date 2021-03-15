@@ -1,4 +1,4 @@
-import { Component, h, Prop, getAssetPath } from '@stencil/core';
+import { Component, h, Prop } from '@stencil/core';
 
 
 @Component({
@@ -17,10 +17,6 @@ export class Homepage {
         <div class="hero-head">
         </div>
         <div class="hero-body main-area">
-
-          <figure class="image background-img">
-            <img src={getAssetPath(`./imgs/${this.image}`)}/>
-          </figure>
 
             <div class="container has-text-centered is-centered">
               <p class="title homepage-title">

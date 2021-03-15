@@ -30,16 +30,16 @@
 }
 
 .signIn-button {
-  font-size: 1em;
-  border-radius: 25px;
-  width: 80px;
+  border-width: medium;
+  font-weight: bold;
+  border-color: #3a71ed;
+  border-radius: 2px;
+  color: #3a71ed;
   height: 30px;
-  color: white;
-  background-color: #2274ff;
-  border: none;
+  width: 80px;
   &:hover {
-    color: #2e98d5;
-    background-color: transparent;
-    border: none;
+    background-color: #3a71ed;
+    border-color: #3a71ed;
+    color: white;
   }
 }

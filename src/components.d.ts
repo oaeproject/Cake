@@ -33,7 +33,6 @@ export namespace Components {
     interface OaeGroupsTabs {
     }
     interface OaeHomepage {
-        "image": string;
     }
     interface OaeLayout {
     }
@@ -215,7 +214,6 @@ declare namespace LocalJSX {
     interface OaeGroupsTabs {
     }
     interface OaeHomepage {
-        "image"?: string;
     }
     interface OaeLayout {
     }

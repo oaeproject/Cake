@@ -1,14 +1,12 @@
-import { Component, h, Prop } from '@stencil/core';
+import { Component, h } from '@stencil/core';
 
 
 @Component({
   tag: 'oae-homepage',
   styleUrl: 'homepage.scss',
-  assetsDirs: ['imgs'],
 })
 
 export class Homepage {
-  @Prop() image = 'home-back9.jpg';
 
   render() {
     return (

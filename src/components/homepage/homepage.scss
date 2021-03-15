@@ -10,7 +10,11 @@ $secondaryFontColor: #424242;
 .hero-body.main-area {
   height: 100px;
   overflow: hidden;
-  background-image: url('assets/images/home-back9.jpg');
+  background-image: url('assets/images/cool-background.svg');
+  background-repeat: no-repeat;
+  background-position: right; 
+  background-size: cover;
+  background-color: white;
 }
 
 .img.background-img {

@@ -9,10 +9,10 @@
  */
 /* eslint-disable new-cap, @typescript-eslint/promise-function-async */
 import { Component, h, Prop } from '@stencil/core';
+import { flowResult } from 'mobx';
 
-import { userAPI } from '../../helpers/user';
 import { authenticationAPI } from '../../helpers/authentication';
-import { RootStore } from '../../stores/root-store';
+import rootStore from '../../stores/root-store';
 
 @Component({
   tag: 'oae-homepage',
@@ -23,6 +23,7 @@ export class Homepage {
   @Prop({ mutable: true }) authStrategyInfo: Record<string, unknown> = {};
 
   componentWillLoad() {
+    const userStore = rootStore.userStore;
     return fetch('/api/config')
       .then(response => {
         return response.json();
@@ -49,16 +50,15 @@ export class Homepage {
       })
       .then(() => {
         // Get data on the user visiting
-        const askUserAPI = userAPI();
-        return askUserAPI.getMe();
+        return flowResult(userStore.getCurrentUser());
       })
-      .then(visitingUser => {
+      .then(currentUser => {
         console.log('visiting user: ');
-        console.log(visitingUser);
+        console.log(currentUser);
 
         // Store this guy on mobX store
-        const userStore = new RootStore().userStore;
-        userStore.updateUser(visitingUser);
+        userStore.setCurrentUser(currentUser);
+        console.log(userStore.describeUser);
       })
       .catch(error => {
         // TODO exception handling

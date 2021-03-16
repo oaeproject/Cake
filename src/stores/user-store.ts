@@ -1,46 +1,51 @@
-import { makeAutoObservable, observable, computed, autorun, action } from 'mobx';
+import { computed, autorun, makeObservable, observable, flow, action } from 'mobx';
+
+import { Tenant } from '../models/tenant';
+import { User } from '../models/user';
+import { RootStore } from './root-store';
 
 export class UserStore {
-  rootStore;
-  anonymous;
-  locale;
-  shortDescription: string;
-  tenantIbelongTo = { displayName: 'nowhere' };
+  rootStore: RootStore;
+  currentUser: User;
 
   constructor(rootStore) {
-    makeAutoObservable(this, {
-      anonymous: observable,
-      locale: observable,
-      tenantIbelongTo: observable,
+    makeObservable(this, {
+      currentUser: observable,
+      setCurrentUser: action,
+      getCurrentUser: flow,
       describeUser: computed,
-      updateUser: action,
-      getUser: computed,
     });
     autorun(() => {
-      // TODO debug
-      console.log(this.describeUser);
+      // Some action we might need to run just once
     });
     this.rootStore = rootStore;
   }
 
-  updateUser(user) {
-    this.anonymous = user.anon;
-    this.locale = user.locale;
-    this.tenantIbelongTo = user.tenant;
+  setCurrentUser(visitingUser) {
+    const tenantUserBelongsTo = new Tenant(this, visitingUser.tenant);
+    this.currentUser = new User(this, { anonymous: visitingUser.anon, locale: visitingUser.locale, tenant: tenantUserBelongsTo });
+
+    // TODO debug
+    console.log(`Just set the current user locally!`);
   }
 
-  get getUser() {
-    return { anonymous: this.anonymous, locale: this.locale, tenant: this.tenantIbelongTo };
+  /**
+   * Using flow instead of async / await
+   * Check more info here:
+   * https://mobx.js.org/actions.html#using-flow-instead-of-async--await-
+   */
+  *getCurrentUser() {
+    try {
+      const response = yield fetch('/api/me');
+      const data = yield response.json();
+      return data;
+    } catch (error: unknown) {
+      // TODO better error handling
+      console.error(error);
+    }
   }
 
   get describeUser() {
-    return `User is ${this.anonymous ? 'anonymous' : 'unknown'} and belongs to tenant ${this.tenantIbelongTo.displayName}`;
+    return `Current user is ${this.currentUser.anonymous ? 'a ghost' : 'logged in'} and belongs to tenant ${this.currentUser.tenant.displayName}`;
   }
-
-  /*
-  GetTodos(user) {
-    // Access todoStore through the root store.
-    return this.rootStore.todoStore.todos.filter(todo => todo.author === user);
-  }
-  */
 }

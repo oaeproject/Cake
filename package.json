@@ -45,7 +45,9 @@
       "prettier"
     ],
     "ignores": [],
-    "rules": {},
+    "rules": {
+      "capitalized-comments": "off"
+    },
     "env": [],
     "overrides": []
   }

@@ -9,12 +9,14 @@ export namespace Components {
     interface AppHome {
     }
     interface AppProfile {
+        "color": string;
         "name": string;
     }
     interface AppRoot {
     }
     interface HomeNav {
-        "authStrategyInfo": Record<string, unknown>;
+        "authStrategyInfo": any;
+        "tenantAlias": string;
         "tenantLogo": string;
     }
     interface HomeSearch {
@@ -34,8 +36,9 @@ export namespace Components {
     interface OaeGroupsTabs {
     }
     interface OaeHomepage {
-        "authStrategyInfo": Record<string, unknown>;
-        "tenantConfig": Record<string, unknown>;
+        "authStrategyInfo": any;
+        "currentUser": any;
+        "tenantConfig": any;
     }
     interface OaeLayout {
     }
@@ -193,12 +196,14 @@ declare namespace LocalJSX {
     interface AppHome {
     }
     interface AppProfile {
+        "color"?: string;
         "name"?: string;
     }
     interface AppRoot {
     }
     interface HomeNav {
-        "authStrategyInfo"?: Record<string, unknown>;
+        "authStrategyInfo"?: any;
+        "tenantAlias"?: string;
         "tenantLogo"?: string;
     }
     interface HomeSearch {
@@ -218,8 +223,9 @@ declare namespace LocalJSX {
     interface OaeGroupsTabs {
     }
     interface OaeHomepage {
-        "authStrategyInfo"?: Record<string, unknown>;
-        "tenantConfig"?: Record<string, unknown>;
+        "authStrategyInfo"?: any;
+        "currentUser"?: any;
+        "tenantConfig"?: any;
     }
     interface OaeLayout {
     }

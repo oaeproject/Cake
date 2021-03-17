@@ -12,6 +12,8 @@ import { Component, h, Prop } from '@stencil/core';
 import { flowResult } from 'mobx';
 
 import { authenticationAPI } from '../../helpers/authentication';
+import { getLoginRedirectUrl as getRedirectUrl, getInvitationInfo } from '../../helpers/utils';
+
 import rootStore from '../../stores/root-store';
 
 @Component({
@@ -19,11 +21,21 @@ import rootStore from '../../stores/root-store';
   styleUrl: 'homepage.scss',
 })
 export class Homepage {
-  @Prop({ mutable: true }) tenantConfig: Record<string, unknown> = {};
-  @Prop({ mutable: true }) authStrategyInfo: Record<string, unknown> = {};
+  @Prop({ mutable: true }) tenantConfig;
+  @Prop({ mutable: true }) authStrategyInfo;
+  @Prop({ mutable: true }) currentUser;
 
   componentWillLoad() {
     const userStore = rootStore.userStore;
+    const redirectUrl = getRedirectUrl();
+    // TODO debug
+    console.log(`redirectUrl: ${redirectUrl}`);
+
+    // Variable that keeps track of the invitation info that is available in the page context, if any
+    const invitationInfo = getInvitationInfo();
+    // TODO debug
+    console.log(`invitation info: ${invitationInfo.email} / ${invitationInfo.token}`);
+
     return fetch('/api/config')
       .then(response => {
         return response.json();
@@ -53,10 +65,12 @@ export class Homepage {
         return flowResult(userStore.getCurrentUser());
       })
       .then(currentUser => {
-        console.log('visiting user: ');
-        console.log(currentUser);
+        console.log(`login user: ${currentUser}`);
 
-        // Store this guy on mobX store
+        // TODO maybe we just want to have it in our store
+        this.currentUser = currentUser;
+
+        // Store this guy on mobX store, not as a prop?
         userStore.setCurrentUser(currentUser);
         console.log(userStore.describeUser);
       })
@@ -69,7 +83,7 @@ export class Homepage {
   render() {
     return (
       <section class="hero is-primary is-medium">
-        <home-nav authStrategyInfo={this.authStrategyInfo} color="blue"></home-nav>
+        <home-nav authStrategyInfo={this.authStrategyInfo} tenantAlias={this.currentUser.tenant.alias}></home-nav>
         <div class="hero-head"></div>
         <div class="hero-body main-area">
           <div class="container has-text-centered is-centered">

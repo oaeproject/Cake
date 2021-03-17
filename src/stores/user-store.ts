@@ -1,4 +1,4 @@
-import { computed, autorun, makeObservable, observable, flow, action } from 'mobx';
+import { computed, autorun, makeAutoObservable, observable, flow, action } from 'mobx';
 
 import { Tenant } from '../models/tenant';
 import { User } from '../models/user';
@@ -9,7 +9,8 @@ export class UserStore {
   currentUser: User;
 
   constructor(rootStore) {
-    makeObservable(this, {
+    // TODO do we need all these attributes to be observable?
+    makeAutoObservable(this, {
       currentUser: observable,
       setCurrentUser: action,
       getCurrentUser: flow,
@@ -21,12 +22,8 @@ export class UserStore {
     this.rootStore = rootStore;
   }
 
-  setCurrentUser(visitingUser) {
-    const tenantUserBelongsTo = new Tenant(this, visitingUser.tenant);
-    this.currentUser = new User(this, { anonymous: visitingUser.anon, locale: visitingUser.locale, tenant: tenantUserBelongsTo });
-
-    // TODO debug
-    console.log(`Just set the current user locally!`);
+  setCurrentUser(user) {
+    this.currentUser = new User(this, { anonymous: user.anon, locale: user.locale, tenant: new Tenant(this, user.tenant) });
   }
 
   /**

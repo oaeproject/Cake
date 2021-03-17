@@ -1,4 +1,4 @@
-import { makeObservable, computed, observable } from 'mobx';
+import { makeAutoObservable, computed, observable } from 'mobx';
 import { Tenant } from './tenant';
 
 export class User {
@@ -8,9 +8,10 @@ export class User {
   locale: string;
 
   constructor(store, userData) {
-    makeObservable(this, {
+    // TODO do we need all these attributes to be observable?
+    makeAutoObservable(this, {
       anonymous: observable,
-      tenant: observable,
+      // tenant: observable,
       locale: observable,
       asBackend: computed,
     });

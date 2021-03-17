@@ -1,4 +1,4 @@
-import { computed, observable, makeObservable } from 'mobx';
+import { computed, observable, makeAutoObservable } from 'mobx';
 
 export class Tenant {
   store: null;
@@ -9,12 +9,13 @@ export class Tenant {
   emailDomains: string[];
 
   constructor(store, tenantData) {
-    makeObservable(this, {
-      alias: observable,
-      displayName: observable,
-      isGuestTenant: observable,
-      isPrivate: observable,
-      asBackend: computed,
+    // TODO do we need all these attributes to be observable?
+    makeAutoObservable(this, {
+      // alias: observable,
+      // displayName: observable,
+      // isGuestTenant: observable,
+      // isPrivate: observable,
+      // asBackend: computed,
     });
     this.store = store;
 

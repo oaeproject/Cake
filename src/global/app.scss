@@ -137,10 +137,23 @@ ul.breadcrumb li a:hover {
 }
 
 // Experiments
-.twitter {
-  background-image: url('https://ipsf.net/wp-content/uploads/2018/10/twitter-transparent-app-2.png');
+.facebook {
+  background-image: url('assets/logo/facebook.svg');
   background-repeat: no-repeat;
   background-position: right;
-  background-size: cover;
-  background-color: #4491cd;
+  background-size: auto;
+}
+
+.google {
+  background-image: url('assets/logo/google.svg');
+  background-repeat: no-repeat;
+  background-position: right;
+  background-size: auto;
+}
+
+.twitter {
+  background-image: url('assets/logo/twitter.svg');
+  background-size: auto;
+  background-repeat: no-repeat;
+  background-position: right;
 }

@@ -35,12 +35,13 @@ export class ExternalAuthStrategy {
   }
 
   render() {
+    const socialButtonClass = `${this.id} button is-round signIn-button`;
     return (
       <form action={this.url} method="POST">
         <input type="hidden" name="invitationToken" value={this.invitationToken} />
         <input type="hidden" name="invitationEmail" value={this.invitationEmail} />
         <input type="hidden" name="redirectUrl" value={this.redirectUrl} />
-        <a onClick={this.submitForm} class="twitter button is-round signIn-button">
+        <a onClick={this.submitForm} class={socialButtonClass}>
           <i class={this.icon}></i>
         </a>
       </form>

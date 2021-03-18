@@ -14,6 +14,15 @@ export namespace Components {
     }
     interface AppRoot {
     }
+    interface ExternalAuthStrategy {
+        "icon": string;
+        "id": string;
+        "invitationEmail": string;
+        "invitationToken": string;
+        "name": string;
+        "redirectUrl": string;
+        "url": string;
+    }
     interface HomeNav {
         "authStrategyInfo": any;
         "tenantAlias": string;
@@ -73,6 +82,12 @@ declare global {
     var HTMLAppRootElement: {
         prototype: HTMLAppRootElement;
         new (): HTMLAppRootElement;
+    };
+    interface HTMLExternalAuthStrategyElement extends Components.ExternalAuthStrategy, HTMLStencilElement {
+    }
+    var HTMLExternalAuthStrategyElement: {
+        prototype: HTMLExternalAuthStrategyElement;
+        new (): HTMLExternalAuthStrategyElement;
     };
     interface HTMLHomeNavElement extends Components.HomeNav, HTMLStencilElement {
     }
@@ -174,6 +189,7 @@ declare global {
         "app-home": HTMLAppHomeElement;
         "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
+        "external-auth-strategy": HTMLExternalAuthStrategyElement;
         "home-nav": HTMLHomeNavElement;
         "home-search": HTMLHomeSearchElement;
         "oae-dashboard": HTMLOaeDashboardElement;
@@ -200,6 +216,15 @@ declare namespace LocalJSX {
         "name"?: string;
     }
     interface AppRoot {
+    }
+    interface ExternalAuthStrategy {
+        "icon"?: string;
+        "id"?: string;
+        "invitationEmail"?: string;
+        "invitationToken"?: string;
+        "name"?: string;
+        "redirectUrl"?: string;
+        "url"?: string;
     }
     interface HomeNav {
         "authStrategyInfo"?: any;
@@ -245,6 +270,7 @@ declare namespace LocalJSX {
         "app-home": AppHome;
         "app-profile": AppProfile;
         "app-root": AppRoot;
+        "external-auth-strategy": ExternalAuthStrategy;
         "home-nav": HomeNav;
         "home-search": HomeSearch;
         "oae-dashboard": OaeDashboard;
@@ -270,6 +296,7 @@ declare module "@stencil/core" {
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
+            "external-auth-strategy": LocalJSX.ExternalAuthStrategy & JSXBase.HTMLAttributes<HTMLExternalAuthStrategyElement>;
             "home-nav": LocalJSX.HomeNav & JSXBase.HTMLAttributes<HTMLHomeNavElement>;
             "home-search": LocalJSX.HomeSearch & JSXBase.HTMLAttributes<HTMLHomeSearchElement>;
             "oae-dashboard": LocalJSX.OaeDashboard & JSXBase.HTMLAttributes<HTMLOaeDashboardElement>;

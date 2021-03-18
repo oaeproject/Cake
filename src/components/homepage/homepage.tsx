@@ -65,7 +65,7 @@ export class Homepage {
         return flowResult(userStore.getCurrentUser());
       })
       .then(currentUser => {
-        console.log(`login user: ${currentUser}`);
+        console.log(`login user: ${currentUser.displayName}`);
 
         // TODO maybe we just want to have it in our store
         this.currentUser = currentUser;

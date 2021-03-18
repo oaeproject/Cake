@@ -28,6 +28,10 @@ A production build includes:
 - Generated Service workers
 - App manifest
 
+## Development
+
+Use `http://guest.oae.com?url=%2F%3FinvitationToken%3DhA7EFd5wYudH%26invitationEmail%3Dmiguel.laginha%2540apereo.org` for testing manually, based on the `cake-integration` branch on Hilary.
+
 ## Unit Tests
 
 To run the unit tests once, run:

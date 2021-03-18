@@ -5,7 +5,9 @@ import '@material/mwc-dialog';
 import '@material/mwc-button';
 import '@material/mwc-textfield';
 
-import { map, values, keys, mapObjIndexed, pipe, last, split, equals } from 'ramda';
+import { map, values, pipe, last, split, equals } from 'ramda';
+
+const DEFAULT_LOGO = 'oae-logo.svg';
 
 @Component({
   tag: 'home-nav',
@@ -26,15 +28,16 @@ export class HomeNav {
     return fetch('/api/ui/logo')
       .then(response => response.text())
       .then(text => {
-        // TODO we need to change the backend to deliver the correct filepath
-        const isDefaultLogo = pipe(split('/'), last, equals('oae-logo.png'))(text);
+        // TODO we need to change the backend to deliver the correct filepath if default
+        const isDefaultLogo = pipe(split('/'), last, equals(DEFAULT_LOGO))(text);
 
+        let logoToDisplay;
         if (isDefaultLogo) {
-          this.tenantLogo = './assets/logo/oae-logo.svg';
+          logoToDisplay = './assets/logo/oae-logo.svg';
         } else {
-          // TODO here we go get the tenant logo wherever it is
-          this.tenantLogo = './assets/images/custom-logo.svg';
+          logoToDisplay = text;
         }
+        this.tenantLogo = logoToDisplay;
       })
       .catch(error => {
         // TODO handle this better
@@ -47,11 +50,14 @@ export class HomeNav {
   }
 
   render() {
-    let externalAuth;
+    // TODO debug
+    console.log(this.authStrategyInfo.enabledExternalStrategies);
+
+    let externalAuth: any;
     if (this.authStrategyInfo.hasExternalAuth) {
       externalAuth = pipe(
         values,
-        map(eachStrategy => <span>{eachStrategy.id}</span>),
+        map(eachStrategy => <external-auth-strategy icon={eachStrategy.icon} id={eachStrategy.id} url={eachStrategy.url} name={eachStrategy.name} />),
       )(this.authStrategyInfo.enabledExternalStrategies);
     }
 

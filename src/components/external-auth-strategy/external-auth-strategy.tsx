@@ -15,10 +15,7 @@ export class ExternalAuthStrategy {
   @Prop() invitationEmail: string;
 
   componentWillLoad() {
-    console.log('Component is about to be rendered');
-    // TODO debug
     this.redirectUrl = getRedirectUrl();
-    console.log(`redirectUrl: ${this.redirectUrl}`);
 
     // Variable that keeps track of the invitation info that is available in the page context, if any
     const invitationInfo = getInvitationInfo();
@@ -26,7 +23,8 @@ export class ExternalAuthStrategy {
     this.invitationEmail = invitationInfo.email;
 
     // TODO debug
-    console.log(`invitation info: ${invitationInfo.email} / ${invitationInfo.token}`);
+    console.log(`redirectUrl: ${this.redirectUrl}`);
+    console.log(`invitation info: ${this.invitationEmail} / ${this.invitationToken}`);
   }
 
   submitForm(e) {

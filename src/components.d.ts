@@ -38,6 +38,8 @@ export namespace Components {
     }
     interface OaeLibrary {
     }
+    interface OaeLibraryMosaic {
+    }
     interface OaeLibraryTable {
     }
     interface OaeNewsfeed {
@@ -140,6 +142,12 @@ declare global {
         prototype: HTMLOaeLibraryElement;
         new (): HTMLOaeLibraryElement;
     };
+    interface HTMLOaeLibraryMosaicElement extends Components.OaeLibraryMosaic, HTMLStencilElement {
+    }
+    var HTMLOaeLibraryMosaicElement: {
+        prototype: HTMLOaeLibraryMosaicElement;
+        new (): HTMLOaeLibraryMosaicElement;
+    };
     interface HTMLOaeLibraryTableElement extends Components.OaeLibraryTable, HTMLStencilElement {
     }
     var HTMLOaeLibraryTableElement: {
@@ -180,6 +188,7 @@ declare global {
         "oae-homepage": HTMLOaeHomepageElement;
         "oae-layout": HTMLOaeLayoutElement;
         "oae-library": HTMLOaeLibraryElement;
+        "oae-library-mosaic": HTMLOaeLibraryMosaicElement;
         "oae-library-table": HTMLOaeLibraryTableElement;
         "oae-newsfeed": HTMLOaeNewsfeedElement;
         "oae-sidebar": HTMLOaeSidebarElement;
@@ -219,6 +228,8 @@ declare namespace LocalJSX {
     }
     interface OaeLibrary {
     }
+    interface OaeLibraryMosaic {
+    }
     interface OaeLibraryTable {
     }
     interface OaeNewsfeed {
@@ -245,6 +256,7 @@ declare namespace LocalJSX {
         "oae-homepage": OaeHomepage;
         "oae-layout": OaeLayout;
         "oae-library": OaeLibrary;
+        "oae-library-mosaic": OaeLibraryMosaic;
         "oae-library-table": OaeLibraryTable;
         "oae-newsfeed": OaeNewsfeed;
         "oae-sidebar": OaeSidebar;
@@ -270,6 +282,7 @@ declare module "@stencil/core" {
             "oae-homepage": LocalJSX.OaeHomepage & JSXBase.HTMLAttributes<HTMLOaeHomepageElement>;
             "oae-layout": LocalJSX.OaeLayout & JSXBase.HTMLAttributes<HTMLOaeLayoutElement>;
             "oae-library": LocalJSX.OaeLibrary & JSXBase.HTMLAttributes<HTMLOaeLibraryElement>;
+            "oae-library-mosaic": LocalJSX.OaeLibraryMosaic & JSXBase.HTMLAttributes<HTMLOaeLibraryMosaicElement>;
             "oae-library-table": LocalJSX.OaeLibraryTable & JSXBase.HTMLAttributes<HTMLOaeLibraryTableElement>;
             "oae-newsfeed": LocalJSX.OaeNewsfeed & JSXBase.HTMLAttributes<HTMLOaeNewsfeedElement>;
             "oae-sidebar": LocalJSX.OaeSidebar & JSXBase.HTMLAttributes<HTMLOaeSidebarElement>;

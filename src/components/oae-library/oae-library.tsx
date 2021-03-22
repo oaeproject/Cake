@@ -36,6 +36,7 @@ export class Library {
             </div>
           </div>
           <oae-library-table></oae-library-table>
+          <oae-library-mosaic></oae-library-mosaic>
         </section>
       </oae-layout>
     );

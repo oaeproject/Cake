@@ -16,10 +16,6 @@ import { Component, h } from '@stencil/core';
   /* shadow?: boolean;*/
 })
 export class AppRoot {
-  componentDidRender() {
-    console.log('here, here!');
-  }
-
   render() {
     return (
       <ion-app>

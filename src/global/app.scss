@@ -135,3 +135,46 @@ ul.breadcrumb li a:hover {
   color: #01447e;
   text-decoration: underline;
 }
+
+// Experiments
+.facebook {
+  background-image: url('assets/logo/facebook.svg');
+  background-repeat: no-repeat;
+  background-position: right;
+  background-size: auto;
+}
+
+.google {
+  background-image: url('assets/logo/google.svg');
+  background-repeat: no-repeat;
+  background-position: right;
+  background-size: auto;
+}
+
+.twitter {
+  background-image: url('assets/logo/twitter.svg');
+  background-size: auto;
+  background-repeat: no-repeat;
+  background-position: right;
+}
+
+.shibboleth {
+  background-image: url('assets/logo/shibboleth.svg');
+  background-size: auto;
+  background-repeat: no-repeat;
+  background-position: right;
+}
+
+.cas {
+  background-image: url('assets/logo/cas.png');
+  background-size: auto;
+  background-repeat: no-repeat;
+  background-position: right;
+}
+
+.ldap {
+  background-image: url('assets/logo/ldap.png');
+  background-size: auto;
+  background-repeat: no-repeat;
+  background-position: right;
+}

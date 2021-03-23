@@ -5,37 +5,31 @@ import { Component, h } from '@stencil/core';
     styleUrl: 'oae-library-mosaic.scss',
 })
 
-export class LibraryTable {
+export class LibraryMosaic {
     render() {
         return (
-            <div class="card">
+            <div class="card mosaic-card">
                 <div class="card-image">
-                    <figure class="image is-4by3">
-                        <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image" />
+                    <figure class="image is-2by1">
+                        <img src="https://images.pexels.com/photos/267350/pexels-photo-267350.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="Placeholder image" />
                     </figure>
                 </div>
                 <div class="card-content">
-                    <div class="media">
+                    <div class="media-content">
+                        <p class="title is-5">background.jpg</p>
+                    </div>
+                    <div class="media is-inline-flex mosaic-card-bottom">
                         <div class="media-left">
                             <figure class="image is-48x48">
                                 <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image" />
                             </figure>
                         </div>
-                        <div class="media-content">
-                            <p class="title is-4">John Smith</p>
-                            <p class="subtitle is-6">@johnsmith</p>
+                        <div class="is-left mosaic-card-bottom-label">
+                            <p class="title is-6">personal</p>
                         </div>
-                    </div>
-
-                    <div class="content">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-      Phasellus nec iaculis mauris. <a>@bulmaio</a>.
-      <a href="#">#css</a> <a href="#">#responsive</a>
-                        <time>11:09 PM - 1 Jan 2016</time>
                     </div>
                 </div>
             </div>
-
         );
     }
 }

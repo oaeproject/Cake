@@ -22,7 +22,9 @@ export class LibraryMosaic {
                     <div class="media is-inline-flex mosaic-card-bottom">
                         <div class="media-left">
                             <div class="box is-48x48 mosaic-box">
-                                
+                                <span class="icon">
+                                    <iron-icon icon="icons:folder"></iron-icon>
+                                </span>
                             </div>
                         </div>
                         <div class="is-left mosaic-card-bottom-label">

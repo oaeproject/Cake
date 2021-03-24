@@ -36,7 +36,18 @@ export class Library {
             </div>
           </div>
           <oae-library-table></oae-library-table>
-          <oae-library-mosaic></oae-library-mosaic>
+          <div class="is-inline-flex">
+            <oae-library-mosaic></oae-library-mosaic>
+            <oae-library-mosaic></oae-library-mosaic>
+            <oae-library-mosaic></oae-library-mosaic>
+            <oae-library-mosaic></oae-library-mosaic>
+          </div>
+          <div class="is-inline-flex">
+            <oae-library-mosaic></oae-library-mosaic>
+            <oae-library-mosaic></oae-library-mosaic>
+            <oae-library-mosaic></oae-library-mosaic>
+            <oae-library-mosaic></oae-library-mosaic>
+          </div>
         </section>
       </oae-layout>
     );

@@ -1,4 +1,5 @@
 import { Component, h } from '@stencil/core';
+import '@polymer/iron-icons/iron-icons.js';
 
 @Component({
     tag: 'oae-library-mosaic',
@@ -10,7 +11,7 @@ export class LibraryMosaic {
         return (
             <div class="card mosaic-card">
                 <div class="card-image">
-                    <figure class="image is-2by1">
+                    <figure class="image is-2by1 mosaic-card-corners">
                         <img src="https://images.pexels.com/photos/267350/pexels-photo-267350.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="Placeholder image" />
                     </figure>
                 </div>
@@ -20,9 +21,9 @@ export class LibraryMosaic {
                     </div>
                     <div class="media is-inline-flex mosaic-card-bottom">
                         <div class="media-left">
-                            <figure class="image is-48x48">
-                                <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image" />
-                            </figure>
+                            <div class="box is-48x48 mosaic-box">
+                                
+                            </div>
                         </div>
                         <div class="is-left mosaic-card-bottom-label">
                             <p class="title is-6">personal</p>

@@ -1,5 +1,4 @@
 import { Component, Prop, State, h } from '@stencil/core';
-import { sayHello } from '../../helpers/utils';
 
 @Component({
   tag: 'app-profile',
@@ -29,7 +28,6 @@ export class AppProfile {
 
       <ion-content class="ion-padding">
         <p>
-          {sayHello()}! My name is {this.formattedName()}. My name was passed in through a route param!
         </p>
 
         <ion-item>

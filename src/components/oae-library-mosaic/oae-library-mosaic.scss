@@ -1,0 +1,30 @@
+.mosaic-card {
+  margin-top: 2em;
+  margin-left: 1em;
+  width: 250px;
+  height: 270px;
+  border: 1px solid #e0e0e0;
+  box-sizing: border-box;
+  box-shadow: 0px 0px 10px 1px rgba(172, 172, 172, 0.25);
+  border-radius: 8px;
+}
+
+.mosaic-card-corners {
+  border-radius: 8px 8px 0 0;
+}
+
+.mosaic-card-bottom {
+  margin-top: 2em;
+}
+
+.mosaic-card-bottom-label {
+  margin-top: 0.5em;
+  margin-left: 1em;
+}
+
+.mosaic-box {
+  background: #c5d7ff;
+  border-radius: 5px;
+  box-shadow: none;
+  padding: 0.5em
+}

@@ -1,5 +1,8 @@
 import { computed, autorun, makeAutoObservable, observable, flow, action } from 'mobx';
 
+import anylogger from 'anylogger';
+const log = anylogger('user-store');
+
 import { Tenant } from '../models/tenant';
 import { User } from '../models/user';
 import { RootStore } from './root-store';
@@ -46,8 +49,7 @@ export class UserStore {
       const data = yield response.json();
       return data;
     } catch (error: unknown) {
-      // TODO better error handling
-      console.error(error);
+      log.error(`Unable to get current user from the API`, error);
     }
   }
 

@@ -11,6 +11,9 @@
 import { Component, h, Prop } from '@stencil/core';
 import { flowResult } from 'mobx';
 
+import anylogger from 'anylogger';
+const log = anylogger('homepage');
+
 import { authenticationAPI } from '../../helpers/authentication';
 import { getLoginRedirectUrl as getRedirectUrl, getInvitationInfo } from '../../helpers/utils';
 
@@ -30,13 +33,11 @@ export class Homepage {
     const redirectUrl = getRedirectUrl();
     userStore.setUserRedirectUrl(redirectUrl);
 
-    // TODO debug
-    console.log(`redirectUrl: ${redirectUrl}`);
+    log.debug(`redirectUrl: ${redirectUrl}`);
 
     // Variable that keeps track of the invitation info that is available in the page context, if any
     const invitationInfo = getInvitationInfo();
-    // TODO debug
-    console.log(`invitation info: ${invitationInfo.email} / ${invitationInfo.token}`);
+    log.debug(`invitation info: ${invitationInfo.email} / ${invitationInfo.token}`);
 
     return fetch('/api/config')
       .then(response => {
@@ -45,9 +46,7 @@ export class Homepage {
       .then(data => {
         this.tenantConfig = data;
 
-        // TODO debug
-        console.log('this.tenantConfig:');
-        console.log(this.tenantConfig);
+        log.debug(`tenant configuration: ${this.tenantConfig}`);
 
         return data;
       })
@@ -56,9 +55,7 @@ export class Homepage {
         // Variable that holds the configured auth strategy information for the tenant
         this.authStrategyInfo = askAuthAPI.getStrategyInfo(tenantConfig);
 
-        // TODO debug
-        console.log('this.authStrategyInfo:');
-        console.log(this.authStrategyInfo);
+        log.debug(`authStrategyInfo: ${this.authStrategyInfo}`);
 
         return this.authStrategyInfo;
       })
@@ -67,18 +64,18 @@ export class Homepage {
         return flowResult(userStore.getCurrentUser());
       })
       .then(currentUser => {
-        console.log(`login user: ${currentUser.displayName}`);
+        log.debug(`login user: ${currentUser.displayName}`);
 
         // TODO maybe we just want to have it in our store
         this.currentUser = currentUser;
 
         // Store this guy on mobX store, not as a prop?
         userStore.setCurrentUser(currentUser);
-        console.log(userStore.describeUser);
+        log.debug(`Visiting user: ${userStore.describeUser}`);
       })
       .catch(error => {
         // TODO exception handling
-        console.error(error);
+        log.error(`Unable to fetch tenant configuration`, error);
       });
   }
 

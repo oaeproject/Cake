@@ -9,7 +9,6 @@ export namespace Components {
     interface AppHome {
     }
     interface AppProfile {
-        "color": string;
         "name": string;
     }
     interface AppRoot {
@@ -231,7 +230,6 @@ declare namespace LocalJSX {
     interface AppHome {
     }
     interface AppProfile {
-        "color"?: string;
         "name"?: string;
     }
     interface AppRoot {

@@ -96,9 +96,11 @@ export class LocalAuthStrategy {
        * window.location.href = userStore.getUserRedirectUrl();
        */
 
+      this.validationFailed = false;
       window.location.href = '/dashboard';
     } else if (failedAuthentication) {
       // show alert message saying credentials not valid
+      this.validationFailed = true;
     }
   }
 

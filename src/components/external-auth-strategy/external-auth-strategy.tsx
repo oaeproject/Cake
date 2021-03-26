@@ -1,6 +1,9 @@
 import { Component, h, Prop } from '@stencil/core';
 import { getLoginRedirectUrl as getRedirectUrl, getInvitationInfo } from '../../helpers/utils';
 
+import anylogger from 'anylogger';
+const log = anylogger('external-auth-strategy');
+
 @Component({
   tag: 'external-auth-strategy',
   styleUrl: 'external-auth-strategy.css',
@@ -23,13 +26,12 @@ export class ExternalAuthStrategy {
     this.invitationEmail = invitationInfo.email;
 
     // TODO debug
-    console.log(`redirectUrl: ${this.redirectUrl}`);
-    console.log(`invitation info: ${this.invitationEmail} / ${this.invitationToken}`);
+    log.debug(`redirectUrl: ${this.redirectUrl}`);
+    log.debug(`invitation info: ${this.invitationEmail} / ${this.invitationToken}`);
   }
 
-  submitForm(e) {
+  submitForm(e: Event) {
     e.preventDefault();
-    console.log('Submitting!!!');
   }
 
   render() {

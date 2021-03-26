@@ -1,6 +1,9 @@
 import { path, pick, pipe, equals, length, mergeRight, objOf, and, intersection, isEmpty, not, keys } from 'ramda';
 import { authConstants } from './constants';
 
+import anylogger from 'anylogger';
+const log = anylogger('authentication');
+
 const {
   STRATEGY_CAS,
   STRATEGY_FACEBOOK,
@@ -193,9 +196,8 @@ const signInViaLDAP = async (username: string, password: string, ldapAuthSetting
       body: JSON.stringify({ username, password }),
     });
     return response.status;
-  } catch (error) {
-    console.log(`LDAP sign in failed!`);
-    console.log(error);
+  } catch (error: unknown) {
+    log.error(`LDAP sign in failed!`, error);
     throw error;
   }
 };
@@ -217,9 +219,8 @@ const signInViaLocalAuth = async (username: string, password: string, localAuthS
       body: JSON.stringify({ username, password }),
     });
     return response.status;
-  } catch (error) {
-    console.log(`Local sign in failed!`);
-    console.log(error);
+  } catch (error: unknown) {
+    log.error(`Local sign in failed!`, error);
     throw error;
   }
 };
@@ -229,8 +230,7 @@ const tryLDAPFirstLocalAuthSecond = async (username, password, ldapSettings, loc
   try {
     status = await signInViaLDAP(username, password, ldapSettings);
   } catch (error: unknown) {
-    // TODO log here
-    console.log(error);
+    log.error(`Unable to sign in via LDAP, trying local authentication instead`, error);
   } finally {
     status = await signInViaLocalAuth(username, password, localSettings);
   }

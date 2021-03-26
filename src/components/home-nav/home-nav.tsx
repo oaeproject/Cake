@@ -6,6 +6,8 @@ import '@material/mwc-button';
 import '@material/mwc-textfield';
 
 import { map, values, pipe, last, split, equals } from 'ramda';
+import anylogger from 'anylogger';
+const log = anylogger('home-nav');
 
 const DEFAULT_LOGO = 'oae-logo.svg';
 
@@ -40,8 +42,7 @@ export class HomeNav {
         this.tenantLogo = logoToDisplay;
       })
       .catch(error => {
-        // TODO handle this better
-        console.error(error);
+        log.error(`Error fetching the tenant logo`, error);
       });
   }
 

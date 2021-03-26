@@ -8,7 +8,7 @@
  * [ ] Clear password field after submit if 401 is returned
  * [ ] Focus on username input on loading the modal window
  */
-import { State, Prop, Component, h, Element } from '@stencil/core';
+import { Listen, State, Prop, Component, h, Element } from '@stencil/core';
 import '@material/mwc-button';
 import '@material/mwc-textfield';
 
@@ -31,6 +31,14 @@ export class LocalAuthStrategy {
   @Prop() enabledStrategies: any;
   @Element() element: HTMLElement;
   @State() validationFailed = false;
+
+  @Listen('keydown')
+  async handleKeyDown(event: KeyboardEvent) {
+    const wasEnterKeyPressed = compose(equals('Enter'), prop('key'));
+    if (wasEnterKeyPressed(event)) {
+      return this.handleSubmit(event);
+    }
+  }
 
   /**
    * Attempt to log the user in with the provided username and password onto the current
@@ -106,17 +114,16 @@ export class LocalAuthStrategy {
     if (this.validationFailed) {
       loginFailed = <div>Ouch! credentials not valid</div>;
     }
+
     return (
-      <div>
-        <form onSubmit={this.handleSubmit}>
-          <mwc-textfield id="username" minlength="3" maxlength="64" placeholder="Username" required></mwc-textfield>
-          <mwc-textfield type="password" id="password" minlength="3" maxlength="64" placeholder="Password" required></mwc-textfield>
-          <mwc-button id="submit-button" slot="primaryAction">
-            Sign in
-          </mwc-button>
-          {loginFailed}
-        </form>
-      </div>
+      <form onSubmit={this.handleSubmit}>
+        <mwc-textfield id="username" minlength="3" maxlength="64" placeholder="Username" required></mwc-textfield>
+        <mwc-textfield type="password" id="password" minlength="3" maxlength="64" placeholder="Password" required></mwc-textfield>
+        <mwc-button id="submit-button" slot="primaryAction">
+          Sign in
+        </mwc-button>
+        {loginFailed}
+      </form>
     );
   }
 }

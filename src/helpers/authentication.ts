@@ -151,10 +151,6 @@ const getStrategyInfo = (tenantConfig /* , contextLabel = 'SIGN_IN' */) => {
   const enabledStrategies = getEnabledStrategies(tenantConfig /* , contextLabel */);
   const enabledStrategyNames = keys(enabledStrategies);
 
-  // TODO debug
-  console.log('enabledStrategies:');
-  console.log(enabledStrategies);
-
   const hasLocalAuth = pipe(intersection(STRATEGIES_LOCAL), isEmpty, not)(enabledStrategyNames);
   const hasExternalAuth = pipe(intersection(STRATEGIES_EXTERNAL), isEmpty, not)(enabledStrategyNames);
   const hasInstitutionalAuth = pipe(intersection(STRATEGIES_INSTITUTIONAL), isEmpty, not)(enabledStrategyNames);
@@ -180,9 +176,74 @@ const getStrategyInfo = (tenantConfig /* , contextLabel = 'SIGN_IN' */) => {
   };
 };
 
+const signInViaLDAP = async (username: string, password: string, ldapAuthSettings: { id: string; url: string }) => {
+  if (!username) {
+    throw new Error('A valid username should be provided');
+  } else if (!password) {
+    throw new Error('A valid password should be provided');
+  }
+
+  try {
+    const response = await fetch(ldapAuthSettings.url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username, password }),
+    });
+    return response.status;
+  } catch (error) {
+    console.log(`LDAP sign in failed!`);
+    console.log(error);
+    throw error;
+  }
+};
+
+const signInViaLocalAuth = async (username: string, password: string, localAuthSettings: { id: string; url: string }): Promise<number> => {
+  if (!username) {
+    throw new Error('A valid username should be provided');
+  } else if (!password) {
+    throw new Error('A valid password should be provided');
+  }
+
+  try {
+    const response = await fetch(localAuthSettings.url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username, password }),
+    });
+    return response.status;
+  } catch (error) {
+    console.log(`Local sign in failed!`);
+    console.log(error);
+    throw error;
+  }
+};
+
+const tryLDAPFirstLocalAuthSecond = async (username, password, ldapSettings, localSettings) => {
+  let status;
+  try {
+    status = await signInViaLDAP(username, password, ldapSettings);
+  } catch (error: unknown) {
+    // TODO log here
+    console.log(error);
+  } finally {
+    status = await signInViaLocalAuth(username, password, localSettings);
+  }
+
+  return status;
+};
+
 export function authenticationAPI() {
   return {
     getStrategyInfo,
     getEnabledStrategies,
+    signInViaLDAP,
+    signInViaLocalAuth,
+    tryLDAPFirstLocalAuthSecond,
   };
 }

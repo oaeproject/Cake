@@ -7,6 +7,7 @@ import { RootStore } from './root-store';
 export class UserStore {
   rootStore: RootStore;
   currentUser: User;
+  redirectUrl: string;
 
   constructor(rootStore) {
     // TODO do we need all these attributes to be observable?
@@ -24,6 +25,14 @@ export class UserStore {
 
   setCurrentUser(user) {
     this.currentUser = new User(this, { anonymous: user.anon, locale: user.locale, tenant: new Tenant(this, user.tenant) });
+  }
+
+  setUserRedirectUrl(url) {
+    this.redirectUrl = url;
+  }
+
+  getUserRedirectUrl() {
+    return this.redirectUrl;
   }
 
   /**

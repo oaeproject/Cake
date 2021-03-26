@@ -28,6 +28,8 @@ export class Homepage {
   componentWillLoad() {
     const userStore = rootStore.userStore;
     const redirectUrl = getRedirectUrl();
+    userStore.setUserRedirectUrl(redirectUrl);
+
     // TODO debug
     console.log(`redirectUrl: ${redirectUrl}`);
 

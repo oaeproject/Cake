@@ -50,9 +50,6 @@ export class HomeNav {
   }
 
   render() {
-    // TODO debug
-    console.log(this.authStrategyInfo.enabledExternalStrategies);
-
     let externalAuth: any;
     if (this.authStrategyInfo.hasExternalAuth) {
       externalAuth = pipe(
@@ -63,15 +60,7 @@ export class HomeNav {
 
     let localAuth;
     if (this.authStrategyInfo.hasLocalAuth) {
-      localAuth = (
-        <form>
-          <mwc-textfield id="username" minlength="3" maxlength="64" placeholder="Username" required></mwc-textfield>
-          <mwc-textfield type="password" id="password" minlength="3" maxlength="64" placeholder="Password" required></mwc-textfield>
-          <mwc-button id="primary-action-button" slot="primaryAction">
-            Sign in
-          </mwc-button>
-        </form>
-      );
+      localAuth = <local-auth-strategy enabledStrategies={this.authStrategyInfo.enabledStrategies} />;
     }
 
     return (

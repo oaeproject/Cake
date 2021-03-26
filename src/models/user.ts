@@ -7,7 +7,7 @@ export class User {
   tenant: Tenant;
   locale: string;
 
-  constructor(store, userData) {
+  constructor(store, { anonymous, locale, tenant }: { anonymous: boolean; locale: string; tenant: Tenant }) {
     // TODO do we need all these attributes to be observable?
     makeAutoObservable(this, {
       anonymous: observable,
@@ -17,9 +17,9 @@ export class User {
     });
     this.store = store;
 
-    this.anonymous = userData.anonymous;
-    this.locale = userData.locale;
-    this.tenant = userData.tenant;
+    this.anonymous = anonymous;
+    this.locale = locale;
+    this.tenant = tenant;
   }
 
   get asBackend() {

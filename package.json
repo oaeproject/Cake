@@ -28,6 +28,7 @@
     "xo": "^0.38.2"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.3",
     "@material/mwc-button": "^0.20.0",
     "@material/mwc-dialog": "^0.20.0",
     "@material/mwc-textfield": "^0.20.0",

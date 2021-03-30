@@ -1,5 +1,8 @@
 import { computed, autorun, makeAutoObservable, observable, flow, action } from 'mobx';
 
+import anylogger from 'anylogger';
+const log = anylogger('user-store');
+
 import { Tenant } from '../models/tenant';
 import { User } from '../models/user';
 import { RootStore } from './root-store';
@@ -7,6 +10,7 @@ import { RootStore } from './root-store';
 export class UserStore {
   rootStore: RootStore;
   currentUser: User;
+  redirectUrl: string;
 
   constructor(rootStore) {
     // TODO do we need all these attributes to be observable?
@@ -26,6 +30,14 @@ export class UserStore {
     this.currentUser = new User(this, { anonymous: user.anon, locale: user.locale, tenant: new Tenant(this, user.tenant) });
   }
 
+  setUserRedirectUrl(url) {
+    this.redirectUrl = url;
+  }
+
+  getUserRedirectUrl() {
+    return this.redirectUrl;
+  }
+
   /**
    * Using flow instead of async / await
    * Check more info here:
@@ -37,8 +49,7 @@ export class UserStore {
       const data = yield response.json();
       return data;
     } catch (error: unknown) {
-      // TODO better error handling
-      console.error(error);
+      log.error(`Unable to get current user from the API`, error);
     }
   }
 

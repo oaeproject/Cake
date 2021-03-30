@@ -29,6 +29,9 @@ export namespace Components {
     }
     interface HomeSearch {
     }
+    interface LocalAuthStrategy {
+        "enabledStrategies": any;
+    }
     interface OaeDashboard {
     }
     interface OaeGroups {
@@ -101,6 +104,12 @@ declare global {
     var HTMLHomeSearchElement: {
         prototype: HTMLHomeSearchElement;
         new (): HTMLHomeSearchElement;
+    };
+    interface HTMLLocalAuthStrategyElement extends Components.LocalAuthStrategy, HTMLStencilElement {
+    }
+    var HTMLLocalAuthStrategyElement: {
+        prototype: HTMLLocalAuthStrategyElement;
+        new (): HTMLLocalAuthStrategyElement;
     };
     interface HTMLOaeDashboardElement extends Components.OaeDashboard, HTMLStencilElement {
     }
@@ -199,6 +208,7 @@ declare global {
         "external-auth-strategy": HTMLExternalAuthStrategyElement;
         "home-nav": HTMLHomeNavElement;
         "home-search": HTMLHomeSearchElement;
+        "local-auth-strategy": HTMLLocalAuthStrategyElement;
         "oae-dashboard": HTMLOaeDashboardElement;
         "oae-groups": HTMLOaeGroupsElement;
         "oae-groups-avatar": HTMLOaeGroupsAvatarElement;
@@ -239,6 +249,9 @@ declare namespace LocalJSX {
         "tenantLogo"?: string;
     }
     interface HomeSearch {
+    }
+    interface LocalAuthStrategy {
+        "enabledStrategies"?: any;
     }
     interface OaeDashboard {
     }
@@ -282,6 +295,7 @@ declare namespace LocalJSX {
         "external-auth-strategy": ExternalAuthStrategy;
         "home-nav": HomeNav;
         "home-search": HomeSearch;
+        "local-auth-strategy": LocalAuthStrategy;
         "oae-dashboard": OaeDashboard;
         "oae-groups": OaeGroups;
         "oae-groups-avatar": OaeGroupsAvatar;
@@ -309,6 +323,7 @@ declare module "@stencil/core" {
             "external-auth-strategy": LocalJSX.ExternalAuthStrategy & JSXBase.HTMLAttributes<HTMLExternalAuthStrategyElement>;
             "home-nav": LocalJSX.HomeNav & JSXBase.HTMLAttributes<HTMLHomeNavElement>;
             "home-search": LocalJSX.HomeSearch & JSXBase.HTMLAttributes<HTMLHomeSearchElement>;
+            "local-auth-strategy": LocalJSX.LocalAuthStrategy & JSXBase.HTMLAttributes<HTMLLocalAuthStrategyElement>;
             "oae-dashboard": LocalJSX.OaeDashboard & JSXBase.HTMLAttributes<HTMLOaeDashboardElement>;
             "oae-groups": LocalJSX.OaeGroups & JSXBase.HTMLAttributes<HTMLOaeGroupsElement>;
             "oae-groups-avatar": LocalJSX.OaeGroupsAvatar & JSXBase.HTMLAttributes<HTMLOaeGroupsAvatarElement>;

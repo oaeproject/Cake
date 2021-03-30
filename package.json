@@ -33,8 +33,10 @@
     "@material/mwc-dialog": "^0.20.0",
     "@material/mwc-textfield": "^0.20.0",
     "@webcomponents/webcomponentsjs": "^2.5.0",
+    "anylogger": "^1.0.10",
     "mobx": "6.1.8",
-    "ramda": "latest"
+    "ramda": "latest",
+    "ulog": "^2.0.0-beta.18"
   },
   "xo": {
     "prettier": true,

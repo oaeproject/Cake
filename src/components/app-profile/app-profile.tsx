@@ -27,13 +27,6 @@ export class AppProfile {
       </ion-header>,
 
       <ion-content class="ion-padding">
-<<<<<<< HEAD
-        <p>
-        </p>
-=======
-        <p>Hi! My name is {this.formattedName()}. My name was passed in through a route param!</p>
->>>>>>> a766095abca4babe83010ae12c5eb6b8aaf1507c
-
         <ion-item>
           <ion-label>Setting ({this.state.toString()})</ion-label>
           <ion-toggle checked={this.state} onIonChange={ev => (this.state = ev.detail.checked)} />

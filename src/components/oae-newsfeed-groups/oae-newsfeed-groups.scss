@@ -44,12 +44,6 @@ p.user-info {
   padding: 10px;
 }
 
-.news-feed-file {
-  margin-left: 60px;
-  margin-right: 65px;
-  width: auto;
-}
-
 .news-feed-top {
   margin-bottom: 0;
 }
@@ -77,16 +71,6 @@ p.user-info {
     color: #2962ff;
     background-color: #f5f7ff;
     text-decoration: underline;
-  }
-}
-
-.feed-user-link {
-  text-decoration: underline;
-  color: #2962ff;
-  font-weight: bold;
-  &:hover {
-    background-color: #f5f7ff;
-    color: #2962ff;
   }
 }
 
@@ -150,12 +134,6 @@ p.user-info {
 .icon-feed {
   color: #272b2e;
   margin-left: 5px;
-}
-
-.icon-feed-file {
-  color: #272b2e;
-  margin-left: 5px;
-  transform: rotate(90deg);
 }
 
 .news-pin {

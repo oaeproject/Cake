@@ -12,7 +12,6 @@ import { Listen, State, Prop, Component, h, Element } from '@stencil/core';
 import '@material/mwc-button';
 import '@material/mwc-textfield';
 
-import rootStore from '../../stores/root-store';
 import { equals, defaultTo, prop, compose, isEmpty, not } from 'ramda';
 const isNotEmpty = compose(not, isEmpty);
 

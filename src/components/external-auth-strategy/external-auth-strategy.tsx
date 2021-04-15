@@ -10,7 +10,7 @@ const log = anylogger('external-auth-strategy');
 })
 export class ExternalAuthStrategy {
   @Prop() name: string;
-  @Prop() id: string;
+  @Prop() identifier: string;
   @Prop() url: string;
   @Prop() icon: string;
   @Prop() redirectUrl: string;
@@ -35,7 +35,7 @@ export class ExternalAuthStrategy {
   }
 
   render() {
-    const socialButtonClass = `${this.id} button is-round signIn-button`;
+    const socialButtonClass = `${this.identifier} button is-round signIn-button`;
     return (
       <form action={this.url} method="POST">
         <input type="hidden" name="invitationToken" value={this.invitationToken} />

@@ -1,4 +1,4 @@
-import { computed, observable, makeAutoObservable } from 'mobx';
+import { makeAutoObservable } from 'mobx';
 
 export class Tenant {
   store: null;

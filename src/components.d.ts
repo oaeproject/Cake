@@ -15,7 +15,7 @@ export namespace Components {
     }
     interface ExternalAuthStrategy {
         "icon": string;
-        "id": string;
+        "identifier": string;
         "invitationEmail": string;
         "invitationToken": string;
         "name": string;
@@ -60,6 +60,8 @@ export namespace Components {
     interface OaeLibraryTable {
     }
     interface OaeNewsfeed {
+    }
+    interface OaeNewsfeedGroups {
     }
     interface OaeSidebar {
         "avatar": string;
@@ -189,6 +191,12 @@ declare global {
         prototype: HTMLOaeNewsfeedElement;
         new (): HTMLOaeNewsfeedElement;
     };
+    interface HTMLOaeNewsfeedGroupsElement extends Components.OaeNewsfeedGroups, HTMLStencilElement {
+    }
+    var HTMLOaeNewsfeedGroupsElement: {
+        prototype: HTMLOaeNewsfeedGroupsElement;
+        new (): HTMLOaeNewsfeedGroupsElement;
+    };
     interface HTMLOaeSidebarElement extends Components.OaeSidebar, HTMLStencilElement {
     }
     var HTMLOaeSidebarElement: {
@@ -222,6 +230,7 @@ declare global {
         "oae-library-mosaic": HTMLOaeLibraryMosaicElement;
         "oae-library-table": HTMLOaeLibraryTableElement;
         "oae-newsfeed": HTMLOaeNewsfeedElement;
+        "oae-newsfeed-groups": HTMLOaeNewsfeedGroupsElement;
         "oae-sidebar": HTMLOaeSidebarElement;
         "oae-tag": HTMLOaeTagElement;
     }
@@ -236,7 +245,7 @@ declare namespace LocalJSX {
     }
     interface ExternalAuthStrategy {
         "icon"?: string;
-        "id"?: string;
+        "identifier"?: string;
         "invitationEmail"?: string;
         "invitationToken"?: string;
         "name"?: string;
@@ -282,6 +291,8 @@ declare namespace LocalJSX {
     }
     interface OaeNewsfeed {
     }
+    interface OaeNewsfeedGroups {
+    }
     interface OaeSidebar {
         "avatar"?: string;
         "image"?: string;
@@ -309,6 +320,7 @@ declare namespace LocalJSX {
         "oae-library-mosaic": OaeLibraryMosaic;
         "oae-library-table": OaeLibraryTable;
         "oae-newsfeed": OaeNewsfeed;
+        "oae-newsfeed-groups": OaeNewsfeedGroups;
         "oae-sidebar": OaeSidebar;
         "oae-tag": OaeTag;
     }
@@ -337,6 +349,7 @@ declare module "@stencil/core" {
             "oae-library-mosaic": LocalJSX.OaeLibraryMosaic & JSXBase.HTMLAttributes<HTMLOaeLibraryMosaicElement>;
             "oae-library-table": LocalJSX.OaeLibraryTable & JSXBase.HTMLAttributes<HTMLOaeLibraryTableElement>;
             "oae-newsfeed": LocalJSX.OaeNewsfeed & JSXBase.HTMLAttributes<HTMLOaeNewsfeedElement>;
+            "oae-newsfeed-groups": LocalJSX.OaeNewsfeedGroups & JSXBase.HTMLAttributes<HTMLOaeNewsfeedGroupsElement>;
             "oae-sidebar": LocalJSX.OaeSidebar & JSXBase.HTMLAttributes<HTMLOaeSidebarElement>;
             "oae-tag": LocalJSX.OaeTag & JSXBase.HTMLAttributes<HTMLOaeTagElement>;
         }

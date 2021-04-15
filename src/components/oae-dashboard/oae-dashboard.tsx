@@ -13,9 +13,7 @@ export class Dashboard {
       <oae-layout>
         <div>
           <oae-newsfeed></oae-newsfeed>
-          <oae-newsfeed></oae-newsfeed>
-          <oae-newsfeed></oae-newsfeed>
-          <oae-newsfeed></oae-newsfeed>
+          <oae-newsfeed-groups></oae-newsfeed-groups>
         </div>
       </oae-layout>
     );

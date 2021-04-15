@@ -25,14 +25,14 @@ export class NewsFeed {
                   </figure>
                   <section>
                     <p class="user-info">
-                      <a class="feed-user">Michael Brown</a>
-                      uploaded a file
-                      <span class="panel-icon icon-feed">
-                        <iron-icon icon="icons:cloud-upload"></iron-icon>
+                      <a class="feed-user">Michael Brown </a>
+                      uploaded a file to  <a class="feed-user">Design Matters</a>
+                      <span class="panel-icon icon-feed-file">
+                        <iron-icon icon="icons:attachment"></iron-icon>
                       </span>
                     </p>
                     <p>
-                      23 March 2017
+                      29 March 2021
                     </p>
                   </section>
                 </div>
@@ -53,7 +53,9 @@ export class NewsFeed {
             <p>
               Here is the briefing for that group assignment we talked about.
             </p>
-            <oae-tag></oae-tag>
+          </section>
+          <section class="column news-feed-file">
+            <a class="feed-user-link">internship-report.pdf </a>
           </section>
           <nav class="level bottom-nav-news">
             <div class="level-left">

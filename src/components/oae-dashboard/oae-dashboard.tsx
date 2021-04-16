@@ -12,8 +12,10 @@ export class Dashboard {
     return (
       <oae-layout>
         <div>
+          <oae-newsfeed-folder></oae-newsfeed-folder>
           <oae-newsfeed></oae-newsfeed>
           <oae-newsfeed-groups></oae-newsfeed-groups>
+
         </div>
       </oae-layout>
     );

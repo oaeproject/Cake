@@ -21,14 +21,14 @@ export class NewsFeed {
               <div class="level-item">
                 <div class="column is-flex news-feed-nav">
                   <figure class="image avatar-news-feed">
-                    <img class="is-rounded avatar-news-feed" src="assets/images/avatar.jpg" />
+                    <img class="is-rounded avatar-news-feed" src="assets/images/avatar2.jpg" />
                   </figure>
                   <section>
                     <p class="user-info">
-                      <a class="feed-user">Michael Brown </a>
+                      <a class="feed-user">Olivia Bernard </a>
                       uploaded a file to  <a class="feed-user">Design Matters</a>
-                      <span class="panel-icon icon-feed-file">
-                        <iron-icon icon="icons:attachment"></iron-icon>
+                      <span class="comments-icon icon-feed">
+                        <iron-icon icon="icons:content-paste"></iron-icon>
                       </span>
                     </p>
                     <p>
@@ -56,6 +56,9 @@ export class NewsFeed {
           </section>
           <section class="column news-feed-file">
             <a class="feed-user-link">internship-report.pdf </a>
+            <span class="comments-icon">
+              <iron-icon icon="icons:get-app"></iron-icon>
+            </span>
           </section>
           <nav class="level bottom-nav-news">
             <div class="level-left">

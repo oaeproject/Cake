@@ -61,6 +61,8 @@ export namespace Components {
     }
     interface OaeNewsfeed {
     }
+    interface OaeNewsfeedFolder {
+    }
     interface OaeNewsfeedGroups {
     }
     interface OaeSidebar {
@@ -191,6 +193,12 @@ declare global {
         prototype: HTMLOaeNewsfeedElement;
         new (): HTMLOaeNewsfeedElement;
     };
+    interface HTMLOaeNewsfeedFolderElement extends Components.OaeNewsfeedFolder, HTMLStencilElement {
+    }
+    var HTMLOaeNewsfeedFolderElement: {
+        prototype: HTMLOaeNewsfeedFolderElement;
+        new (): HTMLOaeNewsfeedFolderElement;
+    };
     interface HTMLOaeNewsfeedGroupsElement extends Components.OaeNewsfeedGroups, HTMLStencilElement {
     }
     var HTMLOaeNewsfeedGroupsElement: {
@@ -230,6 +238,7 @@ declare global {
         "oae-library-mosaic": HTMLOaeLibraryMosaicElement;
         "oae-library-table": HTMLOaeLibraryTableElement;
         "oae-newsfeed": HTMLOaeNewsfeedElement;
+        "oae-newsfeed-folder": HTMLOaeNewsfeedFolderElement;
         "oae-newsfeed-groups": HTMLOaeNewsfeedGroupsElement;
         "oae-sidebar": HTMLOaeSidebarElement;
         "oae-tag": HTMLOaeTagElement;
@@ -291,6 +300,8 @@ declare namespace LocalJSX {
     }
     interface OaeNewsfeed {
     }
+    interface OaeNewsfeedFolder {
+    }
     interface OaeNewsfeedGroups {
     }
     interface OaeSidebar {
@@ -320,6 +331,7 @@ declare namespace LocalJSX {
         "oae-library-mosaic": OaeLibraryMosaic;
         "oae-library-table": OaeLibraryTable;
         "oae-newsfeed": OaeNewsfeed;
+        "oae-newsfeed-folder": OaeNewsfeedFolder;
         "oae-newsfeed-groups": OaeNewsfeedGroups;
         "oae-sidebar": OaeSidebar;
         "oae-tag": OaeTag;
@@ -349,6 +361,7 @@ declare module "@stencil/core" {
             "oae-library-mosaic": LocalJSX.OaeLibraryMosaic & JSXBase.HTMLAttributes<HTMLOaeLibraryMosaicElement>;
             "oae-library-table": LocalJSX.OaeLibraryTable & JSXBase.HTMLAttributes<HTMLOaeLibraryTableElement>;
             "oae-newsfeed": LocalJSX.OaeNewsfeed & JSXBase.HTMLAttributes<HTMLOaeNewsfeedElement>;
+            "oae-newsfeed-folder": LocalJSX.OaeNewsfeedFolder & JSXBase.HTMLAttributes<HTMLOaeNewsfeedFolderElement>;
             "oae-newsfeed-groups": LocalJSX.OaeNewsfeedGroups & JSXBase.HTMLAttributes<HTMLOaeNewsfeedGroupsElement>;
             "oae-sidebar": LocalJSX.OaeSidebar & JSXBase.HTMLAttributes<HTMLOaeSidebarElement>;
             "oae-tag": LocalJSX.OaeTag & JSXBase.HTMLAttributes<HTMLOaeTagElement>;

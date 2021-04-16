@@ -27,7 +27,7 @@ export class NewsFeed {
                                     <section>
                                         <p class="user-info">
                                             <a class="feed-user">Michael Brown </a>
-                      created group <a class="feed-user"> Design Matters</a>
+                      created group <a class="feed-user">internship</a>
                                             <span class="panel-icon icon-feed">
                                                 <iron-icon icon="social:group"></iron-icon>
                                             </span>

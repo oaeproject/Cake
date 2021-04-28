@@ -1,29 +1,31 @@
-import { computed, observable, makeAutoObservable } from 'mobx';
+// import { computed, observable, makeAutoObservable } from 'mobx';
+import { prop } from "ramda";
 
 export class Tenant {
   store: null;
   alias: string;
-  displayName = 'interwebs';
+  displayName: string;
   isGuestTenant: boolean;
   isPrivate: boolean;
   emailDomains: string[];
 
-  constructor(store, tenantData) {
+  constructor(tenantData) {
     // TODO do we need all these attributes to be observable?
+    /*
     makeAutoObservable(this, {
       // alias: observable,
-      // displayName: observable,
-      // isGuestTenant: observable,
-      // isPrivate: observable,
-      // asBackend: computed,
+      displayName: observable,
+      isGuestTenant: observable,
+      isPrivate: observable,
+      asBackend: computed,
     });
-    this.store = store;
+    */
 
-    this.alias = tenantData.alias;
-    this.displayName = tenantData.displayName;
-    this.isGuestTenant = tenantData.isGuestTenant;
-    this.isPrivate = tenantData.isPrivate;
-    this.emailDomains = tenantData.emailDomains;
+    this.alias = prop("alias", tenantData);
+    this.displayName = prop("displayName", tenantData);
+    this.isGuestTenant = prop("isGuestTenant", tenantData);
+    this.isPrivate = prop("isPrivate", tenantData);
+    this.emailDomains = prop("emailDomains", tenantData);
   }
 
   get asBackend() {

@@ -2,6 +2,7 @@ import { Tenant } from "./tenant";
 
 import {
   has,
+  defaultTo,
   __,
   prop,
   assoc,
@@ -133,7 +134,7 @@ export class User {
     this.isGlobalAdmin = prop("isGlobalAdmin", userData);
     this.isTenantAdmin = prop("isTenantAdmin", userData);
     this.visibility = prop("visibility", userData);
-    this.isLoggedIn = not(prop("anon", userData));
+    this.isLoggedIn = not(defaultTo(true, prop("anon", userData)));
     this.anonymous = prop("anonymous", userData);
     this.locale = prop("locale", userData);
     this.lastModified = new Date(prop("lastModified", userData));

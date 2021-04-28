@@ -12,7 +12,7 @@ log.txt
 *.sublime-project
 *.sublime-workspace
 
-.stencil/
+public/build
 .idea/
 .vscode/
 .sass-cache/

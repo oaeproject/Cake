@@ -37,11 +37,11 @@ export default {
 	input: 'src/main.ts',
 	inlineDynamicImports: true,
 	output: {
-    sourcemap: true,
-    format: 'es',
-    name: 'app',
-    dir: 'public/build'
-  },
+		sourcemap: true,
+		format: 'iife',
+		name: 'app',
+		file: 'public/build/bundle.js'
+	},
 	plugins: [ scss(), json(),
 		svelte({
 			preprocess: sveltePreprocess({ sourceMap: !production }),

@@ -134,7 +134,6 @@ export class User {
     this.isGlobalAdmin = prop("isGlobalAdmin", userData);
     this.isTenantAdmin = prop("isTenantAdmin", userData);
     this.visibility = prop("visibility", userData);
-    this.isLoggedIn = not(defaultTo(true, prop("anon", userData)));
     this.isLoggedIn = not(Boolean(prop("anon", userData)));
     this.anonymous = prop("anonymous", userData);
     this.locale = prop("locale", userData);

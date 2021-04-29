@@ -1,7 +1,6 @@
 <script lang="ts">
   import ExternalAuthStrategy from "./ExternalAuthStrategy.svelte";
   import LocalAuthStrategy from "./LocalAuthStrategy.svelte";
-  import { values, pipe, last, split, equals } from "ramda";
   import { and, not, values, pipe, last, split, equals } from "ramda";
   import anylogger from "anylogger";
   import { afterUpdate, onMount } from "svelte";
@@ -38,7 +37,6 @@
   const getHeadingForDialog = () => `Sign in to ${$user.tenant.alias}`;
 
   afterUpdate(() => {
-    if (equals("true", goToLogin)) {
     const shouldOpenLoginWindow = equals("true", goToLogin);
     const isNotLoggedInYet = not($user.isLoggedIn);
     if (and(shouldOpenLoginWindow, isNotLoggedInYet)) {

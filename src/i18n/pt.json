@@ -1,5 +1,14 @@
 {
-  "page_title": "Título da página",
+  "page_title": "Bem vindo ao OAE",
+  "welcome_phrase": "Uma nova forma de partilhar, explorar e colaborar",
   "sign_in": "Entrar",
-  "sign_up": "Registar"
+  "sign_up": "Registar",
+  "cancel": "Cancelar",
+  "homeTopBar": {
+    "ALREADY_HAVE_AN_ACCOUNT": "Já tem conta?",
+    "SKIP_TOP_MENU": "Salte para o conteúdo [c]",
+    "SKIP_TOP_MENU_KEY": "c",
+    "SKIP_MENU_TARGET": "O conteúdo começa aqui",
+    "TOPNAV_ARIA_LABEL": "Barra de navegação universal"
+  }
 }

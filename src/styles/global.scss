@@ -9,7 +9,7 @@
 // Import a Google Font
 // Open Sans - Regular (400)
 // Open Sans - Bold (700)
-@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,700");
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
 
 $link: #0060df;
 
@@ -17,20 +17,20 @@ $link: #0060df;
 // @import "../node_modules/material-design-icons/iconfont/";
 
 // Bulma *ALL SASS imports
-@import "node_modules/bulma/sass/utilities/_all.sass";
-@import "node_modules/bulma/sass/grid/_all.sass";
-@import "node_modules/bulma/sass/utilities/_all.sass";
-@import "node_modules/bulma/sass/base/_all.sass";
-@import "node_modules/bulma/sass/form/_all.sass";
-@import "node_modules/bulma/sass/layout/_all.sass";
-@import "node_modules/bulma/sass/elements/_all.sass";
+@import 'node_modules/bulma/sass/utilities/_all.sass';
+@import 'node_modules/bulma/sass/grid/_all.sass';
+@import 'node_modules/bulma/sass/utilities/_all.sass';
+@import 'node_modules/bulma/sass/base/_all.sass';
+@import 'node_modules/bulma/sass/form/_all.sass';
+@import 'node_modules/bulma/sass/layout/_all.sass';
+@import 'node_modules/bulma/sass/elements/_all.sass';
 
 // Components
-@import "node_modules/bulma/sass/components/navbar.sass";
-@import "node_modules/bulma/sass/components/dropdown.sass";
-@import "node_modules/bulma/sass/components/modal.sass";
-@import "node_modules/bulma/sass/components/level.sass";
-@import "node_modules/bulma/sass/components/card.sass";
+@import 'node_modules/bulma/sass/components/navbar.sass';
+@import 'node_modules/bulma/sass/components/dropdown.sass';
+@import 'node_modules/bulma/sass/components/modal.sass';
+@import 'node_modules/bulma/sass/components/level.sass';
+@import 'node_modules/bulma/sass/components/card.sass';
 
 // Material Design Icons
 // Default Styles
@@ -84,26 +84,20 @@ html,
 body {
   margin: 0;
   height: 100%;
-  font-family: "Open Sans", sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: 1em;
   background-color: #f6f8f7;
 }
 * {
-  font-family: "Open Sans", sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: 1em;
 }
 
-.columns {
-  height: 100%;
-}
-
-// Main
-
 // Main Content
 .main-container {
-  height: 100vh;
   max-width: 100%;
   margin: 0;
+  display: flex;
 }
 
 .columns-container {
@@ -123,11 +117,6 @@ body {
 .menu {
   margin-top: 1em;
   min-height: 90vh;
-}
-
-// Main Wrapper
-.main-wrapper {
-  overflow-y: scroll;
 }
 
 // Main Content
@@ -152,7 +141,7 @@ ul.breadcrumb li {
 ul.breadcrumb li + li:before {
   padding: 8px;
   color: black;
-  content: "/\ ";
+  content: '/\ ';
 }
 
 ul.breadcrumb li a {
@@ -173,42 +162,42 @@ ul.breadcrumb li a:hover {
 }
 
 .facebook {
-  background-image: url("/assets/logos/facebook.svg");
+  background-image: url('/assets/logos/facebook.svg');
   background-repeat: no-repeat;
   background-position: right;
   background-size: auto;
 }
 
 .google {
-  background-image: url("/assets/logos/google.svg");
+  background-image: url('/assets/logos/google.svg');
   background-repeat: no-repeat;
   background-position: right;
   background-size: auto;
 }
 
 .twitter {
-  background-image: url("/assets/logos/twitter.svg");
+  background-image: url('/assets/logos/twitter.svg');
   background-size: auto;
   background-repeat: no-repeat;
   background-position: right;
 }
 
 .shibboleth {
-  background-image: url("/assets/logos/shibboleth.svg");
+  background-image: url('/assets/logos/shibboleth.svg');
   background-size: auto;
   background-repeat: no-repeat;
   background-position: right;
 }
 
 .cas {
-  background-image: url("/assets/logos/cas.png");
+  background-image: url('/assets/logos/cas.png');
   background-size: auto;
   background-repeat: no-repeat;
   background-position: right;
 }
 
 .ldap {
-  background-image: url("/assets/logos/ldap.png");
+  background-image: url('/assets/logos/ldap.png');
   background-size: auto;
   background-repeat: no-repeat;
   background-position: right;

@@ -179,13 +179,13 @@
   a.library,
   a.discussions,
   a.groups,
-  a.user-settings,
-  a.network {
+  a.user-settings {
     padding-left: 0.8em;
     &:hover {
       color: #0060df;
     }
   }
+
   .sidebar-dropdown {
     padding: 1%;
     margin-left: 1%;

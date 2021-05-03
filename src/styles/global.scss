@@ -82,8 +82,9 @@ dropdown-item.mdi:not(:empty)::before {
 // Structure
 html,
 body {
-  margin: 0;
   height: 100%;
+  padding: 0;
+  margin: 0;
   font-family: 'Open Sans', sans-serif;
   font-size: 1em;
   background-color: #f6f8f7;
@@ -96,6 +97,7 @@ body {
 // Main Content
 .main-container {
   max-width: 100%;
+  min-height: 100vh;
   margin: 0;
   display: flex;
 }

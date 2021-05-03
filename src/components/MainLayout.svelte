@@ -3,21 +3,21 @@
 </script>
 
 <div class="container main-container">
-    <div class="column sidebar">
-      <div class="menu sticky">
-        <Sidebar />
-      </div>
+  <div class="column sidebar">
+    <div class="menu sticky">
+      <Sidebar />
     </div>
-    <div class="column is-three-fifths main-wrapper">
-      <div class="column main-content">
-        <slot />
-      </div>
+  </div>
+  <div class="column is-three-fifths main-wrapper">
+    <div class="column main-content">
+      <slot />
     </div>
-    <div class="column right-sidebar">
-      <h1>Options</h1>
-    </div>
-  
+  </div>
+  <div class="column right-sidebar">
+    <h1>Options</h1>
+  </div>
 </div>
+
 
 <style lang="scss">
   .right-sidebar {

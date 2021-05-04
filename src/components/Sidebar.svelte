@@ -146,10 +146,9 @@
 <style lang="scss">
   .menu-list li {
     padding: 2%;
-    margin-left: 2%;
-    margin-bottom: 1%;
+    margin-top: 2%;
     border-radius: 5px;
-    height: 30px;
+    height: 40px;
     color: #212121;
     display: flex;
     align-items: center;
@@ -175,15 +174,16 @@
     padding-left: 1%;
   }
 
-  a.dashboard,
-  a.library,
-  a.discussions,
-  a.groups,
-  a.user-settings {
+  a {
     padding-left: 0.8em;
     &:hover {
       color: #0060df;
     }
+  }
+
+  .sidebar-divider {
+    margin-top: 8%;
+    margin-bottom: 8%;
   }
 
   .sidebar-dropdown {

@@ -14,7 +14,6 @@
     </div>
   </div>
   <div class="column right-sidebar">
-    <h1>Options</h1>
   </div>
 </div>
 

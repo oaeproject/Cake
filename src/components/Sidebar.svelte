@@ -1,20 +1,20 @@
 <script lang="ts">
-  import '@polymer/iron-icons/iron-icons.js';
-  import '@polymer/iron-icons/social-icons.js';
-  import '@polymer/iron-icons/av-icons.js';
+  import "@polymer/iron-icons/iron-icons.js";
+  import "@polymer/iron-icons/social-icons.js";
+  import "@polymer/iron-icons/av-icons.js";
 
-  import anylogger from 'anylogger';
-  import { useNavigate } from 'svelte-navigator';
-  import { authenticationAPI } from '../helpers/authentication';
-  import { equals } from 'ramda';
-  import { user } from '../stores/user';
+  import anylogger from "anylogger";
+  import { useNavigate } from "svelte-navigator";
+  import { authenticationAPI } from "../helpers/authentication";
+  import { equals } from "ramda";
+  import { user } from "../stores/user";
 
   const navigate = useNavigate();
   const askAuthAPI = authenticationAPI();
   const { logout } = askAuthAPI;
 
-  const log = anylogger('sidebar');
-  const oaeLogo = `/assets/logos/oae-logo.svg`;
+  const log = anylogger("sidebar");
+  const oaeLogo = "/assets/logos/oae-logo.svg";
   // TODO use default image if no avatar defined
 
   const didLogout = equals(200);

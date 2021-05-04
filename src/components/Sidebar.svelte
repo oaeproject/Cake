@@ -14,7 +14,7 @@
   const { logout } = askAuthAPI;
 
   const log = anylogger("sidebar");
-  const oaeLogo = `/assets/logos/oae-logo.svg`;
+  const oaeLogo = "/assets/logos/oae-logo.svg";
   // TODO use default image if no avatar defined
 
   const didLogout = equals(200);
@@ -23,7 +23,7 @@
     try {
       const status = await logout();
       if (didLogout(status)) {
-        navigate("/");
+        navigate('/');
       } else {
         // TODO: trouble logging out
         log.warn(`Logout returned unexpected status: ${status}`);
@@ -46,11 +46,7 @@
       <div class="level-item">
         <div class="dropdown is-hoverable">
           <div class="dropdown-trigger">
-            <button
-              class="button dropdown-sidebar"
-              aria-haspopup="true"
-              aria-controls="dropdown-menu4"
-            >
+            <button class="button dropdown-sidebar" aria-haspopup="true" aria-controls="dropdown-menu4">
               <span>Home</span>
               <span class="icon is-small">
                 <i class="fas fa-angle-down" aria-hidden="true" />
@@ -61,8 +57,7 @@
             <div class="dropdown-content">
               <div class="dropdown-item">
                 <p>
-                  You can insert <strong>any type of content</strong> within the
-                  dropdown menu.
+                  You can insert <strong>any type of content</strong> within the dropdown menu.
                 </p>
               </div>
             </div>
@@ -124,45 +119,24 @@
       <div class="level-left">
         <div class="level-item">
           <figure class="image is-48x48">
-            <img
-              alt="user-avatar"
-              class="is-rounded"
-              src={$user.mediumPicture}
-            />
+            <img alt="user-avatar" class="is-rounded" src={$user.mediumPicture} />
           </figure>
         </div>
         <div class="level-item">
-          <div class="dropdown is-hoverable dropdown is-up">
-            <div class="dropdown-trigger">
-              <button
-                class="button dropdown-sidebar"
-                aria-haspopup="true"
-                aria-controls="dropdown-menu4"
-              >
-                <span>{$user.displayName}</span>
-                <span class="icon is-small">
-                  <i class="fas fa-angle-down" aria-hidden="true" />
-                </span>
-              </button>
-            </div>
-            <div class="dropdown-menu" id="dropdown-menu4" role="menu">
-              <div class="dropdown-content">
-                <div class="dropdown-item">
-                  <button class="button logout-button">
-                    <span class="icon">
-                      <iron-icon icon="power-settings-new" />
-                    </span>
-                    {#if $user.isLoggedIn}
-                      <span
-                        class="logout-button-text"
-                        on:click|preventDefault={logoutUser}>Logout</span
-                      >
-                    {/if}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+          <button class="button" aria-haspopup="true">
+            <span>{$user.displayName}</span>
+            <span class="icon is-small">
+              <i class="fas fa-angle-down" aria-hidden="true" />
+            </span>
+          </button>
+          <button class="button logout-button">
+            <span class="icon">
+              <iron-icon icon="power-settings-new" />
+            </span>
+            {#if $user.isLoggedIn}
+              <span class="logout-button-text" on:click|preventDefault={logoutUser}>Logout</span>
+            {/if}
+          </button>
         </div>
       </div>
     </nav>
@@ -205,13 +179,13 @@
   a.library,
   a.discussions,
   a.groups,
-  a.user-settings,
-  a.network {
+  a.user-settings {
     padding-left: 0.8em;
     &:hover {
       color: #0060df;
     }
   }
+
   .sidebar-dropdown {
     padding: 1%;
     margin-left: 1%;
@@ -246,11 +220,6 @@
     padding-left: 2%;
   }
 
-  .sidebar-notifications {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-  }
   // Footer
   .footer.sidebar-footer {
     position: absolute;

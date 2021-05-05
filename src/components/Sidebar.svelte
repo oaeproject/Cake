@@ -1,8 +1,4 @@
 <script lang="ts">
-  import "@polymer/iron-icons/iron-icons.js";
-  import "@polymer/iron-icons/social-icons.js";
-  import "@polymer/iron-icons/av-icons.js";
-
   import anylogger from "anylogger";
   import { useNavigate } from "svelte-navigator";
   import { authenticationAPI } from "../helpers/authentication";
@@ -70,7 +66,7 @@
   <ul class="menu-list">
     <li>
       <span class="icon sidebar-icon">
-        <iron-icon icon="cloud-upload" />
+        <i class="fas fa-chart-line"></i>
       </span>
       <a href="/dashboard" class="dashboard"> New File </a>
     </li>
@@ -87,13 +83,15 @@
       <a href="/groups" class="groups">Settings</a>
     </li>
   </ul>
-  <hr class="navbar-divider sidebar-divider" />
+  <p class="menu-label sidebar-label">
+    Navigation
+  </p>
   <ul class="menu-list">
     <li>
       <span class="icon sidebar-icon">
         <iron-icon icon="dashboard" />
       </span>
-      <a href="/dashboard" class="dashboard"> Dashboard </a>
+      <a href="/dashboard" class="dashboard"> Activity Feed </a>
     </li>
     <li>
       <span class="icon sidebar-icon">
@@ -181,10 +179,14 @@
     }
   }
 
-  .sidebar-divider {
-    margin-top: 8%;
-    margin-bottom: 8%;
-  }
+.sidebar-label {
+  margin-top: 8%;
+  color: #AEADAE;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  margin-left: 3%;
+  font-weight: 500;
+}
 
   .sidebar-dropdown {
     padding: 1%;

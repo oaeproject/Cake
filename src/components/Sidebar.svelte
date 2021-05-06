@@ -65,13 +65,13 @@
 
   <ul class="menu-list sidebar-topList">
     <li>
-      <span class="icon sidebar-icon is-medium">
+      <span class="icon sidebar-icon fa-lg">
         <i class="fas fa-cloud-upload-alt" />
       </span>
       <a href="/dashboard" class="dashboard"> Upload File </a>
     </li>
     <li>
-      <span class="icon sidebar-icon is-medium">
+      <span class="icon sidebar-icon fa-lg">
         <i class="fas fa-plus-circle" />
       </span>
       <a href="/library" class="library"> Create </a>
@@ -80,31 +80,31 @@
   <p class="menu-label sidebar-label">Navigation</p>
   <ul class="menu-list">
     <li>
-      <span class="icon sidebar-icon is-medium">
+      <span class="icon sidebar-icon fa-lg">
         <i class="fas fa-chart-line" />
       </span>
       <a href="/dashboard" class="dashboard"> Activity Feed </a>
     </li>
     <li>
-      <span class="icon sidebar-icon is-medium">
+      <span class="icon sidebar-icon fa-lg">
         <i class="fas fa-folder-open" />
       </span>
       <a href="/library" class="library"> Library </a>
     </li>
     <li>
-      <span class="icon sidebar-icon is-medium">
+      <span class="icon sidebar-icon fa-lg">
         <i class="fas fa-clipboard-list" />
       </span>
       <a href="/discussions" class="discussions"> Discussions </a>
     </li>
     <li>
-      <span class="icon sidebar-icon is-medium">
+      <span class="icon sidebar-icon fa-lg">
         <i class="fas fa-users" />
       </span>
       <a href="/groups" class="groups"> Groups </a>
     </li>
     <li>
-      <span class="icon sidebar-icon is-medium">
+      <span class="icon sidebar-icon fa-lg">
         <i class="fas fa-cog" />
       </span>
       <a href="/groups" class="groups">Settings</a>
@@ -148,7 +148,7 @@
     padding: 2%;
     margin-top: 2%;
     border-radius: 5px;
-    height: 40px;
+    height: 45px;
     display: flex;
     align-items: center;
     &:hover {
@@ -175,11 +175,11 @@
 }
 
   .menu-list span {
-    padding-left: 1%;
+    padding-left: 3%;
   }
 
   a {
-    padding-left: 0.8em;
+    padding-left: 1.3em;
     &:hover {
       color: #0060df;
     }

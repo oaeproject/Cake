@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { _ } from "svelte-i18n";
+  import { _, isLoading } from "svelte-i18n";
   import { onMount } from "svelte";
   import { prop } from "ramda";
   import HomeTopBar from "../components/HomeTopBar.svelte";
@@ -14,12 +14,22 @@
   import { authenticationAPI } from "../helpers/authentication";
   import { getRedirectUrl, getInvitationInfo } from "../helpers/utils";
   import { useFocus } from "svelte-navigator";
+  import { locale } from "svelte-i18n";
 
   let log = anylogger("homepage");
   const registerFocus = useFocus();
 
   let authenticationStrategy = {};
   export let goToLogin: string;
+
+  let pageTitle;
+  $: if ($isLoading) {
+    pageTitle = "...";
+  } else {
+    pageTitle = $_(
+      "packages.oae-core.footer.bundles.OPEN_ACADEMIC_ENVIRONMENT"
+    );
+  }
 
   onMount(async () => {
     redirectUrl.set(getRedirectUrl(document.location.toString()));
@@ -48,6 +58,8 @@
 
       // Get data on the user visiting
       user.set(await getCurrentUser());
+
+      locale.set($user.locale);
     } catch (error) {
       // TODO exception handling
       log.error(`Unable to fetch tenant configuration`, error);
@@ -55,27 +67,33 @@
   });
 </script>
 
-<section class="hero is-primary is-medium">
-  <HomeTopBar {goToLogin} {authenticationStrategy} />
-  <div class="hero-head" />
-  <div class="hero-body main-area">
-    <div class="container has-text-centered is-centered">
-      <p class="title homepage-title">
-        A new way to share, explore and connect
-      </p>
-      <home-search use:registerFocus />
+<svelte:head><title>{pageTitle}</title></svelte:head>
+
+{#if $isLoading}
+  Please wait...
+{:else}
+  <section class="hero is-primary is-medium">
+    <HomeTopBar {goToLogin} {authenticationStrategy} />
+    <div class="hero-head" />
+    <div class="hero-body main-area">
+      <div class="container has-text-centered is-centered">
+        <p class="title homepage-title">
+          {$_("shared.oae.bundles.ui.SUPPORTING_ACADEMIC_COLLABORATION")}
+        </p>
+        <home-search use:registerFocus />
+      </div>
     </div>
-  </div>
-  <div class="hero-body section1-area">
-    <div class="container has-text-centered is-centered">
-      <p class="subtitle">
-        The Open Academic Environment is the easiest way to communicate and
-        share files with your classmates. Whether you're a student, investigator
-        or professor, join us for free!
-      </p>
+    <div class="hero-body section1-area">
+      <div class="container has-text-centered is-centered">
+        <p class="subtitle">
+          The Open Academic Environment is the easiest way to communicate and
+          share files with your classmates. Whether you're a student,
+          investigator or professor, join us for free!
+        </p>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
+{/if}
 
 <style lang="scss">
   // Font Colour

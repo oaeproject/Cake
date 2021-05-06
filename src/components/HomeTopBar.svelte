@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { _ } from "svelte-i18n";
   import ExternalAuthStrategy from "./ExternalAuthStrategy.svelte";
   import LocalAuthStrategy from "./LocalAuthStrategy.svelte";
   import { and, not, values, pipe, last, split, equals } from "ramda";
@@ -100,16 +101,18 @@
                 />;
               {/if}
               <mwc-button slot="secondaryAction" dialogAction="close">
-                Cancel
+                {$_("shared.oae.bundles.ui.CANCEL")}
               </mwc-button>
             </mwc-dialog>
-            <a class="button is-round register-button" href="/">Register</a>
+            <a class="button is-round register-button" href="/"
+              >{$_("shared.oae.bundles.ui.SIGN_UP")}</a
+            >
             <a
               href="/"
               on:click|preventDefault={showSignInModal}
               class="button is-round signIn-button"
             >
-              Sign In
+              {$_("shared.oae.bundles.ui.SIGN_IN")}
             </a>
           </div>
         {/if}

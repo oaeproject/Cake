@@ -3,7 +3,7 @@
   import { useNavigate, useLocation, useFocus } from "svelte-navigator";
   import { getCurrentUser, user } from "../stores/user";
   import anylogger from "anylogger";
-
+  import { locale } from "svelte-i18n";
   let isChecking = true;
 
   const log = anylogger("private-route-guard");
@@ -21,6 +21,7 @@
   onMount(async () => {
     try {
       user.set(await getCurrentUser());
+      locale.set($user.locale);
     } catch {
       navigateToLogin();
     } finally {

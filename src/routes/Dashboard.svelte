@@ -10,13 +10,11 @@
   } from "../stores/activity";
   import NewsFeed from "../components/NewsFeed.svelte";
   import MainLayout from "../components/MainLayout.svelte";
-  import { getCurrentUser, user } from "../stores/user";
-
   const log = anylogger("oae-dashboard");
   const registerFocus = useFocus();
 
   onMount(async () => {
-    user.set(await getCurrentUser());
+    // user.set(await getCurrentUser());
     activities.set(await fetchUserActivities());
 
     // TODO debug

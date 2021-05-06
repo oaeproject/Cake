@@ -14,6 +14,7 @@
   import { authenticationAPI } from "../helpers/authentication";
   import { getRedirectUrl, getInvitationInfo } from "../helpers/utils";
   import { useFocus } from "svelte-navigator";
+  import { locale } from "svelte-i18n";
 
   let log = anylogger("homepage");
   const registerFocus = useFocus();
@@ -25,7 +26,9 @@
   $: if ($isLoading) {
     pageTitle = "...";
   } else {
-    pageTitle = $_("page_title");
+    pageTitle = $_(
+      "packages.oae-core.footer.bundles.OPEN_ACADEMIC_ENVIRONMENT"
+    );
   }
 
   onMount(async () => {
@@ -55,6 +58,8 @@
 
       // Get data on the user visiting
       user.set(await getCurrentUser());
+
+      locale.set($user.locale);
     } catch (error) {
       // TODO exception handling
       log.error(`Unable to fetch tenant configuration`, error);
@@ -73,7 +78,7 @@
     <div class="hero-body main-area">
       <div class="container has-text-centered is-centered">
         <p class="title homepage-title">
-          {$_("welcome_phrase")}
+          {$_("shared.oae.bundles.ui.SUPPORTING_ACADEMIC_COLLABORATION")}
         </p>
         <home-search use:registerFocus />
       </div>

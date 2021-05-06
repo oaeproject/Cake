@@ -1,16 +1,17 @@
 <script lang="ts">
-  import anylogger from 'anylogger';
-  import { useNavigate } from 'svelte-navigator';
-  import { authenticationAPI } from '../helpers/authentication';
-  import { equals } from 'ramda';
-  import { user } from '../stores/user';
+  import { _ } from "svelte-i18n";
+  import anylogger from "anylogger";
+  import { useNavigate } from "svelte-navigator";
+  import { authenticationAPI } from "../helpers/authentication";
+  import { equals } from "ramda";
+  import { user } from "../stores/user";
 
   const navigate = useNavigate();
   const askAuthAPI = authenticationAPI();
   const { logout } = askAuthAPI;
 
-  const log = anylogger('sidebar');
-  const oaeLogo = '/assets/logos/oae-logo.svg';
+  const log = anylogger("sidebar");
+  const oaeLogo = "/assets/logos/oae-logo.svg";
   // TODO use default image if no avatar defined
 
   const didLogout = equals(200);
@@ -19,7 +20,7 @@
     try {
       const status = await logout();
       if (didLogout(status)) {
-        navigate('/');
+        navigate("/");
       } else {
         // TODO: trouble logging out
         log.warn(`Logout returned unexpected status: ${status}`);
@@ -42,7 +43,11 @@
       <div class="level-item">
         <div class="dropdown is-hoverable">
           <div class="dropdown-trigger">
-            <button class="button dropdown-sidebar" aria-haspopup="true" aria-controls="dropdown-menu4">
+            <button
+              class="button dropdown-sidebar"
+              aria-haspopup="true"
+              aria-controls="dropdown-menu4"
+            >
               <span>Home</span>
               <span class="icon is-small">
                 <i class="fas fa-angle-down" aria-hidden="true" />
@@ -53,7 +58,8 @@
             <div class="dropdown-content">
               <div class="dropdown-item">
                 <p>
-                  You can insert <strong>any type of content</strong> within the dropdown menu.
+                  You can insert <strong>any type of content</strong> within the
+                  dropdown menu.
                 </p>
               </div>
             </div>
@@ -68,7 +74,9 @@
       <span class="icon sidebar-icon fa-lg">
         <i class="fas fa-cloud-upload-alt" />
       </span>
-      <a href="/dashboard" class="dashboard"> Upload File </a>
+      <a href="/dashboard" class="dashboard"
+        >{$_("packages.oae-core.upload.bundles.UPLOAD_FILES")}</a
+      >
     </li>
     <li>
       <span class="icon sidebar-icon fa-lg">
@@ -115,7 +123,11 @@
       <div class="level-left">
         <div class="level-item">
           <figure class="image is-48x48">
-            <img alt="user-avatar" class="is-rounded" src={$user.mediumPicture} />
+            <img
+              alt="user-avatar"
+              class="is-rounded"
+              src={$user.mediumPicture}
+            />
           </figure>
         </div>
         <div class="level-item">
@@ -130,7 +142,10 @@
               <iron-icon icon="power-settings-new" />
             </span>
             {#if $user.isLoggedIn}
-              <span class="logout-button-text" on:click|preventDefault={logoutUser}>Sign Out</span>
+              <span
+                class="logout-button-text"
+                on:click|preventDefault={logoutUser}>Sign Out</span
+              >
             {/if}
           </button>
         </div>
@@ -172,7 +187,7 @@
   li:hover a {
     color: white;
     font-weight: 500;
-}
+  }
 
   .menu-list span {
     padding-left: 3%;

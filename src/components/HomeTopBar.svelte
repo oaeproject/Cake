@@ -102,10 +102,12 @@
               {/if}
               <mwc-button slot="secondaryAction" dialogAction="close">
                 {$_("cancel")}
+                {$_("shared.oae.bundles.ui.CANCEL")}
               </mwc-button>
             </mwc-dialog>
             <a class="button is-round register-button" href="/"
               >{$_("sign_up")}</a
+              >{$_("shared.oae.bundles.ui.SIGN_UP")}</a
             >
             <a
               href="/"
@@ -113,6 +115,7 @@
               class="button is-round signIn-button"
             >
               {$_("sign_in")}
+              {$_("shared.oae.bundles.ui.SIGN_IN")}
             </a>
           </div>
         {/if}

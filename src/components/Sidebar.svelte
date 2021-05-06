@@ -1,16 +1,16 @@
 <script lang="ts">
-  import anylogger from "anylogger";
-  import { useNavigate } from "svelte-navigator";
-  import { authenticationAPI } from "../helpers/authentication";
-  import { equals } from "ramda";
-  import { user } from "../stores/user";
+  import anylogger from 'anylogger';
+  import { useNavigate } from 'svelte-navigator';
+  import { authenticationAPI } from '../helpers/authentication';
+  import { equals } from 'ramda';
+  import { user } from '../stores/user';
 
   const navigate = useNavigate();
   const askAuthAPI = authenticationAPI();
   const { logout } = askAuthAPI;
 
-  const log = anylogger("sidebar");
-  const oaeLogo = "/assets/logos/oae-logo.svg";
+  const log = anylogger('sidebar');
+  const oaeLogo = '/assets/logos/oae-logo.svg';
   // TODO use default image if no avatar defined
 
   const didLogout = equals(200);
@@ -63,51 +63,49 @@
     </div>
   </nav>
 
-  <ul class="menu-list">
+  <ul class="menu-list sidebar-topList">
     <li>
-      <span class="icon sidebar-icon">
-        <i class="fas fa-chart-line"></i>
+      <span class="icon sidebar-icon is-medium">
+        <i class="fas fa-cloud-upload-alt" />
       </span>
-      <a href="/dashboard" class="dashboard"> New File </a>
+      <a href="/dashboard" class="dashboard"> Upload File </a>
     </li>
     <li>
-      <span class="icon sidebar-icon">
-        <iron-icon icon="create" />
+      <span class="icon sidebar-icon is-medium">
+        <i class="fas fa-plus-circle" />
       </span>
       <a href="/library" class="library"> Create </a>
     </li>
     <li>
-      <span class="icon sidebar-icon">
-        <iron-icon icon="settings" />
+      <span class="icon sidebar-icon is-medium">
+        <i class="fas fa-cog" />
       </span>
       <a href="/groups" class="groups">Settings</a>
     </li>
   </ul>
-  <p class="menu-label sidebar-label">
-    Navigation
-  </p>
+  <p class="menu-label sidebar-label">Navigation</p>
   <ul class="menu-list">
     <li>
-      <span class="icon sidebar-icon">
-        <iron-icon icon="dashboard" />
+      <span class="icon sidebar-icon is-medium">
+        <i class="fas fa-chart-line" />
       </span>
       <a href="/dashboard" class="dashboard"> Activity Feed </a>
     </li>
     <li>
-      <span class="icon sidebar-icon">
-        <iron-icon icon="av:library-books" />
+      <span class="icon sidebar-icon is-medium">
+        <i class="fas fa-folder-open" />
       </span>
       <a href="/library" class="library"> Library </a>
     </li>
     <li>
-      <span class="icon sidebar-icon">
-        <iron-icon icon="content-paste" />
+      <span class="icon sidebar-icon is-medium">
+        <i class="fas fa-clipboard-list" />
       </span>
       <a href="/discussions" class="discussions"> Discussions </a>
     </li>
     <li>
-      <span class="icon sidebar-icon">
-        <iron-icon icon="social:people-outline" />
+      <span class="icon sidebar-icon is-medium">
+        <i class="fas fa-users" />
       </span>
       <a href="/groups" class="groups"> Groups </a>
     </li>
@@ -132,7 +130,7 @@
               <iron-icon icon="power-settings-new" />
             </span>
             {#if $user.isLoggedIn}
-              <span class="logout-button-text" on:click|preventDefault={logoutUser}>Logout</span>
+              <span class="logout-button-text" on:click|preventDefault={logoutUser}>Sign Out</span>
             {/if}
           </button>
         </div>
@@ -142,6 +140,10 @@
 </aside>
 
 <style lang="scss">
+  .sidebar-topList {
+    margin-top: 8%;
+  }
+
   .menu-list li {
     padding: 2%;
     margin-top: 2%;
@@ -179,18 +181,19 @@
     }
   }
 
-.sidebar-label {
-  margin-top: 8%;
-  color: #AEADAE;
-  text-transform: uppercase;
-  font-size: 0.8em;
-  margin-left: 3%;
-  font-weight: 500;
-}
+  .sidebar-label {
+    margin-top: 8%;
+    color: #aeadae;
+    text-transform: uppercase;
+    font-size: 0.8em;
+    margin-left: 3%;
+    font-weight: 500;
+  }
 
   .sidebar-dropdown {
     padding: 1%;
     margin-left: 1%;
+    margin-bottom: 5%;
   }
 
   // Sidebar Dropdown

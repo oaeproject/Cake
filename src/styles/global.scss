@@ -9,7 +9,7 @@
 // Import a Google Font
 // Open Sans - Regular (400)
 // Open Sans - Bold (700)
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
 $link: #0060df;
 
@@ -85,12 +85,12 @@ body {
   height: 100%;
   padding: 0;
   margin: 0;
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 1em;
   background-color: #f6f8f7;
 }
 * {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 1em;
 }
 
@@ -119,6 +119,8 @@ body {
 .menu {
   margin-top: 1em;
   min-height: 90vh;
+  padding-left: 0.3em;
+  padding-right: 0.3em;
 }
 
 // Main Content

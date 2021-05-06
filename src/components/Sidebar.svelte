@@ -76,12 +76,6 @@
       </span>
       <a href="/library" class="library"> Create </a>
     </li>
-    <li>
-      <span class="icon sidebar-icon is-medium">
-        <i class="fas fa-cog" />
-      </span>
-      <a href="/groups" class="groups">Settings</a>
-    </li>
   </ul>
   <p class="menu-label sidebar-label">Navigation</p>
   <ul class="menu-list">
@@ -108,6 +102,12 @@
         <i class="fas fa-users" />
       </span>
       <a href="/groups" class="groups"> Groups </a>
+    </li>
+    <li>
+      <span class="icon sidebar-icon is-medium">
+        <i class="fas fa-cog" />
+      </span>
+      <a href="/groups" class="groups">Settings</a>
     </li>
   </ul>
   <footer class="footer sidebar-footer">

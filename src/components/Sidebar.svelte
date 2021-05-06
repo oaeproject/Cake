@@ -191,7 +191,7 @@
     text-transform: uppercase;
     font-size: 0.8em;
     margin-left: 3%;
-    font-weight: 500;
+    font-weight: 600;
   }
 
   .sidebar-dropdown {

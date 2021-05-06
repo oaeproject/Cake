@@ -14,7 +14,6 @@
   const registerFocus = useFocus();
 
   onMount(async () => {
-    // user.set(await getCurrentUser());
     activities.set(await fetchUserActivities());
 
     // TODO debug

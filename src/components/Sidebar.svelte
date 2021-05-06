@@ -149,26 +149,30 @@
     margin-top: 2%;
     border-radius: 5px;
     height: 40px;
-    color: #212121;
     display: flex;
     align-items: center;
     &:hover {
-      color: #0060df;
-      background-color: #f6f8f7;
+      color: white;
+      background-color: #0060df;
     }
     &:active {
       color: #0060df;
-      background-color: #f6f8f7;
+      background-color: #0060df;
     }
     &:focus {
       color: #0060df;
-      background-color: #f6f8f7;
+      background-color: #0060df;
     }
   }
 
   .menu-list a {
     color: #212121;
   }
+
+  li:hover a {
+    color: white;
+    font-weight: 500;
+}
 
   .menu-list span {
     padding-left: 1%;

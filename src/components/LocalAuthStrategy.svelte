@@ -148,8 +148,9 @@
     bind:this={submitButton}
     id="submit-button"
     on:click={handleSubmit}
+    class="submit-button-style is-fullwidth"
   >
-    Sign in
+    Sign in to OAE
   </mwc-button>
 
   {#if formValidation.failed}
@@ -158,6 +159,7 @@
 </form>
 
 <style lang="scss">
+ 
   .wrong-credentials {
     color: red;
     font-weight: bold;

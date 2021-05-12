@@ -83,6 +83,7 @@
               bind:this={modalWindow}
               id="dialog"
               heading={getHeadingForDialog()}
+              open
             >
               {#if authenticationStrategy.hasExternalAuth}
                 {#each enabledExternalStrategies as eachStrategy}
@@ -98,7 +99,7 @@
               {#if authenticationStrategy.hasLocalAuth}
                 <LocalAuthStrategy
                   enabledStrategies={authenticationStrategy.enabledStrategies}
-                />;
+                />
               {/if}
               <mwc-button slot="secondaryAction" dialogAction="close">
                 {$_("shared.oae.bundles.ui.CANCEL")}
@@ -171,5 +172,9 @@
   // Experiments
   .warning {
     color: darkred;
+  }
+
+  #dialogue {
+    color: blue;
   }
 </style>

@@ -169,12 +169,4 @@
     }
   }
 
-  // Experiments
-  .warning {
-    color: darkred;
-  }
-
-  #dialogue {
-    color: blue;
-  }
 </style>

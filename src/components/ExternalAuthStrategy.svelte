@@ -5,7 +5,7 @@
 
   const log = anylogger('external-auth-strategy');
 
-  //export let name: string;
+  export let name: string;
   export let id: string;
   export let url: string;
   export let icon: string;
@@ -28,21 +28,32 @@
   };
 </script>
 
-<form on:submit|preventDefault={submitForm} action={url} method="POST" class="btn-group is-inline-flex is-align-items-center">
+<form on:submit|preventDefault={submitForm} action={url} method="POST" class="btn-group">
   <input type="hidden" name="invitationToken" bind:value={invitationToken} />
   <input type="hidden" name="invitationEmail" bind:value={invitationEmail} />
   <input type="hidden" name="redirectUrl" bind:value={$redirectUrl} />
 
   <div>
-    <button on:click={submitForm} href="/" class={`${id} button is-round is-light signIn-button is-multiline`}>
-      <i class={icon} />
+    <button on:click={submitForm} href="/" class={`${id} button is-light signIn-button is-multiline`}>
+      <span class="icon">
+        <i class={icon} />
+      </span>
+      <span>{name}</span>
     </button>
   </div>
 </form>
 
 <style lang="scss">
   .btn-group {
-    margin: 1em 0 1em 5%;
+    margin: 1em 0 0.5em 4.5em;
+  }
+
+  .signIn-button {
+    margin-bottom: 0;
+    
+    &:hover {
+    box-shadow: 0 1px 3px rgba(206, 212, 218, 1);
+    }
   }
 
   .icon {
@@ -52,9 +63,8 @@
   }
 
   .button.is-multiline {
-    min-width: 2em;
-    min-height: 1em;
+    min-width: 75%;
+    height: 25px;
     white-space: unset;
-    height: auto;
   }
 </style>

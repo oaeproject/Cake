@@ -84,14 +84,14 @@ const getEnabledStrategies = (
 
   const CASAuthSettings = {
     id: STRATEGY_CAS,
-    name: "with CAS",
+    name: "Sign in with CAS",
     url: "/api/auth/cas",
   };
 
   const facebookAuthSettings = {
     id: STRATEGY_FACEBOOK,
     icon: "facebook",
-    name: "with facebook",
+    name: "Sign in with Facebook",
     url: "/api/auth/facebook",
   };
 
@@ -100,14 +100,14 @@ const getEnabledStrategies = (
   const googleAuthSettings = {
     id: STRATEGY_GOOGLE,
     icon: "google-plus",
-    name: "with google",
+    name: "Sign in with Google",
     url: "/api/auth/google",
   };
 
   const googleAppsAuthSettings = {
     id: STRATEGY_GOOGLE_APPS,
     icon: "google-plus",
-    name: "with google apps",
+    name: "Sign in with Google Apps",
     url: "/api/auth/google",
   };
 
@@ -118,14 +118,14 @@ const getEnabledStrategies = (
 
   const shibbAuthSettings = {
     id: STRATEGY_SHIBBOLETH,
-    name: "with Shibboleth",
+    name: "Sign in with Shibboleth",
     url: "/api/auth/shibboleth",
   };
 
   const twitterAuthSettings = {
     id: STRATEGY_TWITTER,
     icon: "twitter",
-    name: "with twitter",
+    name: "Sign in with Twitter",
     url: "/api/auth/twitter",
   };
 

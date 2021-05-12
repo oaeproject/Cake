@@ -28,25 +28,29 @@
   };
 </script>
 
-<form on:submit|preventDefault={submitForm} action={url} method="POST" class="btn-group is-inline-flex">
+<form on:submit|preventDefault={submitForm} action={url} method="POST" class="btn-group is-inline-flex is-align-items-center">
   <input type="hidden" name="invitationToken" bind:value={invitationToken} />
   <input type="hidden" name="invitationEmail" bind:value={invitationEmail} />
   <input type="hidden" name="redirectUrl" bind:value={$redirectUrl} />
 
   <div>
-    <span on:click={submitForm} href="/" class={`${id} button is-round signIn-button is-multiline`}>
+    <button on:click={submitForm} href="/" class={`${id} button is-round is-light signIn-button is-multiline`}>
       <i class={icon} />
-    </span>
+    </button>
   </div>
 </form>
 
 <style lang="scss">
+  .btn-group {
+    margin: 1em 0 1em 5%;
+  }
+
   .icon {
     display: flex;
     justify-content: center;
     align-items: center;
   }
-  
+
   .button.is-multiline {
     min-width: 2em;
     min-height: 1em;

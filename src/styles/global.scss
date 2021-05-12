@@ -175,7 +175,7 @@ ul.breadcrumb li a:hover {
 .google {
   background-image: url('/assets/logos/google.svg');
   background-repeat: no-repeat;
-  background-position: right;
+  background-position: center;
   background-size: auto;
 }
 
@@ -183,19 +183,19 @@ ul.breadcrumb li a:hover {
   background-image: url('/assets/logos/twitter.svg');
   background-size: auto;
   background-repeat: no-repeat;
-  background-position: right;
+  background-position: center;
 }
 
 .shibboleth {
   background-image: url('/assets/logos/shibboleth.svg');
-  background-size: auto;
+  background-size: contain;
   background-repeat: no-repeat;
-  background-position: right;
+  background-position: center;
 }
 
 .cas {
   background-image: url('/assets/logos/cas.png');
-  background-size: auto;
+  background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
 }

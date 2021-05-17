@@ -85,7 +85,7 @@
               class="dialogue-buttons"
               heading={getHeadingForDialog()}
             >
-            <h1 class="modal-title">Sign in with OAE</h1>
+            <h1 class="modal-title">Sign in to OAE</h1>
               {#if authenticationStrategy.hasExternalAuth}
                 {#each enabledExternalStrategies as eachStrategy}
                   <ExternalAuthStrategy

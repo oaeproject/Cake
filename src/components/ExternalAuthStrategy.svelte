@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { _ } from 'svelte-i18n';
   import anylogger from 'anylogger';
   import { onMount } from 'svelte';
   import { redirectUrl, invitationInfo } from '../stores/user';
@@ -38,7 +39,7 @@
       <span class="icon">
         <i class={icon} />
       </span>
-      <span>{name}</span>
+      <span>{$_(name)}</span>
     </button>
   </div>
 </form>

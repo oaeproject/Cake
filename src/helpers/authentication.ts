@@ -84,14 +84,14 @@ const getEnabledStrategies = (
 
   const CASAuthSettings = {
     id: STRATEGY_CAS,
-    name: "Sign in with CAS",
+    name: "shared.oae.bundles.ui.SIGN_IN_WITH_CAS",
     url: "/api/auth/cas",
   };
 
   const facebookAuthSettings = {
     id: STRATEGY_FACEBOOK,
     icon: "facebook",
-    name: "Sign in with Facebook",
+    name: "shared.oae.bundles.ui.SIGN_IN_WITH_FACEBOOK",
     url: "/api/auth/facebook",
   };
 
@@ -100,32 +100,33 @@ const getEnabledStrategies = (
   const googleAuthSettings = {
     id: STRATEGY_GOOGLE,
     icon: "google-plus",
-    name: "Sign in with Google",
+    name: "shared.oae.bundles.ui.SIGN_IN_WITH_GOOGLE",
     url: "/api/auth/google",
   };
 
   const googleAppsAuthSettings = {
     id: STRATEGY_GOOGLE_APPS,
     icon: "google-plus",
-    name: "Sign in with Google Apps",
+    name: "shared.oae.bundles.ui.SIGN_IN_WITH_GOOGLE_APPS",
     url: "/api/auth/google",
   };
 
   const ldapAuthSettings = {
     id: STRATEGY_LDAP,
+    name: "shared.oae.bundles.ui.SIGN_IN_WITH_LDAP",
     url: "/api/auth/ldap",
   };
 
   const shibbAuthSettings = {
     id: STRATEGY_SHIBBOLETH,
-    name: "Sign in with Shibboleth",
+    name: "shared.oae.bundles.ui.SIGN_IN_WITH_SHIBBOLETH",
     url: "/api/auth/shibboleth",
   };
 
   const twitterAuthSettings = {
     id: STRATEGY_TWITTER,
     icon: "twitter",
-    name: "Sign in with Twitter",
+    name: "shared.oae.bundles.ui.SIGN_IN_WITH_TWITTER",
     url: "/api/auth/twitter",
   };
 

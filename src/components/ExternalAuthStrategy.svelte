@@ -45,14 +45,20 @@
 
 <style lang="scss">
   .btn-group {
-    margin: 1em 0 0.5em 4.5em;
+    margin: 1em 0 0.5em 2.5em;
   }
 
   .signIn-button {
     margin-bottom: 0;
-    
+    background-color:#F7F9FA;
+    border-radius: 2px;
+    border-color: #D1E0FF;
     &:hover {
-    box-shadow: 0 1px 3px rgba(206, 212, 218, 1);
+      box-shadow: 0 1px 2px rgba(206, 212, 218, 1);
+      background-color: white;
+      box-shadow: 0px 3px 10px #DCE2EE;
+      border-radius: 2px;
+      border-color: #D1E0FF;
     }
   }
 

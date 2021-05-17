@@ -122,46 +122,95 @@
     when(wasEnterKeyPressed, handleSubmit, event);
   };
 </script>
+<div id="or">or</div>
+<div class="form-entries is-fullwidth">
+  <form bind:this={localAuthForm} on:submit|preventDefault={handleSubmit}>
+    <h3>Username</h3>
+    <mwc-textfield
+      bind:this={usernameField}
+      on:keypress={onKeyPress}
+      dialogInitialFocus
+      id="username"
+      class="username-entry"
+      minlength="3"
+      maxlength="64"
+      placeholder="ex: JohnDoe"
+      required
+      stacked
+    />
+    <h3>Password</h3>
+    <mwc-textfield
+      bind:this={passwordField}
+      on:keypress={onKeyPress}
+      type="password"
+      id="password"
+      class="password-entry"
+      minlength="3"
+      maxlength="64"
+      placeholder="Password"
+      required
+      stacked
+    />
+    <mwc-button
+      bind:this={submitButton}
+      id="submit-button"
+      on:click={handleSubmit}
+      class="login-button"
+    >
+      Sign in to OAE
+    </mwc-button>
 
-<form bind:this={localAuthForm} on:submit|preventDefault={handleSubmit}>
-  <mwc-textfield
-    bind:this={usernameField}
-    on:keypress={onKeyPress}
-    dialogInitialFocus
-    id="username"
-    minlength="3"
-    maxlength="64"
-    placeholder="Username"
-    required
-  />
-  <mwc-textfield
-    bind:this={passwordField}
-    on:keypress={onKeyPress}
-    type="password"
-    id="password"
-    minlength="3"
-    maxlength="64"
-    placeholder="Password"
-    required
-  />
-  <mwc-button
-    bind:this={submitButton}
-    id="submit-button"
-    on:click={handleSubmit}
-    class="submit-button-style is-fullwidth"
-  >
-    Sign in to OAE
-  </mwc-button>
-
-  {#if formValidation.failed}
-    <div class="wrong-credentials">{formValidation.message}</div>
-  {/if}
-</form>
+    {#if formValidation.failed}
+      <div class="wrong-credentials">{formValidation.message}</div>
+    {/if}
+  </form>
+</div>
 
 <style lang="scss">
- 
+  #or {
+    position: relative;
+    width: 80%;
+    height: 50px;
+    margin-left: 8.5%;
+    line-height: 50px;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  #or::before,
+  #or::after {
+    position: absolute;
+    width: 130px;
+    height: 1px;
+    top: 24px;
+    background-color: #aaa;
+    content: '';
+  }
+
+  #or::before {
+    left: 0;
+  }
+
+  #or::after {
+    right: 0;
+  }
+
+  .username-entry,
+  .password-entry {
+    padding-right: 2%;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    width: 98%;
+  }
+
+  .login-button {
+    margin-top: 2%;
+  }
+
   .wrong-credentials {
-    color: red;
-    font-weight: bold;
+    font: Poppins;
+    color: #3A72E9;
+    margin-top: 5%;
+    font-weight: medium;
   }
 </style>

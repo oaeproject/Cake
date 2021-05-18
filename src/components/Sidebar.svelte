@@ -101,7 +101,7 @@
     </li>
     <li>
       <span class="icon sidebar-icon fa-lg">
-        <i class="fas fa-clipboard-list" />
+        <i class="fas fa-comments"></i>
       </span>
       <a href="/discussions" class="discussions"> Discussions </a>
     </li>

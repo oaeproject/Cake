@@ -35,7 +35,7 @@
     modalWindow.open = true;
   };
 
-  const getHeadingForDialog = () => `Sign in to ${$user.tenant.alias}`;
+  const getHeadingForDialog = () => `${$user.tenant.alias}`;
 
   afterUpdate(() => {
     const shouldOpenLoginWindow = equals("true", goToLogin);
@@ -82,8 +82,10 @@
             <mwc-dialog
               bind:this={modalWindow}
               id="dialog"
+              class="dialogue-buttons"
               heading={getHeadingForDialog()}
             >
+            <h1 class="modal-title">Sign in to OAE</h1>
               {#if authenticationStrategy.hasExternalAuth}
                 {#each enabledExternalStrategies as eachStrategy}
                   <ExternalAuthStrategy
@@ -98,11 +100,8 @@
               {#if authenticationStrategy.hasLocalAuth}
                 <LocalAuthStrategy
                   enabledStrategies={authenticationStrategy.enabledStrategies}
-                />;
+                />
               {/if}
-              <mwc-button slot="secondaryAction" dialogAction="close">
-                {$_("shared.oae.bundles.ui.CANCEL")}
-              </mwc-button>
             </mwc-dialog>
             <a class="button is-round register-button" href="/"
               >{$_("shared.oae.bundles.ui.SIGN_UP")}</a
@@ -168,8 +167,23 @@
     }
   }
 
-  // Experiments
-  .warning {
-    color: darkred;
+  .dialogue-buttons {
+    --mdc-theme-primary: blue;
+    --mdc-theme-on-primary: white;
+    --mdc-button-outline-color: rgba(20, 20, 200, .2);
+    --mdc-dialog-heading-ink-color: #C4C4C4;
+    width: 560px
   }
+  
+
+  .modal-title {
+    margin-top: 1%;
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 36px;
+    line-height: 72px;
+    color: #3A72E9;
+  }
+
 </style>

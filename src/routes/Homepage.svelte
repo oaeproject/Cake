@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   import { _, isLoading } from 'svelte-i18n';
   import { onMount } from 'svelte';
   import { prop } from 'ramda';
@@ -14,7 +14,7 @@
   const registerFocus = useFocus();
 
   let authenticationStrategy = {};
-  export let goToLogin: string;
+  export let goToLogin;
 
   let pageTitle;
   $: if ($isLoading) {
@@ -70,7 +70,9 @@
       <div class="container">
         <div class="columns">
           <div class="column is-half left-column">
-            <p>The <span>Open Academic Environment</span> is the easiest way to communicate and share files with your classmates.</p>
+            <p>
+              The <span>Open Academic Environment</span> is the easiest way to communicate and share files with your classmates.
+            </p>
             <button class="button is-medium button-register">
               <span class="icon">
                 <i class="fas fa-long-arrow-alt-right" />
@@ -98,6 +100,24 @@
   // Single Use
   @import url('https://fonts.googleapis.com/css?family=Roboto:700&display=swap');
   @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@800&display=swap');
+
+  .hero-body.main-area {
+    height: 100px;
+    overflow: hidden;
+    background-image: url('../assets/images/cool-background.svg');
+    background-repeat: no-repeat;
+    background-position: right;
+    background-size: cover;
+    background-color: white;
+  }
+
+  .img.background-img {
+    visibility: hidden;
+  }
+
+  .hero-body.section1-area {
+    background-color: hotpink;
+  }
 
   .hero-background {
     background-color: #f6f6f6;

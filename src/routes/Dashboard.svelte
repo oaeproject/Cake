@@ -1,23 +1,19 @@
-<script lang="ts">
-  import anylogger from "anylogger";
-  import "@polymer/iron-icons/iron-icons.js";
-  import { useFocus } from "svelte-navigator";
-  import { onMount } from "svelte";
-  import {
-    activities,
-    processedActivities,
-    fetchUserActivities,
-  } from "../stores/activity";
-  import NewsFeed from "../components/NewsFeed.svelte";
-  import MainLayout from "../components/MainLayout.svelte";
-  const log = anylogger("oae-dashboard");
+<script>
+  import anylogger from 'anylogger';
+  import '@polymer/iron-icons/iron-icons.js';
+  import { useFocus } from 'svelte-navigator';
+  import { onMount } from 'svelte';
+  import { activities, processedActivities, fetchUserActivities } from '../stores/activity';
+  import NewsFeed from '../components/NewsFeed.svelte';
+  import MainLayout from '../components/MainLayout.svelte';
+  const log = anylogger('oae-dashboard');
   const registerFocus = useFocus();
 
   onMount(async () => {
     activities.set(await fetchUserActivities());
 
     // TODO debug
-    log.warn("Processed activities:");
+    log.warn('Processed activities:');
     log.warn($processedActivities);
   });
 </script>
@@ -31,7 +27,7 @@
 </MainLayout>
 
 <style lang="scss">
-  @import "../styles/buttons.scss";
+  @import '../styles/buttons.scss';
 
   h3 {
     color: #212121;

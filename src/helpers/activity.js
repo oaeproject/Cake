@@ -1,7 +1,7 @@
 // import { humanize } from '@jsdevtools/humanize-anything';
-import { COMMENT_ACTIVITY_TYPES } from "../models/activity";
+import { COMMENT_ACTIVITY_TYPES } from '../models/activity';
 
-const humanizeActivityVerb = (verb: string) => {
+const humanizeActivityVerb = verb => {
   return ` ${verb}d`;
 };
 
@@ -30,9 +30,7 @@ const sortComments = function (a, b) {
   // Threadkeys will have the following format, primarily to allow for proper thread ordering:
   //  - Top level comments: <createdTimeStamp>|
   //  - Reply: <parentCreatedTimeStamp>#<createdTimeStamp>|
-  if (
-    a["oae:threadKey"].split("#").pop() < b["oae:threadKey"].split("#").pop()
-  ) {
+  if (a['oae:threadKey'].split('#').pop() < b['oae:threadKey'].split('#').pop()) {
     return 1;
   }
 
@@ -49,7 +47,7 @@ const sortComments = function (a, b) {
  */
 const find = function (comments, id) {
   for (let i = 0; i < comments.length; i++) {
-    if (comments[i]["oae:id"] === id) {
+    if (comments[i]['oae:id'] === id) {
       return comments[i];
     }
   }
@@ -93,7 +91,7 @@ const find = function (comments, id) {
  */
 const findComment = function (comments, comment) {
   // Find the "original" parent comment object
-  const originalComment = find(comments, comment["oae:id"]);
+  const originalComment = find(comments, comment['oae:id']);
 
   // Return the "original" comment object if there was one
   if (originalComment) {
@@ -130,15 +128,12 @@ const constructLatestCommentTree = function (comments) {
   if (comments[1]) {
     // If the next comment is not in the tree yet, we add it. This happens
     // when it's not the parent of the first comment
-    if (!find(latestComments, comments[1]["oae:id"])) {
+    if (!find(latestComments, comments[1]['oae:id'])) {
       latestComments.push(comments[1]);
 
       // If this comment has a parent that's not in the latestComments
       // set yet, we include it
-      if (
-        comments[1].inReplyTo &&
-        !find(latestComments, comments[1].inReplyTo["oae:id"])
-      ) {
+      if (comments[1].inReplyTo && !find(latestComments, comments[1].inReplyTo['oae:id'])) {
         latestComments.push(findComment(comments, comments[1].inReplyTo));
       }
 
@@ -146,10 +141,7 @@ const constructLatestCommentTree = function (comments) {
       // the parent of the first comment. It might still have a parent that
       // could be relevant to display in the activity stream though. If that
       // is the case, we will end up with a tree that is 3 levels deep
-    } else if (
-      comments[1].inReplyTo &&
-      !find(latestComments, comments[1].inReplyTo["oae:id"])
-    ) {
+    } else if (comments[1].inReplyTo && !find(latestComments, comments[1].inReplyTo['oae:id'])) {
       latestComments.push(findComment(comments, comments[1].inReplyTo));
     }
   }
@@ -170,20 +162,20 @@ const constructCommentTree = function (comments) {
   // Because this method gets called multiple times and there's no good way to deep clone
   // an array of objects in native JS, we ensure that any in-place edits to comment objects
   // in a previous run don't have an impact now
-  comments.forEach((comment) => {
+  comments.forEach(comment => {
     comment.replies = [];
   });
 
   // Construct a proper graph wherein each object in the top level array is a comment
   // If a comment has replies they will be made available on the `replies` property
   const commentTree = [];
-  comments.forEach((comment) => {
+  comments.forEach(comment => {
     // If this comment was a reply to another comment, we try to find that parent comment
     // and add the current comment as a reply to the parent. If the parent could not be found,
     // we add the comment as a top level comment. This can happen when we're rendering a tree
     // of the latest 4 comments for example
     if (comment.inReplyTo) {
-      const parent = find(comments, comment.inReplyTo["oae:id"]);
+      const parent = find(comments, comment.inReplyTo['oae:id']);
       if (parent) {
         parent.replies.push(comment);
       } else {
@@ -218,7 +210,7 @@ const flattenCommentTree = function (flatCommentTree, commentTree, _level = 0) {
   commentTree.sort(sortComments);
 
   // Visit each comment
-  commentTree.forEach((comment) => {
+  commentTree.forEach(comment => {
     // Ensure that the `published` timestamp is a number
     comment.published = parseInt(comment.published, 10);
 
@@ -249,24 +241,24 @@ const flattenCommentTree = function (flatCommentTree, commentTree, _level = 0) {
  */
 const prepareActivity = function (activity) {
   // Sort the entity collections based on whether or not they have a thumbnail
-  if (activity.actor["oae:collection"]) {
+  if (activity.actor['oae:collection']) {
     // Reverse the items so the item that was changed last is shown first
-    activity.actor["oae:collection"].reverse().sort(sortEntityCollection);
+    activity.actor['oae:collection'].reverse().sort(sortEntityCollection);
   }
 
-  if (activity.object && activity.object["oae:collection"]) {
+  if (activity.object && activity.object['oae:collection']) {
     // Reverse the items so the item that was changed last is shown first
-    activity.object["oae:collection"].reverse().sort(sortEntityCollection);
+    activity.object['oae:collection'].reverse().sort(sortEntityCollection);
   }
 
-  if (activity.target && activity.target["oae:collection"]) {
+  if (activity.target && activity.target['oae:collection']) {
     // Reverse the items so the item that was changed last is shown first
-    activity.target["oae:collection"].reverse().sort(sortEntityCollection);
+    activity.target['oae:collection'].reverse().sort(sortEntityCollection);
   }
 
   // We process the comments into an ordered set
-  if (COMMENT_ACTIVITY_TYPES.indexOf(activity["oae:activityType"]) !== -1) {
-    let comments = activity.object["oae:collection"];
+  if (COMMENT_ACTIVITY_TYPES.indexOf(activity['oae:activityType']) !== -1) {
+    let comments = activity.object['oae:collection'];
     if (!comments) {
       comments = [activity.object];
     }
@@ -284,20 +276,10 @@ const prepareActivity = function (activity) {
     // replies to, if any
     const allComments = constructCommentTree(comments);
 
-    activity.object.objectType = "comments";
-    activity.object["oae:collection"] = allComments;
+    activity.object.objectType = 'comments';
+    activity.object['oae:collection'] = allComments;
     activity.object.latestComments = latestComments;
   }
 };
 
-export {
-  humanizeActivityVerb,
-  sortEntityCollection,
-  sortComments,
-  find,
-  findComment,
-  constructLatestCommentTree,
-  constructCommentTree,
-  flattenCommentTree,
-  prepareActivity,
-};
+export { humanizeActivityVerb, sortEntityCollection, sortComments, find, findComment, constructLatestCommentTree, constructCommentTree, flattenCommentTree, prepareActivity };

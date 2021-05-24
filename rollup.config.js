@@ -5,7 +5,6 @@ import replace from "@rollup/plugin-replace";
 import livereload from "rollup-plugin-livereload";
 import { terser } from "rollup-plugin-terser";
 import sveltePreprocess from "svelte-preprocess";
-import typescript from "@rollup/plugin-typescript";
 import css from "rollup-plugin-css-only";
 import scss from "rollup-plugin-scss";
 import json from "@rollup/plugin-json";
@@ -38,7 +37,7 @@ function serve() {
 }
 
 export default {
-  input: "src/main.ts",
+  input: "src/main.js",
   inlineDynamicImports: true,
   output: {
     sourcemap: true,
@@ -75,10 +74,6 @@ export default {
         process.env.NODE_ENV === "production"
           ? JSON.stringify("production")
           : JSON.stringify("development"),
-    }),
-    typescript({
-      sourceMap: !production,
-      inlineSources: !production,
     }),
 
     // In dev mode, call `npm run start` once

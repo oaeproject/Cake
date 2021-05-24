@@ -1,5 +1,5 @@
-<script lang="ts">
-  import Sidebar from "../components/Sidebar.svelte";
+<script>
+  import Sidebar from '../components/Sidebar.svelte';
 </script>
 
 <div class="container main-container">
@@ -13,10 +13,8 @@
       <slot />
     </div>
   </div>
-  <div class="column right-sidebar">
-  </div>
+  <div class="column right-sidebar" />
 </div>
-
 
 <style lang="scss">
   .right-sidebar {

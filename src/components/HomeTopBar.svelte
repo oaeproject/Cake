@@ -1,35 +1,35 @@
-<script lang="ts">
-  import { _ } from "svelte-i18n";
-  import ExternalAuthStrategy from "./ExternalAuthStrategy.svelte";
-  import LocalAuthStrategy from "./LocalAuthStrategy.svelte";
-  import { and, not, values, pipe, last, split, equals } from "ramda";
-  import anylogger from "anylogger";
-  import { afterUpdate, onMount } from "svelte";
-  import { user } from "../stores/user";
+<script>
+  import { _ } from 'svelte-i18n';
+  import ExternalAuthStrategy from './ExternalAuthStrategy.svelte';
+  import LocalAuthStrategy from './LocalAuthStrategy.svelte';
+  import { and, not, values, pipe, last, split, equals } from 'ramda';
+  import anylogger from 'anylogger';
+  import { afterUpdate, onMount } from 'svelte';
+  import { user } from '../stores/user';
 
-  import "@material/mwc-dialog";
-  import "@material/mwc-button";
-  import "@material/mwc-textfield";
+  import '@material/mwc-dialog';
+  import '@material/mwc-button';
+  import '@material/mwc-textfield';
 
-  const log = anylogger("home-nav");
-  const DEFAULT_LOGO = "oae-logo.svg";
+  const log = anylogger('home-nav');
+  const DEFAULT_LOGO = 'oae-logo.svg';
 
-  export let goToLogin: string;
+  export let goToLogin;
   export let authenticationStrategy;
   $: {
-    enabledExternalStrategies = values(
-      authenticationStrategy.enabledExternalStrategies
-    );
+    enabledExternalStrategies = values(authenticationStrategy.enabledExternalStrategies);
   }
 
   let tenantLogo;
   let modalWindow;
-  let enabledExternalStrategies: {
-    id: string;
-    icon: string;
-    url: string;
-    name: string;
+  let enabledExternalStrategies;
+  /*: {
+    id, //: string;
+    icon, //: string;
+    url, //: string;
+    name, //: string;
   }[];
+  */
 
   const showSignInModal = () => {
     modalWindow.open = true;
@@ -38,7 +38,7 @@
   const getHeadingForDialog = () => `${$user.tenant.alias}`;
 
   afterUpdate(() => {
-    const shouldOpenLoginWindow = equals("true", goToLogin);
+    const shouldOpenLoginWindow = equals('true', goToLogin);
     const isNotLoggedInYet = not($user.isLoggedIn);
     if (and(shouldOpenLoginWindow, isNotLoggedInYet)) {
       showSignInModal();
@@ -47,15 +47,19 @@
 
   onMount(async () => {
     try {
-      const response = await fetch("/api/ui/logo");
+      const response = await fetch('/api/ui/logo');
       const text = await response.text();
 
       // TODO we need to change the backend to deliver the correct filepath if default
-      const isDefaultLogo = pipe(split("/"), last, equals(DEFAULT_LOGO))(text);
+      const isDefaultLogo = pipe(split('/'), last, equals(DEFAULT_LOGO))(text);
 
       let logoToDisplay;
       if (isDefaultLogo) {
+<<<<<<< HEAD
         logoToDisplay = "./assets/logos/logo-oae-dark.png";
+=======
+        logoToDisplay = './assets/logos/oae-logo.svg';
+>>>>>>> 11141bd (revert: removed ts using js instead)
       } else {
         logoToDisplay = text;
       }
@@ -79,30 +83,19 @@
           <span class="warning">{$user.displayName} is logged in</span>
         {:else}
           <div class="buttons">
-            <mwc-dialog
-              bind:this={modalWindow}
-              id="dialog"
-              class="dialogue-buttons"
-              heading={getHeadingForDialog()}
-            >
-            <h1 class="modal-title">Sign in to OAE</h1>
+            <mwc-dialog bind:this={modalWindow} id="dialog" class="dialogue-buttons" heading={getHeadingForDialog()}>
+              <h1 class="modal-title">Sign in to OAE</h1>
               {#if authenticationStrategy.hasExternalAuth}
                 {#each enabledExternalStrategies as eachStrategy}
-                  <ExternalAuthStrategy
-                    icon={eachStrategy.icon}
-                    id={eachStrategy.id}
-                    url={eachStrategy.url}
-                    name={eachStrategy.name}
-                  />
+                  <ExternalAuthStrategy icon={eachStrategy.icon} id={eachStrategy.id} url={eachStrategy.url} name={eachStrategy.name} />
                 {/each}
               {/if}
 
               {#if authenticationStrategy.hasLocalAuth}
-                <LocalAuthStrategy
-                  enabledStrategies={authenticationStrategy.enabledStrategies}
-                />
+                <LocalAuthStrategy enabledStrategies={authenticationStrategy.enabledStrategies} />
               {/if}
             </mwc-dialog>
+<<<<<<< HEAD
             <a class="button is-round register-button" href="/"
               >{$_("shared.oae.bundles.ui.SIGN_UP")}</a
             >
@@ -112,6 +105,11 @@
               class="button is-round signIn-button is-info"
             >
               {$_("shared.oae.bundles.ui.SIGN_IN")}
+=======
+            <a class="button is-round register-button" href="/">{$_('shared.oae.bundles.ui.SIGN_UP')}</a>
+            <a href="/" on:click|preventDefault={showSignInModal} class="button is-round signIn-button">
+              {$_('shared.oae.bundles.ui.SIGN_IN')}
+>>>>>>> 11141bd (revert: removed ts using js instead)
             </a>
           </div>
         {/if}
@@ -167,11 +165,10 @@
   .dialogue-buttons {
     --mdc-theme-primary: blue;
     --mdc-theme-on-primary: white;
-    --mdc-button-outline-color: rgba(20, 20, 200, .2);
-    --mdc-dialog-heading-ink-color: #C4C4C4;
-    width: 560px
+    --mdc-button-outline-color: rgba(20, 20, 200, 0.2);
+    --mdc-dialog-heading-ink-color: #c4c4c4;
+    width: 560px;
   }
-  
 
   .modal-title {
     margin-top: 1%;
@@ -180,7 +177,6 @@
     font-weight: bold;
     font-size: 36px;
     line-height: 72px;
-    color: #3A72E9;
+    color: #3a72e9;
   }
-
 </style>

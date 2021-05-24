@@ -1,11 +1,11 @@
 <script>
-  import { Router, Route } from "svelte-navigator";
-  import PrivateRoute from "./routes/PrivateRoute.svelte";
+  import { Router, Route } from 'svelte-navigator';
+  import PrivateRoute from './routes/PrivateRoute.svelte';
 
-  import Homepage from "./routes/Homepage.svelte";
-  import Dashboard from "./routes/Dashboard.svelte";
-  import Library from "./routes/Library.svelte";
-  import Groups from "./routes/Groups.svelte";
+  import Homepage from './routes/Homepage.svelte';
+  import Dashboard from './routes/Dashboard.svelte';
+  import Library from './routes/Library.svelte';
+  import Groups from './routes/Groups.svelte';
 
   /**
    * A Route path can match parameters with "path/:parameterName" and wildcards with "path/*" or "path/*wildcardName". All parameters and wildcard values will be provided to the component as props. They can also be accessed inside a Route slot via let:params.

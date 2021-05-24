@@ -1,30 +1,26 @@
-<script lang="ts">
-  import anylogger from "anylogger";
-  import "@material/mwc-button";
-  import "@material/mwc-textfield";
-  import { when, equals, defaultTo, prop, compose, isEmpty, not } from "ramda";
-  import { useLocation, useNavigate } from "svelte-navigator";
-  import { getCurrentUser, redirectUrl, user } from "../stores/user";
+<script>
+  import anylogger from 'anylogger';
+  import '@material/mwc-button';
+  import '@material/mwc-textfield';
+  import { when, equals, defaultTo, prop, compose, isEmpty, not } from 'ramda';
+  import { useLocation, useNavigate } from 'svelte-navigator';
+  import { getCurrentUser, redirectUrl, user } from '../stores/user';
 
-  import { resetField } from "../helpers/form";
-  import { authenticationAPI } from "../helpers/authentication";
-  import { authConstants } from "../helpers/constants";
-  import { onMount } from "svelte";
+  import { resetField } from '../helpers/form';
+  import { authenticationAPI } from '../helpers/authentication';
+  import { authConstants } from '../helpers/constants';
+  import { onMount } from 'svelte';
 
   const navigate = useNavigate();
   const location = useLocation();
-  const log = anylogger("local-auth-strategy");
+  const log = anylogger('local-auth-strategy');
 
   const { STRATEGY_LDAP, STRATEGY_LOCAL } = authConstants;
   const askAuthAPI = authenticationAPI();
-  const {
-    tryLDAPFirstLocalAuthSecond: tryLocalIfLdapFails,
-    signInViaLDAP: tryLDAPLogin,
-    signInViaLocalAuth: tryLocalAuthLogin,
-  } = askAuthAPI;
+  const { tryLDAPFirstLocalAuthSecond: tryLocalIfLdapFails, signInViaLDAP: tryLDAPLogin, signInViaLocalAuth: tryLocalAuthLogin } = askAuthAPI;
 
-  const ENTER_KEY = "Enter";
-  const KEY = "key";
+  const ENTER_KEY = 'Enter';
+  const KEY = 'key';
 
   const isNotEmpty = compose(not, isEmpty);
   const getLdapSettings = compose(defaultTo({}), prop(STRATEGY_LDAP));
@@ -34,7 +30,7 @@
   const failedAuthentication = equals(401);
 
   export let enabledStrategies;
-  let formValidation = { failed: true, message: "" };
+  let formValidation = { failed: true, message: '' };
   let localAuthForm;
   let usernameField;
   let passwordField;
@@ -47,26 +43,21 @@
    * LDAP login will be attempted first. If that is unsuccessful, a local login will be
    * attempted next.
    */
-  const handleSubmit = async (event: Event) => {
+  const handleSubmit = async event => {
     const username = usernameField.value;
     const password = passwordField.value;
 
     const ldapSettings = getLdapSettings(enabledStrategies);
     const localSettings = getLocalSettings(enabledStrategies);
 
-    const isLocalEnabled: boolean = isNotEmpty(localSettings);
-    const isLDAPEnabled: boolean = isNotEmpty(ldapSettings);
+    const isLocalEnabled = isNotEmpty(localSettings);
+    const isLDAPEnabled = isNotEmpty(ldapSettings);
     const areBothEnabled = isLocalEnabled && isLDAPEnabled;
 
     const attemptLogin = async () => {
       switch (true) {
         case areBothEnabled:
-          return tryLocalIfLdapFails(
-            username,
-            password,
-            ldapSettings,
-            localSettings
-          );
+          return tryLocalIfLdapFails(username, password, ldapSettings, localSettings);
         case isLDAPEnabled:
           return tryLDAPLogin(username, password, ldapSettings);
         default:
@@ -86,7 +77,7 @@
    * Finish the login process by showing the correct validation message in case of a failed
    * login attempt, or by redirecting the user in case of a successful login attempt
    */
-  const postLogin = async (status) => {
+  const postLogin = async status => {
     if (succededAuthentication(status)) {
       /**
        * Eventually we will redirect the user to the redirect url
@@ -96,13 +87,13 @@
        * TODO: uncomment this line and place it below, one day
        * navigate($redirectUrl);
        */
-      formValidation = { failed: false, message: "" };
+      formValidation = { failed: false, message: '' };
       log.warn(`Authentication succeeded, redirecting to the activity feed..`);
 
-      const from = ($location.state && $location.state.from) || "/dashboard";
+      const from = ($location.state && $location.state.from) || '/dashboard';
       navigate(from, { replace: true });
     } else if (failedAuthentication(status)) {
-      formValidation = { failed: true, message: "Wrong credentials" };
+      formValidation = { failed: true, message: 'Wrong credentials' };
       clearPasswordField();
     }
   };
@@ -113,15 +104,16 @@
   };
 
   onMount(async () => {
-    submitButton.addEventListener("click", async (event) => {
+    submitButton.addEventListener('click', async event => {
       await handleSubmit(event);
     });
   });
 
-  const onKeyPress = async (event: KeyboardEvent) => {
+  const onKeyPress = async event => {
     when(wasEnterKeyPressed, handleSubmit, event);
   };
 </script>
+
 <div id="or">or</div>
 <div class="form-entries is-fullwidth">
   <form bind:this={localAuthForm} on:submit|preventDefault={handleSubmit}>
@@ -151,14 +143,7 @@
       required
       stacked
     />
-    <mwc-button
-      bind:this={submitButton}
-      id="submit-button"
-      on:click={handleSubmit}
-      class="login-button"
-    >
-      Sign in to OAE
-    </mwc-button>
+    <mwc-button bind:this={submitButton} id="submit-button" on:click={handleSubmit} class="login-button"> Sign in to OAE </mwc-button>
 
     {#if formValidation.failed}
       <div class="wrong-credentials">{formValidation.message}</div>
@@ -209,7 +194,7 @@
 
   .wrong-credentials {
     font: Poppins;
-    color: #3A72E9;
+    color: #3a72e9;
     margin-top: 5%;
     font-weight: medium;
   }

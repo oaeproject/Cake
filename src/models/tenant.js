@@ -1,13 +1,13 @@
 // import { computed, observable, makeAutoObservable } from 'mobx';
-import { prop } from "ramda";
+import { prop } from 'ramda';
 
 export class Tenant {
-  store: null;
-  alias: string;
-  displayName: string;
-  isGuestTenant: boolean;
-  isPrivate: boolean;
-  emailDomains: string[];
+  store; //: null;
+  alias; //: string;
+  displayName; //: string;
+  isGuestTenant; //: boolean;
+  isPrivate; //: boolean;
+  emailDomains; //: string[];
 
   constructor(tenantData) {
     // TODO do we need all these attributes to be observable?
@@ -21,11 +21,11 @@ export class Tenant {
     });
     */
 
-    this.alias = prop("alias", tenantData);
-    this.displayName = prop("displayName", tenantData);
-    this.isGuestTenant = prop("isGuestTenant", tenantData);
-    this.isPrivate = prop("isPrivate", tenantData);
-    this.emailDomains = prop("emailDomains", tenantData);
+    this.alias = prop('alias', tenantData);
+    this.displayName = prop('displayName', tenantData);
+    this.isGuestTenant = prop('isGuestTenant', tenantData);
+    this.isPrivate = prop('isPrivate', tenantData);
+    this.emailDomains = prop('emailDomains', tenantData);
   }
 
   get asBackend() {

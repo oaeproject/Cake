@@ -7,6 +7,7 @@
     "dev": "rollup -c -w",
     "start": "sirv public --host --no-clear --single",
     "validate": "svelte-check",
+    "lint": "eslint . --ext .js,.svelte --fix",
     "format": "prettier --write --plugin-search-dir=. ./**/*.html",
     "test-translations": "node -r esm node_modules/.bin/mocha src/tests"
   },

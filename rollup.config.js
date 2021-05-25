@@ -9,6 +9,7 @@ import sveltePreprocess from 'svelte-preprocess';
 import css from 'rollup-plugin-css-only';
 import scss from 'rollup-plugin-scss';
 import json from '@rollup/plugin-json';
+import babel from 'rollup-plugin-babel';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -46,7 +47,25 @@ export default {
     scss(),
     json(),
     svelte({
-      preprocess: sveltePreprocess({ sourceMap: !production }),
+      preprocess: sveltePreprocess({
+        babel: {
+          presets: [
+            [
+              '@babel/preset-env',
+              {
+                loose: true,
+                // No need for babel to resolve modules
+                modules: false,
+                targets: {
+                  // ! Very important. Target es6+
+                  esmodules: true,
+                },
+              },
+            ],
+          ],
+        },
+        sourceMap: !production,
+      }),
       compilerOptions: {
         // enable run-time checks when not in production
         dev: !production,
@@ -66,6 +85,10 @@ export default {
       dedupe: ['svelte'],
     }),
     commonjs(),
+    babel({
+      extensions: ['.js', '.mjs', '.html', '.svelte'],
+      include: ['src/**', 'node_modules/svelte/**'],
+    }),
     replace({
       'preventAssignment': true,
       'process.env.NODE_ENV':

@@ -16,16 +16,9 @@ module.exports = {
     module: true,
     process: true,
   },
-  rules: {
-    '@babel/new-cap': 'error',
-    '@babel/no-invalid-this': 'error',
-    '@babel/no-unused-expressions': 'error',
-    '@babel/object-curly-spacing': 'error',
-    '@babel/semi': 'error',
-  },
   ignorePatterns: ['public/build/'],
   settings: { 'svelte3/ignore-styles': () => true },
-  plugins: ['svelte3', '@babel'],
+  plugins: ['svelte3'],
   extends: 'eslint:recommended',
   overrides: [
     {

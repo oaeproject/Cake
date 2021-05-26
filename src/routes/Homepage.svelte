@@ -1,22 +1,16 @@
 <script lang="ts">
-  import { _, isLoading } from "svelte-i18n";
-  import { onMount } from "svelte";
-  import { prop } from "ramda";
-  import HomeTopBar from "../components/HomeTopBar.svelte";
-  import anylogger from "anylogger";
-  import {
-    getCurrentUser,
-    redirectUrl,
-    user,
-    tenantConfig,
-    invitationInfo,
-  } from "../stores/user";
-  import { authenticationAPI } from "../helpers/authentication";
-  import { getRedirectUrl, getInvitationInfo } from "../helpers/utils";
-  import { useFocus } from "svelte-navigator";
-  import { locale } from "svelte-i18n";
+  import { _, isLoading } from 'svelte-i18n';
+  import { onMount } from 'svelte';
+  import { prop } from 'ramda';
+  import HomeTopBar from '../components/HomeTopBar.svelte';
+  import anylogger from 'anylogger';
+  import { getCurrentUser, redirectUrl, user, tenantConfig, invitationInfo } from '../stores/user';
+  import { authenticationAPI } from '../helpers/authentication';
+  import { getRedirectUrl, getInvitationInfo } from '../helpers/utils';
+  import { useFocus } from 'svelte-navigator';
+  import { locale } from 'svelte-i18n';
 
-  let log = anylogger("homepage");
+  let log = anylogger('homepage');
   const registerFocus = useFocus();
 
   let authenticationStrategy = {};
@@ -24,11 +18,9 @@
 
   let pageTitle;
   $: if ($isLoading) {
-    pageTitle = "...";
+    pageTitle = '...';
   } else {
-    pageTitle = $_(
-      "packages.oae-core.footer.bundles.OPEN_ACADEMIC_ENVIRONMENT"
-    );
+    pageTitle = $_('packages.oae-core.footer.bundles.OPEN_ACADEMIC_ENVIRONMENT');
   }
 
   onMount(async () => {
@@ -38,15 +30,10 @@
 
     // Variable that keeps track of the invitation info that is available in the page context, if any
     invitationInfo.set(getInvitationInfo(document.location.toString()));
-    log.warn(
-      `invitation info: ${prop("email", $invitationInfo)} / ${prop(
-        "token",
-        $invitationInfo
-      )}`
-    );
+    log.warn(`invitation info: ${prop('email', $invitationInfo)} / ${prop('token', $invitationInfo)}`);
 
     try {
-      const response = await fetch("/api/config");
+      const response = await fetch('/api/config');
       const data = await response.json();
       tenantConfig.set(data);
       log.warn(`tenant configuration: ${tenantConfig}`);
@@ -72,24 +59,31 @@
 {#if $isLoading}
   Please wait...
 {:else}
-  <section class="hero is-primary is-medium">
-    <HomeTopBar {goToLogin} {authenticationStrategy} />
-    <div class="hero-head" />
-    <div class="hero-body main-area">
-      <div class="container has-text-centered is-centered">
-        <p class="title homepage-title">
-          {$_("shared.oae.bundles.ui.SUPPORTING_ACADEMIC_COLLABORATION")}
-        </p>
-        <home-search use:registerFocus />
-      </div>
+  <section class="hero is-fullheight hero-background">
+    <!-- Hero head: will stick at the top -->
+    <div class="hero-head">
+      <HomeTopBar {goToLogin} {authenticationStrategy} />
     </div>
-    <div class="hero-body section1-area">
-      <div class="container has-text-centered is-centered">
-        <p class="subtitle">
-          The Open Academic Environment is the easiest way to communicate and
-          share files with your classmates. Whether you're a student,
-          investigator or professor, join us for free!
-        </p>
+
+    <!-- Hero content: will be in the middle -->
+    <div class="hero-body">
+      <div class="container">
+        <div class="columns">
+          <div class="column is-half left-column">
+            <p>The <span>Open Academic Environment</span> is the easiest way to communicate and share files with your classmates.</p>
+            <button class="button is-medium button-register">
+              <span class="icon">
+                <i class="fas fa-long-arrow-alt-right" />
+              </span>
+              <span>Join us for free</span>
+            </button>
+          </div>
+          <div class="column">
+            <figure class="image">
+              <img alt="background" src="../assets/images/home.svg" />
+            </figure>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -102,66 +96,31 @@
 
   // Import Roboto Slab for Title
   // Single Use
-  @import url("https://fonts.googleapis.com/css?family=Roboto:700&display=swap");
-  @import url("https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@800&display=swap");
+  @import url('https://fonts.googleapis.com/css?family=Roboto:700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@800&display=swap');
 
-  .hero-body.main-area {
-    height: 100px;
-    overflow: hidden;
-    background-image: url("../assets/images/cool-background.svg");
-    background-repeat: no-repeat;
-    background-position: right;
-    background-size: cover;
-    background-color: white;
+  .hero-background {
+    background-color: #f6f6f6;
   }
 
-  .img.background-img {
-    visibility: hidden;
+  .left-column p {
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 48px;
+    line-height: 72px;
+    color: #000000;
   }
 
-  .hero-body.section1-area {
-    background-color: hotpink;
-  }
-
-  .hero.is-primary .title {
-    color: white;
-    margin-bottom: 35px;
-  }
-
-  .hero .navbar {
-    background-color: white;
-  }
-
-  // Main Section
-  // Title
-  .hero-body.main-area.title {
-    color: #212121;
-  }
-
-  .control.has-icons-left.home-searchIcon {
-    text-align: center;
-  }
-
-  .input {
-    width: 70%;
-    border: none;
-    box-shadow: none;
+  .left-column span {
     font-weight: bold;
-    border-radius: 2px;
+    color: #3a72e9;
   }
 
-  .input.input:hover {
-    border: none;
-    box-shadow: none;
-    -webkit-box-shadow: 0px 1px 6px 0px rgba(50, 50, 50, 0.52);
-    -moz-box-shadow: 0px 1px 6px 0px rgba(50, 50, 50, 0.52);
-    box-shadow: 0px 1px 6px 0px rgba(50, 50, 50, 0.52);
-  }
-
-  .input.input:focus {
-    border: none;
-    -webkit-box-shadow: 0px 1px 6px 0px rgba(50, 50, 50, 0.52);
-    -moz-box-shadow: 0px 1px 6px 0px rgba(50, 50, 50, 0.52);
-    box-shadow: 0px 1px 6px 0px rgba(50, 50, 50, 0.52);
+  .button-register {
+    margin-top: 1em;
+    background: #ffffff;
+    border: 3px solid #3a72e9;
+    box-sizing: border-box;
   }
 </style>

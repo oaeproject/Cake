@@ -55,7 +55,7 @@
 
       let logoToDisplay;
       if (isDefaultLogo) {
-        logoToDisplay = "./assets/logos/oae-logo.svg";
+        logoToDisplay = "./assets/logos/logo-oae-dark.png";
       } else {
         logoToDisplay = text;
       }
@@ -109,7 +109,7 @@
             <a
               href="/"
               on:click|preventDefault={showSignInModal}
-              class="button is-round signIn-button"
+              class="button is-round signIn-button is-info"
             >
               {$_("shared.oae.bundles.ui.SIGN_IN")}
             </a>
@@ -153,17 +153,14 @@
   }
 
   .signIn-button {
-    border-width: medium;
-    font-weight: bold;
-    border-color: #3a71ed;
-    border-radius: 2px;
-    color: #3a71ed;
-    height: 30px;
-    width: 80px;
-    &:hover {
-      background-color: #3a71ed;
-      border-color: #3a71ed;
-      color: white;
+    font-size: 1em;
+    color: white;
+    width: 120px;
+    background-color: #3a72e9;
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: #03254E;
     }
   }
 

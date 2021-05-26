@@ -104,7 +104,7 @@
               {/if}
             </mwc-dialog>
             <a class="button is-round register-button" href="/"
-              >{$_("shared.oae.bundles.ui.REGISTER")}</a
+              >{$_("shared.oae.bundles.ui.SIGN_UP")}</a
             >
             <a
               href="/"

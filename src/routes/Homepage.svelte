@@ -67,9 +67,23 @@
 
     <!-- Hero content: will be in the middle -->
     <div class="hero-body">
-      <div class="container has-text-centered">
-        <p class="title">Title</p>
-        <p class="subtitle">Subtitle</p>
+      <div class="container">
+        <div class="columns">
+          <div class="column is-half left-column">
+            <p>The <span>Open Academic Environment</span> is the easiest way to communicate and share files with your classmates.</p>
+            <button class="button is-medium button-register">
+              <span class="icon">
+                <i class="fas fa-long-arrow-alt-right" />
+              </span>
+              <span>Join us for free</span>
+            </button>
+          </div>
+          <div class="column">
+            <figure class="image">
+              <img alt="background" src="../assets/images/home.svg" />
+            </figure>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -86,6 +100,28 @@
   @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@800&display=swap');
 
   .hero-background {
-    background-color: #F6F6F6;
+    background-color: #f6f6f6;
+  }
+
+  .left-column p {
+    margin-top: 1.5em;
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 48px;
+    line-height: 72px;
+    color: #000000;
+  }
+
+  .left-column span {
+    font-weight: bold;
+    color: #3a72e9;
+  }
+
+  .button-register {
+    margin-top: 1em;
+    background: #ffffff;
+    border: 3px solid #3a72e9;
+    box-sizing: border-box;
   }
 </style>

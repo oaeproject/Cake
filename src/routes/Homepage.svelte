@@ -104,7 +104,6 @@
   }
 
   .left-column p {
-    margin-top: 1.5em;
     font-family: Poppins;
     font-style: normal;
     font-weight: 500;

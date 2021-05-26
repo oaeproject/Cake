@@ -3,9 +3,11 @@ module.exports = {
     [
       '@babel/preset-env',
       {
+        /* These settings are needed if transpiling to ES5 I think */
         // useBuiltIns: 'usage',
         // corejs: 3,
-        loose: true,
+        // loose: true,
+
         // No need for babel to resolve modules
         modules: false,
         targets: {
@@ -15,4 +17,5 @@ module.exports = {
       },
     ],
   ],
+  plugins: ['@babel/plugin-proposal-private-property-in-object', '@babel/plugin-syntax-dynamic-import'],
 };

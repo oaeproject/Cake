@@ -27,7 +27,6 @@ If you're using [Visual Studio Code](https://code.visualstudio.com/) we recommen
 - [ESlint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 - [i18n Ally](https://marketplace.visualstudio.com/items?itemName=lokalise.i18n-ally)
 - [Babel](https://marketplace.visualstudio.com/items?itemName=mgmcdermott.vscode-language-babel)
-- [SCSS formatter](https://marketplace.visualstudio.com/items?itemName=sibiraj-s.vscode-scss-formatter)
 - [Svelte intellisense](https://marketplace.visualstudio.com/items?itemName=ardenivanov.svelte-intellisense)
 - [Debugger for Chrome](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome) or [Debugger for Firefox](https://marketplace.visualstudio.com/items?itemName=firefox-devtools.vscode-firefox-debug)
 - [Stylelint](https://marketplace.visualstudio.com/items?itemName=stylelint.vscode-stylelint)
@@ -47,6 +46,9 @@ Here are some settings you might need (paste them onto `settings.json`):
   "svelte.plugin.typescript.enable": false,
   "svelte.plugin.svelte.format.enable": true,
   "svelte.plugin.svelte.enable": true,
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
 ```
 
 ## Tests and validations
@@ -58,6 +60,30 @@ Run svelte-check with `npm run validate`.
 Run linting check with `npm run lint`.
 
 Run (S)CSS linting with `npm run lint:css`.
+
+## Debugging
+
+With VSCode use the following configuration (`launch.json`):
+
+```
+    {
+      "name": "Launch Chrome",
+      "type": "chrome",
+      "request": "launch",
+      "sourceMaps": true,
+      "url": "http://guest.oae.com",
+      "webRoot": "${workspaceFolder}/www"
+    },
+    {
+      "name": "Launch Firefox",
+      "type": "firefox",
+      "request": "launch",
+      "reAttach": true,
+      "reloadOnAttach": true,
+      "url": "http://guest.oae.com",
+      "webRoot": "${workspaceFolder}/www"
+    }
+```
 
 ## Building and running in production mode
 

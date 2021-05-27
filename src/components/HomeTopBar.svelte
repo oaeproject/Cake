@@ -55,11 +55,7 @@
 
       let logoToDisplay;
       if (isDefaultLogo) {
-<<<<<<< HEAD
-        logoToDisplay = "./assets/logos/logo-oae-dark.png";
-=======
         logoToDisplay = './assets/logos/oae-logo.svg';
->>>>>>> 11141bd (revert: removed ts using js instead)
       } else {
         logoToDisplay = text;
       }
@@ -87,7 +83,12 @@
               <h1 class="modal-title">Sign in to OAE</h1>
               {#if authenticationStrategy.hasExternalAuth}
                 {#each enabledExternalStrategies as eachStrategy}
-                  <ExternalAuthStrategy icon={eachStrategy.icon} id={eachStrategy.id} url={eachStrategy.url} name={eachStrategy.name} />
+                  <ExternalAuthStrategy
+                    icon={eachStrategy.icon}
+                    id={eachStrategy.id}
+                    url={eachStrategy.url}
+                    name={eachStrategy.name}
+                  />
                 {/each}
               {/if}
 
@@ -95,21 +96,9 @@
                 <LocalAuthStrategy enabledStrategies={authenticationStrategy.enabledStrategies} />
               {/if}
             </mwc-dialog>
-<<<<<<< HEAD
-            <a class="button is-round register-button" href="/"
-              >{$_("shared.oae.bundles.ui.SIGN_UP")}</a
-            >
-            <a
-              href="/"
-              on:click|preventDefault={showSignInModal}
-              class="button is-round signIn-button is-info"
-            >
-              {$_("shared.oae.bundles.ui.SIGN_IN")}
-=======
             <a class="button is-round register-button" href="/">{$_('shared.oae.bundles.ui.SIGN_UP')}</a>
-            <a href="/" on:click|preventDefault={showSignInModal} class="button is-round signIn-button">
+            <a href="/" on:click|preventDefault={showSignInModal} class="button is-round signIn-button is-info">
               {$_('shared.oae.bundles.ui.SIGN_IN')}
->>>>>>> 11141bd (revert: removed ts using js instead)
             </a>
           </div>
         {/if}
@@ -143,6 +132,7 @@
     color: #00253d;
     background-color: white;
     border: none;
+
     &:hover {
       color: #2e98d5;
       background-color: transparent;
@@ -155,10 +145,11 @@
     color: white;
     width: 120px;
     background-color: #3a72e9;
+
     &:hover,
     &:focus,
     &:active {
-      background-color: #03254E;
+      background-color: #03254e;
     }
   }
 
@@ -167,12 +158,13 @@
     --mdc-theme-on-primary: white;
     --mdc-button-outline-color: rgba(20, 20, 200, 0.2);
     --mdc-dialog-heading-ink-color: #c4c4c4;
+
     width: 560px;
   }
 
   .modal-title {
     margin-top: 1%;
-    font-family: Poppins;
+    font-family: 'Poppins';
     font-style: normal;
     font-weight: bold;
     font-size: 36px;

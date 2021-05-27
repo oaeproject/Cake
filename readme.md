@@ -18,9 +18,72 @@ npm run dev
 
 ## Development
 
-Use `http://guest.oae.com?url=%2F%3FinvitationToken%3DhA7EFd5wYudH%26invitationEmail%3Dmiguel.laginha%2540apereo.org` for testing manually, based on the `cake-integration` branch on Hilary.
+Use `http://guest.oae.com` for testing.
 
-If you're using [Visual Studio Code](https://code.visualstudio.com/) we recommend installing the official extension [Svelte for VS Code](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode). If you are using other editors you may need to install a plugin in order to get syntax highlighting and intellisense.
+Use `http://guest.oae.com?url=%2F%3FinvitationToken%3DhA7EFd5wYudH%26invitationEmail%3Dmiguel.laginha%2540apereo.org` for testing invitations and other url parameters.
+
+If you're using [Visual Studio Code](https://code.visualstudio.com/) we recommend installing the official extension [Svelte for VS Code](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode) along with several others:
+
+- [ESlint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+- [i18n Ally](https://marketplace.visualstudio.com/items?itemName=lokalise.i18n-ally)
+- [Babel](https://marketplace.visualstudio.com/items?itemName=mgmcdermott.vscode-language-babel)
+- [Svelte intellisense](https://marketplace.visualstudio.com/items?itemName=ardenivanov.svelte-intellisense)
+- [Debugger for Chrome](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome) or [Debugger for Firefox](https://marketplace.visualstudio.com/items?itemName=firefox-devtools.vscode-firefox-debug)
+- [Stylelint](https://marketplace.visualstudio.com/items?itemName=stylelint.vscode-stylelint)
+
+(The official [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) extension is included in [Svelte for VS Code](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode))
+
+Here are some settings you might need (paste them onto `settings.json`):
+
+```
+  "[svelte]": {
+    "editor.defaultFormatter": "svelte.svelte-vscode"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
+  "eslint.validate": ["javascript", "svelte"],
+  "svelte.plugin.typescript.enable": false,
+  "svelte.plugin.svelte.format.enable": true,
+  "svelte.plugin.svelte.enable": true,
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
+```
+
+## Tests and validations
+
+Run translation tests (node) with `npm run test-translations`.
+
+Run svelte-check with `npm run validate`.
+
+Run linting check with `npm run lint`.
+
+Run (S)CSS linting with `npm run lint:css`.
+
+## Debugging
+
+With VSCode use the following configuration (`launch.json`):
+
+```
+    {
+      "name": "Launch Chrome",
+      "type": "chrome",
+      "request": "launch",
+      "sourceMaps": true,
+      "url": "http://guest.oae.com",
+      "webRoot": "${workspaceFolder}/www"
+    },
+    {
+      "name": "Launch Firefox",
+      "type": "firefox",
+      "request": "launch",
+      "reAttach": true,
+      "reloadOnAttach": true,
+      "url": "http://guest.oae.com",
+      "webRoot": "${workspaceFolder}/www"
+    }
+```
 
 ## Building and running in production mode
 

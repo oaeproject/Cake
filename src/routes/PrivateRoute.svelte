@@ -1,6 +1,6 @@
-<script lang="ts">
-  import { Route } from "svelte-navigator";
-  import PrivateRouteGuard from "./PrivateRouteGuard.svelte";
+<script>
+  import { Route } from 'svelte-navigator';
+  import PrivateRouteGuard from './PrivateRouteGuard.svelte';
 
   export let path;
 </script>

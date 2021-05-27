@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   import { _ } from 'svelte-i18n';
   import anylogger from 'anylogger';
   import { onMount } from 'svelte';
@@ -6,12 +6,12 @@
 
   const log = anylogger('external-auth-strategy');
 
-  export let name: string;
-  export let id: string;
-  export let url: string;
-  export let icon: string;
-  let invitationToken: string;
-  let invitationEmail: string;
+  export let name; // : string;
+  export let id; // : string;
+  export let url; // : string;
+  export let icon; // : string;
+  let invitationToken; // : string;
+  let invitationEmail; // : string;
 
   onMount(async () => {
     // Variable that keeps track of the invitation info that is available in the page context, if any
@@ -23,7 +23,7 @@
     log.warn(`invitation info: ${invitationEmail} / ${invitationToken}`);
   });
 
-  const submitForm = (e: Event) => {
+  const submitForm = e => {
     // TODO
     log.warn('Here I go, using external auth again...');
   };
@@ -51,15 +51,15 @@
 
   .signIn-button {
     margin-bottom: 0;
-    background-color:#F7F9FA;
+    background-color: #f7f9fa;
     border-radius: 2px;
-    border-color: #D1E0FF;
+    border-color: #d1e0ff;
     &:hover {
       box-shadow: 0 1px 2px rgba(206, 212, 218, 1);
       background-color: white;
-      box-shadow: 0px 3px 10px #DCE2EE;
+      box-shadow: 0px 3px 10px #dce2ee;
       border-radius: 2px;
-      border-color: #D1E0FF;
+      border-color: #d1e0ff;
     }
   }
 

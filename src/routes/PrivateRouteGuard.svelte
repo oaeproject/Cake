@@ -1,18 +1,18 @@
-<script lang="ts">
-  import { onMount } from "svelte";
-  import { useNavigate, useLocation, useFocus } from "svelte-navigator";
-  import { getCurrentUser, user } from "../stores/user";
-  import anylogger from "anylogger";
-  import { locale } from "svelte-i18n";
+<script>
+  import { onMount } from 'svelte';
+  import { useNavigate, useLocation, useFocus } from 'svelte-navigator';
+  import { getCurrentUser, user } from '../stores/user';
+  import anylogger from 'anylogger';
+  import { locale } from 'svelte-i18n';
   let isChecking = true;
 
-  const log = anylogger("private-route-guard");
+  const log = anylogger('private-route-guard');
   const navigate = useNavigate();
   const location = useLocation();
   const registerFocus = useFocus();
 
   const navigateToLogin = () => {
-    navigate("/login" + $location.search, {
+    navigate('/login' + $location.search, {
       state: { from: $location.pathname },
       replace: true,
     });
@@ -30,7 +30,7 @@
   });
 
   $: if (!$user.isLoggedIn && !isChecking) {
-    log.info("Redirecting user to login window");
+    log.info('Redirecting user to login window');
     navigateToLogin();
   }
 </script>

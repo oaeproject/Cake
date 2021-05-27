@@ -1,19 +1,19 @@
-<script lang="ts">
-  import { ActivityItem } from "../models/activity";
-  import "@polymer/iron-icons/iron-icons.js";
-  import "@polymer/iron-icons/social-icons.js";
-  import "@polymer/iron-icons/av-icons.js";
-  import "@polymer/iron-icons/hardware-icons.js";
-  import "@polymer/iron-icons/communication-icons.js";
+<script>
+  import { ActivityItem } from '../models/activity';
+  import '@polymer/iron-icons/iron-icons.js';
+  import '@polymer/iron-icons/social-icons.js';
+  import '@polymer/iron-icons/av-icons.js';
+  import '@polymer/iron-icons/hardware-icons.js';
+  import '@polymer/iron-icons/communication-icons.js';
 
-  import { formatDistance } from "date-fns";
-  import { humanizeActivityVerb } from "../helpers/activity";
-  import anylogger from "anylogger";
-  import { onMount } from "svelte";
+  import { formatDistance } from 'date-fns';
+  import { humanizeActivityVerb } from '../helpers/activity';
+  import anylogger from 'anylogger';
+  import { onMount } from 'svelte';
 
-  export let activityItem: ActivityItem;
+  export let activityItem;
 
-  const log = anylogger("oae-newsfeed");
+  const log = anylogger('oae-newsfeed');
 
   onMount(async () => {
     log.warn(activityItem);
@@ -27,19 +27,12 @@
         <div class="level-item">
           <div class="column is-flex news-feed-nav">
             <figure class="image avatar-news-feed">
-              <img
-                alt="primary-actor"
-                class="is-rounded avatar-news-feed"
-                src={activityItem.primaryActor.mediumPicture}
-              />
+              <img alt="primary-actor" class="is-rounded avatar-news-feed" src={activityItem.primaryActor.mediumPicture} />
             </figure>
             <section>
               <p class="user-info">
-                <a class="feed-user" href="/"
-                  >{activityItem.primaryActor.displayName}</a
-                >
-                {humanizeActivityVerb(activityItem.verb)} a {activityItem.object
-                  .objectType}
+                <a class="feed-user" href="/">{activityItem.primaryActor.displayName}</a>
+                {humanizeActivityVerb(activityItem.verb)} a {activityItem.object.objectType}
                 <span class="panel-icon icon-feed">
                   <iron-icon icon="icons:cloud-upload" />
                 </span>
@@ -93,8 +86,7 @@
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     &:hover {
       //box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
-      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
-        0 10px 10px rgba(0, 0, 0, 0.22);
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
     }
   }
 

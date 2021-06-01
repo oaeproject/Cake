@@ -112,20 +112,6 @@
     </li>
   </ul>
   <footer class="footer sidebar-footer">
-    <nav class="level sidebar-avatar-logout">
-      <div class="level-left">
-        <div class="level-item">
-          <figure class="image is-48x48">
-            <img alt="user-avatar" class="is-rounded" src={$user.mediumPicture} />
-          </figure>
-        </div>
-        <div class="level-item">
-          <button class="button" aria-haspopup="true">
-            <span>{$user.displayName}</span>
-            <span class="icon is-small">
-              <i class="fas fa-angle-down" aria-hidden="true" />
-            </span>
-          </button>
           <button class="button logout-button">
             <span class="icon">
               <iron-icon icon="power-settings-new" />
@@ -134,9 +120,6 @@
               <span class="logout-button-text" on:click|preventDefault={logoutUser}>Sign Out</span>
             {/if}
           </button>
-        </div>
-      </div>
-    </nav>
   </footer>
 </aside>
 

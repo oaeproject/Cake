@@ -112,14 +112,14 @@
     </li>
   </ul>
   <footer class="footer sidebar-footer">
-          <button class="button logout-button">
-            <span class="icon">
-              <iron-icon icon="power-settings-new" />
-            </span>
-            {#if $user.isLoggedIn}
-              <span class="logout-button-text" on:click|preventDefault={logoutUser}>Sign Out</span>
-            {/if}
-          </button>
+    <button class="button logout-button">
+      <span class="icon">
+        <iron-icon icon="power-settings-new" />
+      </span>
+      {#if $user.isLoggedIn}
+        <span class="logout-button-text" on:click|preventDefault={logoutUser}>Sign Out</span>
+      {/if}
+    </button>
   </footer>
 </aside>
 

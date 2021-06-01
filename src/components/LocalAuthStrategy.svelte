@@ -17,7 +17,11 @@
 
   const { STRATEGY_LDAP, STRATEGY_LOCAL } = authConstants;
   const askAuthAPI = authenticationAPI();
-  const { tryLDAPFirstLocalAuthSecond: tryLocalIfLdapFails, signInViaLDAP: tryLDAPLogin, signInViaLocalAuth: tryLocalAuthLogin } = askAuthAPI;
+  const {
+    tryLDAPFirstLocalAuthSecond: tryLocalIfLdapFails,
+    signInViaLDAP: tryLDAPLogin,
+    signInViaLocalAuth: tryLocalAuthLogin,
+  } = askAuthAPI;
 
   const ENTER_KEY = 'Enter';
   const KEY = 'key';
@@ -112,6 +116,11 @@
   const onKeyPress = async event => {
     when(wasEnterKeyPressed, handleSubmit, event);
   };
+
+  /**
+   * Show/hide alert message button
+   *
+   */
 </script>
 
 <div id="or">or</div>
@@ -143,11 +152,17 @@
       required
       stacked
     />
-    <mwc-button bind:this={submitButton} id="submit-button" on:click={handleSubmit} class="login-button"> Sign in to OAE </mwc-button>
 
-    {#if formValidation.failed}
-      <div class="wrong-credentials">{formValidation.message}</div>
+    {#if formValidation.failed && formValidation.message}
+      <div class="wrong-credentials has-text-centered">
+        <span class="icon is-small"> <i class="fas fa-exclamation-circle" /></span>
+        <span>{formValidation.message}</span>
+      </div>
     {/if}
+
+    <mwc-button bind:this={submitButton} id="submit-button" on:click={handleSubmit} class="login-button">
+      Sign in</mwc-button
+    >
   </form>
 </div>
 
@@ -193,9 +208,23 @@
   }
 
   .wrong-credentials {
-    font: Poppins;
-    color: #3a72e9;
-    margin-top: 5%;
-    font-weight: medium;
+    background: #cc5f5f;
+    border-radius: 2px;
+    margin-top: 2%;
+    margin-bottom: 2%;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 14px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #ffffff;
+    padding: 0.8em;
+    width: 92%;
+  }
+
+  .wrong-credentials span {
+    margin-left: 0.5em;
   }
 </style>

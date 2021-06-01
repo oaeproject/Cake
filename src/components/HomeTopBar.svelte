@@ -79,7 +79,7 @@
           <span class="warning">{$user.displayName} is logged in</span>
         {:else}
           <div class="buttons">
-            <mwc-dialog bind:this={modalWindow} id="dialog" class="dialogue-buttons" heading={getHeadingForDialog()}>
+            <mwc-dialog bind:this={modalWindow} id="dialog" class="dialogue-buttons styled" heading={getHeadingForDialog()}>
               <h1 class="modal-title">Sign in to OAE</h1>
               {#if authenticationStrategy.hasExternalAuth}
                 {#each enabledExternalStrategies as eachStrategy}
@@ -151,6 +151,10 @@
     &:active {
       background-color: #03254e;
     }
+  }
+
+  .styled {
+    --mdc-dialog-min-width: 450px;
   }
 
   .dialogue-buttons {

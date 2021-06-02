@@ -34,7 +34,7 @@
   const failedAuthentication = equals(401);
 
   export let enabledStrategies;
-  let formValidation = { failed: true, message: '' };
+  let formValidation = { failed: false, message: '' };
   let localAuthForm;
   let usernameField;
   let passwordField;
@@ -153,7 +153,7 @@
       stacked
     />
 
-    {#if formValidation.failed && formValidation.message}
+    {#if formValidation.failed}
       <div class="wrong-credentials has-text-centered">
         <span class="icon is-small"> <i class="fas fa-exclamation-circle" /></span>
         <span>{formValidation.message}</span>
@@ -208,7 +208,8 @@
   }
 
   .wrong-credentials {
-    background: #cc5f5f;
+    background: #ffe1e1;
+    border: 1px solid #cc5f5f;
     border-radius: 2px;
     margin-top: 2%;
     margin-bottom: 2%;
@@ -219,9 +220,9 @@
     display: flex;
     align-items: center;
     text-align: center;
-    color: #ffffff;
+    color: #cc5f5f;
     padding: 0.8em;
-    width: 92%;
+    width: 91%;
   }
 
   .wrong-credentials span {

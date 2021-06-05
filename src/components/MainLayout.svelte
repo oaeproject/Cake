@@ -1,5 +1,6 @@
 <script>
   import Sidebar from '../components/Sidebar.svelte';
+  import MainTopBar from '../components/MainTopBar.svelte';
 </script>
 
 <div class="container main-container">
@@ -10,6 +11,9 @@
   </div>
   <div class="column is-three-fifths main-wrapper">
     <div class="column main-content">
+      <div class="sticky-topBar">
+        <MainTopBar />
+      </div>
       <slot />
     </div>
   </div>

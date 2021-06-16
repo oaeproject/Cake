@@ -1,23 +1,29 @@
+// @ts-check
 import { Tenant } from './tenant';
+import { pipe, when, has, __, prop, assoc, dissoc, isNil, compose, any, path, not } from 'ramda';
 
-import { has, defaultTo, __, prop, assoc, dissoc, isNil, compose, any, path, not } from 'ramda';
 const includesTenantData = compose(not, isNil, prop('tenant'));
 const exists = compose(not, isNil);
-
 const deleteOldAttribute = oldAttribute => dissoc(oldAttribute);
 const copyToNewAttribute = (oldAttribute, newAttribute, object) =>
   assoc(newAttribute, __, object)(prop(oldAttribute, object));
-
 const transferAttributeTo = (oldAttribute, newAttribute) => object => {
   return deleteOldAttribute(oldAttribute)(copyToNewAttribute(oldAttribute, newAttribute, object));
 };
-const transferAttribute = (oldAttribute, newAttribute, object) =>
-  transferAttributeTo(oldAttribute, newAttribute)(object);
 
+/** @type {String} */
 const USER = 'user';
+
+/** @type {String} */
 const PICTURE = 'picture';
+
+/** @type {String} */
 const SMALL = 'small';
+
+/** @type {String} */
 const MEDIUM = 'medium';
+
+/** @type {String} */
 const LARGE = 'large';
 
 const getSmallPicture = path([PICTURE, SMALL]);
@@ -25,42 +31,111 @@ const getMediumPicture = path([PICTURE, MEDIUM]);
 const getLargePicture = path([PICTURE, LARGE]);
 
 export class User {
-  /*
-  anonymous; //: boolean;
-  tenant; // : Tenant;
-  locale; // example: en_GB
-  authenticationStrategy; // :
-  /*
-    | "local"
-    | "ldap"
-    | "shibboleth"
-    | "twitter"
-    | "google"
-    | "googleApps"
-    | "facebook"
-    | "cas";
-  displayName; // : string;
-  email; // : string;
-  emailPreference; // : "immediate" | "daily" | "weekly" | "never";
-  id; // example: "u:guest:QGhEMXZoS3" 
-  profilePath; // example: "/user/guest/QGhEMXZoS3" 
-  publicAlias; // : string;
-  resourceType; // : string = USER;
-  signatureExpiryDate; // : number;
-  lastModified; // : Date;
-  signature; // : string;
-  smallPicture; // example: "/api/download/signed?uri=...&expires=...&signature=..." 
-  mediumPicture; // example: "/api/download/signed?uri=...&expires=...&signature=..."
-  largePicture; // example: "/api/download/signed?uri=...&expires=...&signature=..."
+  /** @type {boolean} */
+  anonymous;
 
-  // These are potential observables in the future
-  acceptedTC; // AcceptedTC can be 0 or 1
-  needsToAcceptTC; // : boolean;
-  isGlobalAdmin; // : boolean;
-  isTenantAdmin; // : boolean;
-  visibility; // : "public" | "private" | "loggedin";
-  isLoggedIn; // : boolean;
-  */
+  /** @type {Tenant} */
+  tenant;
+
+  /** @type {string} */
+  locale; // example: en_GB
+
+  /**
+   * @type {string}
+   * "local"
+   * "ldap"
+   * "shibboleth"
+   * "twitter"
+   * "google"
+   * "googleApps"
+   * "facebook"
+   * "cas";
+   */
+  authenticationStrategy;
+
+  /** @type {string} */
+  displayName;
+
+  /** @type {string} */
+  email;
+
+  /**
+   * @type {string}
+   * "immediate"
+   * "daily"
+   * "weekly"
+   * "never";
+   */
+  emailPreference;
+
+  /**
+   * @type {string}
+   * example: "u:guest:QGhEMXZoS3"
+   */
+  id;
+
+  /**
+   * @type {string}
+   * example: "/user/guest/QGhEMXZoS3"
+   */
+  profilePath;
+
+  /** @type {string} */
+  publicAlias;
+
+  /** @type {string} */
+  resourceType = USER;
+
+  /** @type {number} */
+  signatureExpiryDate;
+
+  /** @type {Date} */
+  lastModified;
+
+  /** @type {string} */
+  signature;
+
+  /**
+   * @type {string}
+   * example: "/api/download/signed?uri=...&expires=...&signature=..."
+   */
+  smallPicture;
+
+  /**
+   * @type {string}
+   * example: "/api/download/signed?uri=...&expires=...&signature=..."
+   */
+  mediumPicture;
+
+  /**
+   * @type {string}
+   * example: "/api/download/signed?uri=...&expires=...&signature=..."
+   */
+  largePicture;
+
+  /**
+   * @type {number}
+   * AcceptedTC can be 0 or 1
+   */
+  acceptedTC;
+
+  /** @type {boolean} */
+  needsToAcceptTC;
+
+  /** @type {boolean} */
+  isGlobalAdmin;
+
+  /** @type {boolean} */
+  isTenantAdmin;
+
+  /**
+   * @type {string}
+   * "public" | "private" | "loggedin";
+   */
+  visibility;
+
+  /** @type {boolean} */
+  isLoggedIn;
 
   constructor(userData = {}) {
     /**
@@ -70,73 +145,87 @@ export class User {
      * "oae:profilePath": "/user/guest/QGhEMXZoS3"
      * "oae:tenant": Object { alias: "guest", displayName: "Guest tenant", isGuestTenant: true, … }
      * "oae:visibility": "public"
-     * objectType: "user"
+     * "objectType": "user"
      */
 
-    /**
-     * TODO:
-     *
-     * - [ ] Compose all these transfers
-     * - [x] Display examples of attributes on top
-     * - [x] Switch statement?
-     */
-
+    /** @type {string} */
     const OBJECT_TYPE = 'objectType';
+
+    /** @type {string} */
     const RESOURCE_TYPE = 'resourceType';
+
+    /** @type {string} */
     const VISIBILITY = 'visibility';
+
+    /** @type {string} */
     const OAE_VISIBILITY = 'oae:visibility';
+
+    /** @type {string} */
     const OAE_TENANT = 'oae:tenant';
+
+    /** @type {string} */
     const TENANT = 'tenant';
+
+    /** @type {string} */
     const OAE_ID = 'oae:id';
+
+    /** @type {string} */
     const ID = 'id';
+
+    /** @type {string} */
+    const API_URL = 'apiUrl';
+
+    /** @type {string} */
     const OAE_PROFILE_PATH = 'oae:profilePath';
+
+    /** @type {string} */
     const PROFILE_PATH = 'profilePath';
 
-    // when(predicate, whenTrueFn, X);
+    const hasObjectType = userData => has(OBJECT_TYPE, userData);
+    const hasVisibility = userData => has(OAE_VISIBILITY, userData);
+    const hasTenant = userData => has(OAE_TENANT, userData);
+    const hasId = userData => has(ID, userData);
+    const hasOaeId = userData => has(OAE_ID, userData);
+    const hasProfilePath = userData => has(OAE_PROFILE_PATH, userData);
 
-    if (has(OBJECT_TYPE, userData)) {
-      userData = transferAttribute(OBJECT_TYPE, RESOURCE_TYPE, userData);
-    }
-    /*
-    userData = when(has(OBJECT_TYPE), transferAttributeTo(OBJECT_TYPE, RESOURCE_TYPE), userData);
-    */
+    const copyObjectTypeIfPresent = when(hasObjectType, transferAttributeTo(OBJECT_TYPE, RESOURCE_TYPE));
+    const copyVisibilityIfPresent = when(hasVisibility, transferAttributeTo(OAE_VISIBILITY, VISIBILITY));
+    const copyTenantIfPresent = when(hasTenant, transferAttributeTo(OAE_TENANT, TENANT));
+    const copyApiUrlIfPresent = when(hasId, transferAttributeTo(ID, API_URL));
+    const copyIdIfPresent = when(hasOaeId, transferAttributeTo(OAE_ID, ID));
+    const copyProfilePathIfPresent = when(hasProfilePath, transferAttributeTo(OAE_PROFILE_PATH, PROFILE_PATH));
 
-    if (has(OAE_VISIBILITY, userData)) {
-      userData = transferAttribute(OAE_VISIBILITY, VISIBILITY, userData);
-    }
-
-    if (has(OAE_TENANT, userData)) {
-      userData = transferAttribute(OAE_TENANT, TENANT, userData);
-    }
-
-    if (has(OAE_ID, userData)) {
-      userData = transferAttribute(OAE_ID, ID, userData);
-    }
-
-    if (has(OAE_PROFILE_PATH, userData)) {
-      userData = transferAttribute(OAE_PROFILE_PATH, PROFILE_PATH, userData);
-    }
+    /**
+     * Here we transform some attributes coming from the backend into new simpler ones
+     */
+    userData = pipe(
+      copyObjectTypeIfPresent,
+      copyVisibilityIfPresent,
+      copyTenantIfPresent,
+      copyApiUrlIfPresent,
+      copyIdIfPresent,
+      copyProfilePathIfPresent,
+    )(userData);
 
     this.smallPicture = getSmallPicture(userData);
     this.mediumPicture = getMediumPicture(userData);
     this.largePicture = getLargePicture(userData);
-    this.isGlobalAdmin = prop('isGlobalAdmin', userData);
-    this.isTenantAdmin = prop('isTenantAdmin', userData);
-    this.visibility = prop('visibility', userData);
-    this.isLoggedIn = not(Boolean(prop('anon', userData)));
-    this.anonymous = prop('anonymous', userData);
-    this.locale = prop('locale', userData);
-    this.lastModified = new Date(prop('lastModified', userData));
-    this.needsToAcceptTC = prop('needsToAcceptTC', userData);
-    this.acceptedTC = Boolean(prop('acceptedTC', userData));
-    this.profilePath = prop('profilePath', userData);
-    this.id = prop('id', userData);
-    this.displayName = prop('displayName', userData);
-    this.email = prop('email', userData);
-    this.emailPreference = prop('emailPreference', userData);
+    this.isGlobalAdmin = userData?.isGlobalAdmin;
+    this.isTenantAdmin = userData?.isTenantAdmin;
+    this.visibility = userData?.visibility;
+    this.isLoggedIn = !userData?.anon;
+    this.anonymous = userData?.anonymous;
+    this.locale = userData?.locale;
+    this.lastModified = new Date(userData?.lastModified);
+    this.needsToAcceptTC = userData?.needsToAcceptTC;
+    this.acceptedTC = userData?.acceptedTC;
+    this.profilePath = userData?.profilePath;
+    this.displayName = userData?.displayName;
+    this.email = userData?.email;
+    this.emailPreference = userData?.emailPreference;
 
     if (includesTenantData(userData)) {
-      this.tenant = new Tenant(prop('tenant', userData));
+      this.tenant = new Tenant(userData?.tenant);
     } else {
       this.tenant = new Tenant({});
     }
@@ -144,13 +233,5 @@ export class User {
 
   get hasAnyPicture() {
     return any(exists, [this.smallPicture, this.mediumPicture, this.largePicture]);
-  }
-
-  get asBackend() {
-    return {
-      anon: not(this.isLoggedIn),
-      locale: this.locale,
-      tenant: this.tenant.asBackend,
-    };
   }
 }

@@ -1,14 +1,50 @@
-import { Tenant } from "./tenant";
+import { Tenant } from './tenant';
+
+/** @type {string} */
+const DISCUSSION = 'discussion';
 
 export class Resource {
-  displayName: string;
-  tenant: Tenant;
-  id: string; /* example: "d:guest:euAwbGM_cL" */
-  apiUrl: string; /* example: "http://guest.oae.com/api/discussion/d:guest:euAwbGM_cL" */
-  profilePath: string; /* example: "/discussion/guest/euAwbGM_cL" */
-  objectType: string; /* in this case it should be 'discussion' */
-  url: string; /* example: "http://guest.oae.com/discussion/guest/euAwbGM_cL" */
-  visibility: "public" | "private" | "loggedin";
+  /** @type {string} */
+  displayName;
+
+  /** @type {Tenant} */
+  tenant;
+
+  /**
+   * @type {string}
+   * example: "d:guest:euAwbGM_cL"
+   */
+  id;
+
+  /**
+   * @type {string}
+   * example: "http://guest.oae.com/api/discussion/d:guest:euAwbGM_cL"
+   */
+  apiUrl;
+
+  /**
+   * @type {string}
+   * example: "/discussion/guest/euAwbGM_cL"
+   */
+  profilePath;
+
+  /**
+   * @type {string}
+   * in this case it should be 'discussion'
+   */
+  objectType = DISCUSSION;
+
+  /**
+   * @type {string}
+   * example: "http://guest.oae.com/discussion/guest/euAwbGM_cL"
+   */
+  url;
+
+  /**
+   * @type {string}
+   * 'public' | 'private' | 'loggedin';
+   * */
+  visibility;
 
   constructor(resourceData) {
     /**
@@ -22,16 +58,16 @@ export class Resource {
      * "oae:tenant": Object { alias: "guest", displayName: "Guest tenant", isGuestTenant: true, … }
      * "oae:visibility": "public"
      * objectType: "discussion"
-     * ​​url: "http://guest.oae.com/discussion/guest/euAwbGM_cL"
+     * url: "http://guest.oae.com/discussion/guest/euAwbGM_cL"
      */
 
-    this.apiUrl = resourceData.id;
-    this.id = resourceData["oae:id"];
-    this.displayName = resourceData.displayName;
-    this.profilePath = resourceData.profilePath;
-    this.tenant = new Tenant(resourceData.tenant);
-    this.visibility = resourceData["oae:visibility"];
-    this.objectType = resourceData.objectType;
-    this.url = resourceData.url;
+    this.apiUrl = resourceData?.id;
+    this.id = resourceData['oae:id'];
+    this.displayName = resourceData?.displayName;
+    this.profilePath = resourceData?.profilePath;
+    this.tenant = new Tenant(resourceData?.tenant);
+    this.visibility = resourceData['oae:visibility'];
+    this.objectType = resourceData?.objectType;
+    this.url = resourceData?.url;
   }
 }

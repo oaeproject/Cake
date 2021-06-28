@@ -7,11 +7,9 @@
   import { getCurrentUser, redirectUrl, user, tenantConfig, invitationInfo } from '../stores/user';
   import { authenticationAPI } from '../helpers/authentication';
   import { getRedirectUrl, getInvitationInfo } from '../helpers/utils';
-  import { useFocus } from 'svelte-navigator';
   import { locale } from 'svelte-i18n';
 
   let log = anylogger('homepage');
-  const registerFocus = useFocus();
 
   let authenticationStrategy = {};
   export let goToLogin;
@@ -129,7 +127,7 @@
     font-weight: 500;
     font-size: 48px;
     line-height: 72px;
-    color: #000000;
+    color: #000;
   }
 
   .left-column span {
@@ -139,7 +137,7 @@
 
   .button-register {
     margin-top: 1em;
-    background: #ffffff;
+    background: #fff;
     border: 3px solid #3a72e9;
     box-sizing: border-box;
   }

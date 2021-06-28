@@ -1,21 +1,24 @@
 <script>
-  import { ActivityItem } from '../models/activity';
+  import { user } from '../stores/user';
   import '@polymer/iron-icons/iron-icons.js';
   import '@polymer/iron-icons/social-icons.js';
   import '@polymer/iron-icons/av-icons.js';
   import '@polymer/iron-icons/hardware-icons.js';
   import '@polymer/iron-icons/communication-icons.js';
 
+  import { _ } from 'svelte-i18n';
   import { formatDistance } from 'date-fns';
-  import { humanizeActivityVerb } from '../helpers/activity';
   import anylogger from 'anylogger';
   import { onMount } from 'svelte';
 
   export let activityItem;
 
   const log = anylogger('oae-newsfeed');
+  let activitySummary;
 
   onMount(async () => {
+    activityItem.summary = activityItem.getSummary($user);
+    activitySummary = $_(activityItem.summary.i18nKey, { values: activityItem.summary.properties });
     log.warn(activityItem);
   });
 </script>
@@ -27,12 +30,16 @@
         <div class="level-item">
           <div class="column is-flex news-feed-nav">
             <figure class="image avatar-news-feed">
-              <img alt="primary-actor" class="is-rounded avatar-news-feed" src={activityItem.primaryActor.mediumPicture} />
+              <img
+                alt="primary-actor"
+                class="is-rounded avatar-news-feed"
+                src={activityItem.primaryActor.mediumPicture}
+              />
             </figure>
             <section>
               <p class="user-info">
-                <a class="feed-user" href="/">{activityItem.primaryActor.displayName}</a>
-                {humanizeActivityVerb(activityItem.verb)} a {activityItem.object.objectType}
+                {@html decodeURIComponent(activitySummary)}
+                <!-- This icon.. why is this here? -->
                 <span class="panel-icon icon-feed">
                   <iron-icon icon="icons:cloud-upload" />
                 </span>
@@ -47,6 +54,13 @@
         </div>
       </div>
       <div class="level-right">
+        <!-- I have no idea what the markup should be, so here it goes -->
+        <img
+          alt="object-thumbnail"
+          max-height={activityItem.primaryObject.image.height}
+          max-width={activityItem.primaryObject.image.width}
+          src={activityItem.primaryObject.image.url}
+        />
         <p class="level-item">
           <button class="button news-pin">
             <iron-icon icon="icons:more-vert" />
@@ -80,10 +94,10 @@
 
 <style lang="scss">
   .box {
-    box-shadow: none;
     background-color: white;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+
     &:hover {
       //box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
       box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
@@ -97,7 +111,7 @@
   }
 
   * {
-    font-size: 1m;
+    font-size: 1em;
   }
 
   // Avatar
@@ -148,6 +162,7 @@
     text-decoration: none;
     color: #424242;
     font-weight: bold;
+
     &:hover {
       color: #2962ff;
       background-color: #f5f7ff;
@@ -177,6 +192,7 @@
     color: #424242;
     width: 0;
     margin-left: 55px;
+
     &:hover {
       color: #2962ff;
       text-decoration: underline;
@@ -190,6 +206,7 @@
     color: #424242;
     width: 0;
     margin-left: 90px;
+
     &:hover {
       color: #2962ff;
       text-decoration: underline;
@@ -199,6 +216,7 @@
   .comments-icon {
     color: #272b2e;
     margin-right: 5px;
+
     &:hover {
       color: #272b2e;
     }
@@ -207,6 +225,7 @@
   .reply-icon {
     color: #272b2e;
     margin-right: 5px;
+
     &:hover {
       color: #272b2e;
     }
@@ -224,9 +243,11 @@
     border: none;
     background-color: white;
     color: #424242;
+
     &:hover {
       color: #2962ff;
     }
+
     &:focus,
     :active {
       border: none;

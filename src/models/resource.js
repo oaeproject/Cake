@@ -30,9 +30,8 @@ export class Resource {
 
   /**
    * @type {string}
-   * in this case it should be 'discussion'
    */
-  objectType = DISCUSSION;
+  objectType;
 
   /**
    * @type {string}
@@ -45,6 +44,12 @@ export class Resource {
    * 'public' | 'private' | 'loggedin';
    * */
   visibility;
+
+  mimeType;
+  image;
+  wideImage;
+  subType;
+  revisionId;
 
   constructor(resourceData) {
     /**
@@ -61,11 +66,16 @@ export class Resource {
      * url: "http://guest.oae.com/discussion/guest/euAwbGM_cL"
      */
 
-    this.apiUrl = resourceData?.id;
-    this.id = resourceData['oae:id'];
     this.displayName = resourceData?.displayName;
-    this.profilePath = resourceData?.profilePath;
-    this.tenant = new Tenant(resourceData?.tenant);
+    this.apiUrl = resourceData?.id;
+    this.image = resourceData.image;
+    this.wideImage = resourceData.wideImage;
+    this.id = resourceData['oae:id'];
+    this.mimeType = resourceData['oae:mimeType'];
+    this.profilePath = resourceData['oae:profilePath'];
+    this.subType = resourceData['oae:resourceSubType'];
+    this.revisionId = resourceData['oae:revisionId'];
+    this.tenant = new Tenant(resourceData['oae:tenant']);
     this.visibility = resourceData['oae:visibility'];
     this.objectType = resourceData?.objectType;
     this.url = resourceData?.url;

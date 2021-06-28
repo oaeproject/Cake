@@ -1,4 +1,4 @@
-import { values, both, assocPath, equals, prop, compose, assoc, map } from 'ramda';
+import { assoc, lensProp, values, both, assocPath, equals, prop, compose, set, map } from 'ramda';
 import { ActivityItem } from '../models/activity';
 import anylogger from 'anylogger';
 import { derived, writable } from 'svelte/store';
@@ -48,9 +48,6 @@ const processActivities = (rawActivities, asSomeUser) => {
     // Move the relevant items (comments, previews, ..) to the top
     prepareActivity(eachActivity);
 
-    // Generate an i18nable summary for this activity
-    // const summary = generateSummary(asSomeUser, eachActivity);
-
     // Generate the primary actor view
     // const primaryActor = generatePrimaryActor(me, eachActivity);
 
@@ -82,7 +79,11 @@ const parseActivityActor = (eachActivityActor, currentUser) => {
   const isCurrentUserTheActorAndDoesItHavePictures = both(sameAsActivityActor, hasAnyPicture)(currentUser);
 
   if (isCurrentUserTheActorAndDoesItHavePictures) {
-    eachActivityActor = compose(copySmallPictureFromCurrentUser, copyMediumPictureFromCurrentUser, copyLargePictureFromCurrentUser)(eachActivityActor);
+    eachActivityActor = compose(
+      copySmallPictureFromCurrentUser,
+      copyMediumPictureFromCurrentUser,
+      copyLargePictureFromCurrentUser,
+    )(eachActivityActor);
   } else {
     // TODO simplify
     if (eachActivityActor.image && eachActivityActor.image.url) {

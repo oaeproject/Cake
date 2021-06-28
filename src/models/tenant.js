@@ -1,9 +1,6 @@
 // @ts-check
 export class Tenant {
   /** @type {string} */
-  store;
-
-  /** @type {string} */
   alias;
 
   /** @type {string} */

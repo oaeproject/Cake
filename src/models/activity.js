@@ -1,5 +1,28 @@
 import { User } from './user';
-import { prop, includes } from 'ramda';
+import { Resource } from './resource';
+import { generateSummary } from '../helpers/activity-summary';
+import { includes, nth, has, head, prop, pipe } from 'ramda';
+
+const COLLECTION = 'oae:collection';
+const ACTOR = 'actor';
+const OBJECT = 'object';
+
+const second = nth(1);
+const getActor = prop(ACTOR);
+const getObject = prop(OBJECT);
+const getCollection = prop(COLLECTION);
+
+const getActorCollection = pipe(getActor, getCollection);
+const getObjectCollection = pipe(getObject, getCollection);
+
+const hasSeveralActors = pipe(getActor, has(COLLECTION));
+const hasSeveralObjects = pipe(getObject, has(COLLECTION));
+
+const getFirstActor = pipe(getActorCollection, head);
+const getFirstObject = pipe(getObjectCollection, head);
+
+const getSecondActor = pipe(getActorCollection, second);
+const getSecondObject = pipe(getObjectCollection, second);
 
 // Variable that keeps track of the different activity types that are used for comment activities
 export const COMMENT_ACTIVITY_TYPES = [
@@ -14,7 +37,6 @@ const SHARE_ACTIVITY_TYPES = ['content-share', 'discussion-share', 'folder-share
 
 const getActivityType = prop('oae:activityType');
 const getId = prop('oae:activityId');
-const getType = prop('oae:activityType');
 
 export class ActivityItem {
   /**
@@ -55,12 +77,23 @@ export class ActivityItem {
 
   constructor(rawActivity) {
     this.id = getId(rawActivity);
-    this.activityType = getType(rawActivity);
+    this.activityType = getActivityType(rawActivity);
     this.published = new Date(rawActivity?.published);
-    this.summary = this.generateSummary(rawActivity?.actor, rawActivity?.verb, rawActivity?.object);
-    this.primaryActor = new User(rawActivity?.actor);
-    this.object = rawActivity?.object;
     this.verb = rawActivity?.verb;
+
+    if (hasSeveralActors(rawActivity)) {
+      this.primaryActor = getFirstActor(rawActivity);
+      this.secondaryActor = getSecondActor(rawActivity);
+    } else {
+      this.primaryActor = new User(rawActivity?.actor);
+    }
+
+    if (hasSeveralObjects(rawActivity)) {
+      this.primaryObject = getFirstObject(rawActivity);
+      this.secondaryObject = getSecondObject(rawActivity);
+    } else {
+      this.primaryObject = new Resource(rawActivity?.object);
+    }
 
     const isOneOfCommentActivities = includes(getActivityType(rawActivity), COMMENT_ACTIVITY_TYPES);
     if (isOneOfCommentActivities) {
@@ -69,7 +102,7 @@ export class ActivityItem {
     }
   }
 
-  generateSummary(actor, verb, object) {
-    return `${actor} just ${verb} on ${object}`;
+  getSummary(currentUser) {
+    return generateSummary(currentUser, this);
   }
 }

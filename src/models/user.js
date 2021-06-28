@@ -4,12 +4,14 @@ import { pipe, when, has, __, prop, assoc, dissoc, isNil, compose, any, path, no
 
 const includesTenantData = compose(not, isNil, prop('tenant'));
 const exists = compose(not, isNil);
-const deleteOldAttribute = oldAttribute => dissoc(oldAttribute);
-const copyToNewAttribute = (oldAttribute, newAttribute, object) =>
-  assoc(newAttribute, __, object)(prop(oldAttribute, object));
-const transferAttributeTo = (oldAttribute, newAttribute) => object => {
-  return deleteOldAttribute(oldAttribute)(copyToNewAttribute(oldAttribute, newAttribute, object));
-};
+const transferAttributeTo =
+  (oldAttribute, newAttribute, deleteOldAttribute = true) =>
+  object => {
+    object[newAttribute] = object[oldAttribute];
+    if (deleteOldAttribute) delete object[oldAttribute];
+    return object;
+    // return deleteOldAttribute(oldAttribute)(copyToNewAttribute(oldAttribute, newAttribute, object));
+  };
 
 /** @type {String} */
 const USER = 'user';
@@ -191,8 +193,8 @@ export class User {
     const copyObjectTypeIfPresent = when(hasObjectType, transferAttributeTo(OBJECT_TYPE, RESOURCE_TYPE));
     const copyVisibilityIfPresent = when(hasVisibility, transferAttributeTo(OAE_VISIBILITY, VISIBILITY));
     const copyTenantIfPresent = when(hasTenant, transferAttributeTo(OAE_TENANT, TENANT));
-    const copyApiUrlIfPresent = when(hasId, transferAttributeTo(ID, API_URL));
     const copyIdIfPresent = when(hasOaeId, transferAttributeTo(OAE_ID, ID));
+    const copyApiUrlIfPresent = when(hasId, transferAttributeTo(ID, API_URL, false));
     const copyProfilePathIfPresent = when(hasProfilePath, transferAttributeTo(OAE_PROFILE_PATH, PROFILE_PATH));
 
     /**
@@ -207,22 +209,28 @@ export class User {
       copyProfilePathIfPresent,
     )(userData);
 
+    this.resourceType = userData?.resourceType;
+    this.visibility = userData?.visibility;
+    this.apiUrl = userData?.apiUrl;
+    this.url = userData?.url;
+    this.id = userData?.id;
+    this.profilePath = userData?.profilePath;
     this.smallPicture = getSmallPicture(userData);
     this.mediumPicture = getMediumPicture(userData);
     this.largePicture = getLargePicture(userData);
     this.isGlobalAdmin = userData?.isGlobalAdmin;
     this.isTenantAdmin = userData?.isTenantAdmin;
-    this.visibility = userData?.visibility;
     this.isLoggedIn = !userData?.anon;
     this.anonymous = userData?.anonymous;
     this.locale = userData?.locale;
-    this.lastModified = new Date(userData?.lastModified);
+    if (userData.lastModified) this.lastModified = new Date(userData?.lastModified);
     this.needsToAcceptTC = userData?.needsToAcceptTC;
     this.acceptedTC = userData?.acceptedTC;
-    this.profilePath = userData?.profilePath;
     this.displayName = userData?.displayName;
     this.email = userData?.email;
     this.emailPreference = userData?.emailPreference;
+    this.authenticationStrategy = userData?.authenticationStrategy;
+    this.signature = userData?.signature;
 
     if (includesTenantData(userData)) {
       this.tenant = new Tenant(userData?.tenant);

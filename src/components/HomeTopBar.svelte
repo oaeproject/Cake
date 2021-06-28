@@ -23,7 +23,8 @@
   let tenantLogo;
   let modalWindow;
   let enabledExternalStrategies;
-  /*: {
+  /* TODO: add type like this
+   {
     id, //: string;
     icon, //: string;
     url, //: string;
@@ -79,7 +80,12 @@
           <span class="warning">{$user.displayName} is logged in</span>
         {:else}
           <div class="buttons">
-            <mwc-dialog bind:this={modalWindow} id="dialog" class="dialogue-buttons styled" heading={getHeadingForDialog()}>
+            <mwc-dialog
+              bind:this={modalWindow}
+              id="dialog"
+              class="dialogue-buttons styled"
+              heading={getHeadingForDialog()}
+            >
               <h1 class="modal-title">Sign in to OAE</h1>
               {#if authenticationStrategy.hasExternalAuth}
                 {#each enabledExternalStrategies as eachStrategy}
@@ -168,7 +174,6 @@
 
   .modal-title {
     margin-top: 1%;
-    font-family: 'Poppins';
     font-style: normal;
     font-weight: bold;
     font-size: 36px;

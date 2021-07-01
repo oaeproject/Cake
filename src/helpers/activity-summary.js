@@ -14,6 +14,7 @@ const ID = 'id';
 const SUB_TYPE = 'subType';
 const VISIBILITY = 'visibility';
 const PRIMARY_OBJECT = 'primaryObject';
+const OBJECT_TYPE = 'objectType';
 const PUBLIC = 'public';
 const LOGGEDIN = 'loggedin';
 
@@ -344,24 +345,7 @@ const generateContentAddToLibrarySummary = function (me, activity, properties) {
       break;
   }
 
-  /*
-  if (justTheOneObject) {
-    if (activityObjectIs(COLLABDOC)) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_ADD_LIBRARY_COLLABDOC__';
-    } else if (activityObjectIs(COLLABSHEET)) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_ADD_LIBRARY_COLLABSHEET__';
-    } else if (activityObjectIs(FILE)) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_ADD_LIBRARY_FILE__';
-    } else if (activityObjectIs(LINK)) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_ADD_LIBRARY_LINK__';
-    }
-  } else if (severalObjects) {
-    i18nKey = '__MSG__ACTIVITY_CONTENT_ADD_LIBRARY_2__';
-  } else {
-    i18nKey = '__MSG__ACTIVITY_CONTENT_ADD_LIBRARY_2+__';
-  }
-  */
-
+  i18nKey = transformKey(i18nKey);
   return { i18nKey, properties };
 };
 
@@ -435,42 +419,6 @@ const generateContentCommentSummary = function (me, activity, properties) {
       }
       break;
   }
-
-  /*
-  if (activityTargetIs(COLLABDOC)) {
-    if (justTheOneActor) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_COMMENT_COLLABDOC_1__';
-    } else if (severalActors) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_COMMENT_COLLABDOC_2__';
-    } else {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_COMMENT_COLLABDOC_2+__';
-    }
-  } else if (activityTargetIs(COLLABSHEET)) {
-    if (justTheOneActor) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_COMMENT_COLLABSHEET_1__';
-    } else if (severalActors) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_COMMENT_COLLABSHEET_2__';
-    } else {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_COMMENT_COLLABSHEET_2+__';
-    }
-  } else if (activityTargetIs(FILE)) {
-    if (justTheOneActor) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_COMMENT_FILE_1__';
-    } else if (severalActors) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_COMMENT_FILE_2__';
-    } else {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_COMMENT_FILE_2+__';
-    }
-  } else if (activityTargetIs(LINK)) {
-    if (justTheOneActor) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_COMMENT_LINK_1__';
-    } else if (severalActors) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_COMMENT_LINK_2__';
-    } else {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_COMMENT_LINK_2+__';
-    }
-  }
-  */
 
   return { i18nKey, properties };
 };
@@ -631,34 +579,6 @@ const generateContentRestoredRevision = function (activity, properties) {
       break;
   }
 
-  /*
-  if (objectTypeIs(COLLABDOC)) {
-    if (justTheOneActor) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_RESTORED_COLLABDOC_1__';
-    } else if (justTheTwoActors) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_RESTORED_COLLABDOC_2__';
-    } else {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_RESTORED_COLLABDOC_2+__';
-    }
-  } else if (objectTypeIs(COLLABSHEET)) {
-    if (justTheOneActor) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_RESTORED_COLLABSHEET_1__';
-    } else if (justTheTwoActors) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_RESTORED_COLLABSHEET_2__';
-    } else {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_RESTORED_COLLABSHEET_2+__';
-    }
-  } else if (objectTypeIs(FILE)) {
-    if (justTheOneActor) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_RESTORED_FILE_1__';
-    } else if (justTheTwoActors) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_RESTORED_FILE_2__';
-    } else {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_RESTORED_FILE_2+__';
-    }
-  }
-  */
-
   i18nKey = transformKey(i18nKey);
   return { i18nKey, properties };
 };
@@ -735,42 +655,6 @@ const generateContentRevisionSummary = function (me, activity, properties) {
       }
       break;
   }
-
-  /*
-  if (objectTypeIs(COLLABDOC)) {
-    if (justTheOneActor) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_REVISION_COLLABDOC_1__';
-    } else if (justTheTwoActors) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_REVISION_COLLABDOC_2__';
-    } else {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_REVISION_COLLABDOC_2+__';
-    }
-  } else if (objectTypeIs(COLLABSHEET)) {
-    if (justTheOneActor) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_REVISION_COLLABSHEET_1__';
-    } else if (justTheTwoActors) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_REVISION_COLLABSHEET_2__';
-    } else {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_REVISION_COLLABSHEET_2+__';
-    }
-  } else if (objectTypeIs(FILE)) {
-    if (justTheOneActor) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_REVISION_FILE_1__';
-    } else if (justTheTwoActors) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_REVISION_FILE_2__';
-    } else {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_REVISION_FILE_2+__';
-    }
-  } else if (objectTypeIs(LINK)) {
-    if (justTheOneActor) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_REVISION_LINK_1__';
-    } else if (justTheTwoActors) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_REVISION_LINK_2__';
-    } else {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_REVISION_LINK_2+__';
-    }
-  }
-  */
 
   i18nKey = transformKey(i18nKey);
   return { i18nKey, properties };
@@ -1205,42 +1089,6 @@ const generateContentUpdateVisibilitySummary = function (me, activity, propertie
       break;
   }
 
-  /*
-  if (objectTypeIs(COLLABDOC)) {
-    if (visibilityIs(PUBLIC)) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_VISIBILITY_COLLABDOC_PUBLIC__';
-    } else if (visibilityIs(LOGGEDIN)) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_VISIBILITY_COLLABDOC_LOGGEDIN__';
-    } else {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_VISIBILITY_COLLABDOC_PRIVATE__';
-    }
-  } else if (objectTypeIs(COLLABSHEET)) {
-    if (visibilityIs(PUBLIC)) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_VISIBILITY_COLLABSHEET_PUBLIC__';
-    } else if (visibilityIs(LOGGEDIN)) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_VISIBILITY_COLLABSHEET_LOGGEDIN__';
-    } else {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_VISIBILITY_COLLABSHEET_PRIVATE__';
-    }
-  } else if (objectTypeIs(FILE)) {
-    if (visibilityIs(PUBLIC)) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_VISIBILITY_FILE_PUBLIC__';
-    } else if (visibilityIs(LOGGEDIN)) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_VISIBILITY_FILE_LOGGEDIN__';
-    } else {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_VISIBILITY_FILE_PRIVATE__';
-    }
-  } else if (objectTypeIs(LINK)) {
-    if (visibilityIs(PUBLIC)) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_VISIBILITY_LINK_PUBLIC__';
-    } else if (visibilityIs(LOGGEDIN)) {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_VISIBILITY_LINK_LOGGEDIN__';
-    } else {
-      i18nKey = '__MSG__ACTIVITY_CONTENT_VISIBILITY_LINK_PRIVATE__';
-    }
-  }
-  */
-
   i18nKey = transformKey(i18nKey);
   return { i18nKey, properties };
 };
@@ -1257,35 +1105,46 @@ const generateContentUpdateVisibilitySummary = function (me, activity, propertie
 const generateMeetingJitsiCreateSummary = function (me, activity, properties) {
   let i18nKey = null;
 
-  // Add the target to the activity summary when a targer is present on the
-  // activity and the target is not an user different from the current user
-  if (properties.targetCount === 1 && !(activity.target.objectType === 'user' && activity.target['oae:id'] !== me.id)) {
-    if (activity.target['oae:id'] === me.id) {
-      if (properties.objectCount === 1) {
+  const justTheOneTarget = isOne(properties.targetCount)
+  const justTheOneObject = isOne(properties.objectCount);
+  const justTheTwoObjects = isTwo(properties.objectCount);
+
+  const targetTypeIs = pipe(prop(TARGET), prop(OBJECT_TYPE), equals)(activity)
+  const targetIsCurrentUser = pipe(prop(TARGET), prop(ID), equals(me.id))(activity)
+  const targetIsNotTheCurrentUser = not(targetIsCurrentUser)
+
+  /**
+   * Add the target to the activity summary when a target is present on the
+   *  activity and the target is not an user different from the current user
+   */
+  if (justTheOneTarget && !(targetTypeIs(USER) && targetIsNotTheCurrentUser)) {
+    if (targetIsCurrentUser) {
+      if (justTheOneObject) {
         i18nKey = '__MSG__ACTIVITY_MEETING_CREATE_1_YOU__';
-      } else if (properties.objectCount === 2) {
+      } else if (justTheTwoObjects) {
         i18nKey = '__MSG__ACTIVITY_MEETING_CREATE_2_YOU__';
       } else {
         i18nKey = '__MSG__ACTIVITY_MEETING_CREATE_2+_YOU__';
       }
-    } else if (activity.target.objectType === 'group') {
-      if (properties.objectCount === 1) {
+    } else if (targetTypeIs(GROUP)) {
+      if (justTheOneObject) {
         i18nKey = '__MSG__ACTIVITY_MEETING_CREATE_1_GROUP__';
-      } else if (properties.objectCount === 2) {
+      } else if (justTheTwoObjects) {
         i18nKey = '__MSG__ACTIVITY_MEETING_CREATE_2_GROUP__';
       } else {
         i18nKey = '__MSG__ACTIVITY_MEETING_CREATE_2+_GROUP__';
       }
     }
-  } else if (properties.objectCount === 1) {
+  } else if (justTheOneObject) {
     i18nKey = '__MSG__ACTIVITY_MEETING_CREATE_1__';
-  } else if (properties.objectCount === 2) {
+  } else if (justTheTwoObjects) {
     i18nKey = '__MSG__ACTIVITY_MEETING_CREATE_2__';
   } else {
     i18nKey = '__MSG__ACTIVITY_MEETING_CREATE_2+__';
   }
 
-  return new ActivityItem(i18nKey, properties);
+  i18nKey = transformKey(i18nKey);
+  return { i18nKey, properties }
 };
 
 /**
@@ -1299,31 +1158,41 @@ const generateMeetingJitsiCreateSummary = function (me, activity, properties) {
  */
 const generateMeetingJitsiShareSummary = function (me, activity, properties) {
   let i18nKey = null;
-  if (properties.objectCount === 1) {
-    if (properties.targetCount === 1) {
-      if (activity.target['oae:id'] === me.id) {
+
+  const justTheOneObject = isOne(properties.objectCount);
+  const justTheTwoObjects = isTwo(properties.objectCount);
+
+  const justTheOneTarget = isOne(properties.targetCount);
+  const justTheTwoTargets = isTwo(properties.targetCount);
+
+  const targetIsCurrentUser = pipe(prop(TARGET), prop(ID), equals(me.id))(activity)
+
+  if (justTheOneObject) {
+    if (justTheOneTarget) {
+      if (targetIsCurrentUser) {
         i18nKey = '__MSG__ACTIVITY_MEETING_SHARE_YOU__';
       } else {
         i18nKey = '__MSG__ACTIVITY_MEETING_SHARE_1__';
       }
-    } else if (properties.targetCount === 2) {
+    } else if (justTheTwoTargets) {
       i18nKey = '__MSG__ACTIVITY_MEETING_SHARE_2__';
     } else {
       i18nKey = '__MSG__ACTIVITY_MEETING_SHARE_2+__';
     }
-  } else if (properties.objectCount === 2) {
-    if (activity.target['oae:id'] === me.id) {
+  } else if (justTheTwoObjects) {
+    if (targetIsCurrentUser) {
       i18nKey = '__MSG__ACTIVITY_MEETINGS_SHARE_2_YOU__';
     } else {
       i18nKey = '__MSG__ACTIVITY_MEETINGS_SHARE_2__';
     }
-  } else if (activity.target['oae:id'] === me.id) {
+  } else if (targetIsCurrentUser) {
     i18nKey = '__MSG__ACTIVITY_MEETINGS_SHARE_2+_YOU__';
   } else {
     i18nKey = '__MSG__ACTIVITY_MEETINGS_SHARE_2+__';
   }
 
-  return new ActivityItem(i18nKey, properties);
+  i18nKey = transformKey(i18nKey);
+  return { i18nKey, properties }
 };
 
 /**
@@ -1339,15 +1208,24 @@ const generateMeetingJitsiShareSummary = function (me, activity, properties) {
 const generateDefaultSummary = function (me, activity, properties) {
   let i18nKey = null;
   properties.verb = activity.verb;
-  if (properties.actorCount === 1) {
-    i18nKey = '__MSG__ACTIVITY_DEFAULT_1__';
-  } else if (properties.actorCount === 2) {
-    i18nKey = '__MSG__ACTIVITY_DEFAULT_2__';
-  } else {
-    i18nKey = '__MSG__ACTIVITY_DEFAULT_2+__';
-  }
 
-  return new ActivityItem(i18nKey, properties);
+  const justTheOneActor = isOne(properties.actorCount)
+  const justTheTwoActors = isTwo(properties.actorCount)
+
+  switch (true) {
+    case justTheOneActor:
+    i18nKey = '__MSG__ACTIVITY_DEFAULT_1__';
+      break;
+    case justTheTwoActors:
+    i18nKey = '__MSG__ACTIVITY_DEFAULT_2__';
+      break;
+    default:
+    i18nKey = '__MSG__ACTIVITY_DEFAULT_2+__';
+      break;
+  }  
+
+  i18nKey = transformKey(i18nKey);
+  return { i18nKey, properties };
 };
 
 /**
@@ -1361,15 +1239,24 @@ const generateDefaultSummary = function (me, activity, properties) {
  */
 const generateDiscussionAddToLibrarySummary = function (me, activity, properties) {
   let i18nKey = null;
-  if (properties.objectCount === 1) {
+
+  const justTheOneObject = isOne(properties.objectCount);
+  const justTheTwoObjects = isTwo(properties.objectCount);
+
+  switch (true) {
+    case justTheOneObject:
     i18nKey = '__MSG__ACTIVITY_DISCUSSION_ADD_LIBRARY__';
-  } else if (properties.objectCount === 2) {
+      break;
+    case justTheTwoObjects:
     i18nKey = '__MSG__ACTIVITY_DISCUSSION_ADD_LIBRARY_2__';
-  } else {
+      break;
+    default:
     i18nKey = '__MSG__ACTIVITY_DISCUSSION_ADD_LIBRARY_2+__';
+      break;
   }
 
-  return new ActivityItem(i18nKey, properties);
+  i18nKey = transformKey(i18nKey);
+  return { i18nKey, properties }
 };
 
 /**
@@ -1383,15 +1270,24 @@ const generateDiscussionAddToLibrarySummary = function (me, activity, properties
  */
 const generateDiscussionCreateSummary = function (me, activity, properties) {
   let i18nKey = null;
-  if (properties.objectCount === 1) {
+
+  const justTheOneObject = isOne(properties.objectCount);
+  const justTheTwoObjects = isTwo(properties.objectCount);
+
+  switch (true) {
+    case justTheOneObject:
     i18nKey = '__MSG__ACTIVITY_DISCUSSION_CREATE_1__';
-  } else if (properties.objectCount === 2) {
+      break;
+    case justTheTwoObjects:
     i18nKey = '__MSG__ACTIVITY_DISCUSSION_CREATE_2__';
-  } else {
+      break;
+    default:
     i18nKey = '__MSG__ACTIVITY_DISCUSSION_CREATE_2+__';
+      break;
   }
 
-  return new ActivityItem(i18nKey, properties);
+  i18nKey = transformKey(i18nKey);
+  return { i18nKey, properties }
 };
 
 /**
@@ -1405,15 +1301,24 @@ const generateDiscussionCreateSummary = function (me, activity, properties) {
  */
 const generateDiscussionMessageSummary = function (me, activity, properties) {
   let i18nKey = null;
-  if (properties.actorCount === 1) {
-    i18nKey = '__MSG__ACTIVITY_DISCUSSION_MESSAGE_1__';
-  } else if (properties.actorCount === 2) {
-    i18nKey = '__MSG__ACTIVITY_DISCUSSION_MESSAGE_2__';
-  } else {
-    i18nKey = '__MSG__ACTIVITY_DISCUSSION_MESSAGE_2+__';
+
+  const justTheOneActor = isOne(properties.actorCount);
+  const justTheTwoActors = isTwo(properties.actorCount);
+
+  switch (true) {
+    case justTheOneActor:
+      i18nKey = '__MSG__ACTIVITY_DISCUSSION_MESSAGE_1__';
+      break;
+    case justTheTwoActors:
+      i18nKey = '__MSG__ACTIVITY_DISCUSSION_MESSAGE_2__';
+      break;
+    default:
+      i18nKey = '__MSG__ACTIVITY_DISCUSSION_MESSAGE_2+__';
+      break;
   }
 
-  return new ActivityItem(i18nKey, properties);
+  i18nKey = transformKey(i18nKey);
+  return { i18nKey, properties }
 };
 
 /**
@@ -1427,31 +1332,39 @@ const generateDiscussionMessageSummary = function (me, activity, properties) {
  */
 const generateDiscussionShareSummary = function (me, activity, properties) {
   let i18nKey = null;
-  if (properties.objectCount === 1) {
-    if (properties.targetCount === 1) {
-      if (activity.target['oae:id'] === me.id) {
+
+  const justTheOneObject = isOne(properties.objectCount);
+  const justTheTwoObjects = isTwo(properties.objectCount);
+  const justTheOneTarget = isOne(properties.targetCount)
+  const justTheTwoTargets = isTwo(properties.targetCount)
+  const targetIsCurrentUser = pipe(prop(TARGET), prop(ID), equals(me.id))(activity)
+
+  if (justTheOneObject) {
+    if (justTheOneTarget) {
+      if (targetIsCurrentUser) {
         i18nKey = '__MSG__ACTIVITY_DISCUSSION_SHARE_YOU__';
       } else {
         i18nKey = '__MSG__ACTIVITY_DISCUSSION_SHARE_1__';
       }
-    } else if (properties.targetCount === 2) {
+    } else if (justTheTwoTargets) {
       i18nKey = '__MSG__ACTIVITY_DISCUSSION_SHARE_2__';
     } else {
       i18nKey = '__MSG__ACTIVITY_DISCUSSION_SHARE_2+__';
     }
-  } else if (properties.objectCount === 2) {
-    if (activity.target['oae:id'] === me.id) {
+  } else if (justTheTwoObjects) {
+    if (targetIsCurrentUser) {
       i18nKey = '__MSG__ACTIVITY_DISCUSSIONS_SHARE_2_YOU__';
     } else {
       i18nKey = '__MSG__ACTIVITY_DISCUSSIONS_SHARE_2__';
     }
-  } else if (activity.target['oae:id'] === me.id) {
+  } else if (targetIsCurrentUser) {
     i18nKey = '__MSG__ACTIVITY_DISCUSSIONS_SHARE_2+_YOU__';
   } else {
     i18nKey = '__MSG__ACTIVITY_DISCUSSIONS_SHARE_2+__';
   }
 
-  return new ActivityItem(i18nKey, properties);
+  i18nKey = transformKey(i18nKey);
+  return { i18nKey, properties }
 };
 
 /**
@@ -1465,19 +1378,25 @@ const generateDiscussionShareSummary = function (me, activity, properties) {
  */
 const generateDiscussionUpdateMemberRoleSummary = function (me, activity, properties) {
   let i18nKey = null;
-  if (properties.objectCount === 1) {
-    if (activity.primaryObject['oae:id'] === me.id) {
+
+  const justTheOneObject = isOne(properties.objectCount);
+  const justTheTwoObjects = isTwo(properties.objectCount);
+  const primaryObjectIsCurrentUser = pipe(prop(PRIMARY_OBJECT), prop(ID), equals(me.id))(activity)
+
+  if (justTheOneObject) {
+    if (primaryObjectIsCurrentUser) {
       i18nKey = '__MSG__ACTIVITY_DISCUSSION_UPDATE_MEMBER_ROLE_YOU__';
     } else {
       i18nKey = '__MSG__ACTIVITY_DISCUSSION_UPDATE_MEMBER_ROLE_1__';
     }
-  } else if (properties.objectCount === 2) {
+  } else if (justTheTwoObjects) {
     i18nKey = '__MSG__ACTIVITY_DISCUSSION_UPDATE_MEMBER_ROLE_2__';
   } else {
     i18nKey = '__MSG__ACTIVITY_DISCUSSION_UPDATE_MEMBER_ROLE_2+__';
   }
 
-  return new ActivityItem(i18nKey, properties);
+  i18nKey = transformKey(i18nKey);
+  return { i18nKey, properties }
 };
 
 /**
@@ -1491,15 +1410,20 @@ const generateDiscussionUpdateMemberRoleSummary = function (me, activity, proper
  */
 const generateDiscussionUpdateSummary = function (me, activity, properties) {
   let i18nKey = null;
-  if (properties.actorCount === 1) {
+
+  const justTheOneActor = isOne(properties.actorCount);
+  const justTheTwoActors = isTwo(properties.actorCount);
+
+  if (justTheOneActor) {
     i18nKey = '__MSG__ACTIVITY_DISCUSSION_UPDATE_1__';
-  } else if (properties.actorCount === 2) {
+  } else if (justTheTwoActors) {
     i18nKey = '__MSG__ACTIVITY_DISCUSSION_UPDATE_2__';
   } else {
     i18nKey = '__MSG__ACTIVITY_DISCUSSION_UPDATE_2+__';
   }
 
-  return new ActivityItem(i18nKey, properties);
+  i18nKey = transformKey(i18nKey);
+  return { i18nKey, properties }
 };
 
 /**
@@ -1513,15 +1437,22 @@ const generateDiscussionUpdateSummary = function (me, activity, properties) {
  */
 const generateDiscussionUpdateVisibilitySummary = function (me, activity, properties) {
   let i18nKey = null;
-  if (activity.primaryObject['oae:visibility'] === 'public') {
-    i18nKey = '__MSG__ACTIVITY_DISCUSSION_VISIBILITY_PUBLIC__';
-  } else if (activity.primaryObject['oae:visibility'] === 'loggedin') {
-    i18nKey = '__MSG__ACTIVITY_DISCUSSION_VISIBILITY_LOGGEDIN__';
-  } else {
-    i18nKey = '__MSG__ACTIVITY_DISCUSSION_VISIBILITY_PRIVATE__';
+  const primaryObjectIs = pipe(prop(PRIMARY_OBJECT), prop(VISIBILITY), equals)(activity)
+
+  switch (true) {
+    case primaryObjectIs(PUBLIC):
+      i18nKey = '__MSG__ACTIVITY_DISCUSSION_VISIBILITY_PUBLIC__';
+      break;
+    case primaryObjectIs(LOGGEDIN):
+      i18nKey = '__MSG__ACTIVITY_DISCUSSION_VISIBILITY_LOGGEDIN__';
+      break;
+    default:
+      i18nKey = '__MSG__ACTIVITY_DISCUSSION_VISIBILITY_PRIVATE__';
+      break;
   }
 
-  return new ActivityItem(i18nKey, properties);
+  i18nKey = transformKey(i18nKey);
+  return { i18nKey, properties }
 };
 
 /**
@@ -1535,21 +1466,27 @@ const generateDiscussionUpdateVisibilitySummary = function (me, activity, proper
  */
 const generateFolderAddToFolderSummary = function (me, activity, properties) {
   let i18nKey = null;
-  if (properties.objectCount === 1) {
-    if (activity.primaryObject.subType === COLLABDOC) {
+
+  const justTheOneObject = isOne(properties.objectCount);
+  const justTheTwoObjects = isTwo(properties.objectCount);
+  const objectTypeIs = pipe(prop(PRIMARY_OBJECT), prop(SUB_TYPE), equals)(activity)
+
+  if (justTheOneObject) {
+    if (objectTypeIs(COLLABDOC)) {
       i18nKey = '__MSG__ACTIVITY_FOLDER_ADD_FOLDER_COLLABDOC__';
-    } else if (activity.primaryObject.subType === FILE) {
+    } else if (objectTypeIs(FILE)) {
       i18nKey = '__MSG__ACTIVITY_FOLDER_ADD_FOLDER_FILE__';
-    } else if (activity.primaryObject.subType === LINK) {
+    } else if (objectTypeIs(LINK)) {
       i18nKey = '__MSG__ACTIVITY_FOLDER_ADD_FOLDER_LINK__';
     }
-  } else if (properties.objectCount === 2) {
+  } else if (justTheTwoObjects) {
     i18nKey = '__MSG__ACTIVITY_FOLDER_ADD_FOLDER_2__';
   } else {
     i18nKey = '__MSG__ACTIVITY_FOLDER_ADD_FOLDER_2+__';
   }
 
-  return new ActivityItem(i18nKey, properties);
+  i18nKey = transformKey(i18nKey);
+  return { i18nKey, properties }
 };
 
 /**

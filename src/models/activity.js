@@ -82,15 +82,15 @@ export class ActivityItem {
     this.verb = rawActivity?.verb;
 
     if (hasSeveralActors(rawActivity)) {
-      this.primaryActor = getFirstActor(rawActivity);
-      this.secondaryActor = getSecondActor(rawActivity);
+      this.primaryActor = new User(getFirstActor(rawActivity));
+      this.secondaryActor = new User(getSecondActor(rawActivity));
     } else {
       this.primaryActor = new User(rawActivity?.actor);
     }
 
     if (hasSeveralObjects(rawActivity)) {
-      this.primaryObject = getFirstObject(rawActivity);
-      this.secondaryObject = getSecondObject(rawActivity);
+      this.primaryObject = new Resource(getFirstObject(rawActivity));
+      this.secondaryObject = new Resource(getSecondObject(rawActivity));
     } else {
       this.primaryObject = new Resource(rawActivity?.object);
     }

@@ -68,8 +68,8 @@ export class Resource {
 
     this.displayName = resourceData?.displayName;
     this.apiUrl = resourceData?.id;
-    this.image = resourceData.image;
-    this.wideImage = resourceData.wideImage;
+    this.image = resourceData?.image;
+    this.wideImage = resourceData?.wideImage;
     this.id = resourceData['oae:id'];
     this.mimeType = resourceData['oae:mimeType'];
     this.profilePath = resourceData['oae:profilePath'];

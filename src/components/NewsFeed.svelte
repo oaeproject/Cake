@@ -39,10 +39,6 @@
             <section>
               <p class="user-info">
                 {@html decodeURIComponent(activitySummary)}
-                <!-- This icon.. why is this here? -->
-                <span class="panel-icon icon-feed">
-                  <iron-icon icon="icons:cloud-upload" />
-                </span>
               </p>
               <p>
                 {formatDistance(activityItem.published, new Date(), {
@@ -57,9 +53,9 @@
         <!-- I have no idea what the markup should be, so here it goes -->
         <img
           alt="object-thumbnail"
-          max-height={activityItem.primaryObject.image.height}
-          max-width={activityItem.primaryObject.image.width}
-          src={activityItem.primaryObject.image.url}
+          max-height={activityItem?.primaryObject?.image?.height}
+          max-width={activityItem?.primaryObject?.image?.width}
+          src={activityItem?.primaryObject?.image?.url}
         />
         <p class="level-item">
           <button class="button news-pin">

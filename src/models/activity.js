@@ -1,7 +1,8 @@
 import { User } from './user';
 import { Resource } from './resource';
+import { Comment } from './comment';
 import { generateSummary } from '../helpers/activity-summary';
-import { concat, of, includes, nth, has, head as first, prop, pipe } from 'ramda';
+import { of, nth, has, head as first, prop, pipe } from 'ramda';
 
 const COLLECTION = 'oae:collection';
 const ACTOR = 'actor';
@@ -99,7 +100,12 @@ export class ActivityItem {
     let objects = [];
     if (hasSeveralObjects(rawActivity)) {
       objects = getObjectCollection(rawActivity).map(eachObject => {
-        return new Resource(eachObject);
+        // TODO make this simpler
+        if (has('comment', eachObject)) {
+          return new Comment(eachObject.comment, eachObject.level);
+        } else {
+          return new Resource(eachObject);
+        }
       });
     } else {
       objects = of(new Resource(rawActivity?.object));
@@ -116,11 +122,14 @@ export class ActivityItem {
     }
     this.allTargets = targets;
 
+    /*
     const isOneOfCommentActivities = includes(getActivityType(rawActivity), COMMENT_ACTIVITY_TYPES);
     if (isOneOfCommentActivities) {
       this.allComments = rawActivity.object['oae:collection'];
+      let comments = [];
       this.latestComments = rawActivity.object.latestComments;
     }
+    */
   }
 
   getSummary(currentUser) {

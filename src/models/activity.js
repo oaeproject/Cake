@@ -1,7 +1,7 @@
 import { User } from './user';
 import { Resource } from './resource';
 import { generateSummary } from '../helpers/activity-summary';
-import { of, includes, nth, has, head as first, prop, pipe } from 'ramda';
+import { concat, of, includes, nth, has, head as first, prop, pipe } from 'ramda';
 
 const COLLECTION = 'oae:collection';
 const ACTOR = 'actor';
@@ -71,45 +71,56 @@ export class ActivityItem {
   /** @type {Comment[]} */
   latestComments;
 
+  /** @type {Resource[]} */
+  allObjects = [];
+
+  /** @type {Resource[]} */
+  allTargets = [];
+
+  /** @type {User[]} */
+  allActors = [];
+
   constructor(rawActivity) {
     this.id = getId(rawActivity);
     this.activityType = getActivityType(rawActivity);
     this.published = new Date(rawActivity?.published);
     this.verb = rawActivity?.verb;
 
+    const addObjects = concat(this.allObjects);
+    const addActors = concat(this.allActors);
+    const addTargets = concat(this.allTargets);
+
     // TODO: optimize this
     if (hasSeveralActors(rawActivity)) {
-      // this.primaryActor = new User(getFirstActor(rawActivity));
-      // this.secondaryActor = new User(getSecondaryActor(rawActivity));
-      this.allActors = getActorCollection(rawActivity).map(eachActor => {
-        return new User(eachActor);
-      });
+      this.allActors = addActors(
+        getActorCollection(rawActivity).map(eachActor => {
+          return new User(eachActor);
+        }),
+      );
     } else {
-      this.allActors = of(new User(rawActivity?.actor));
+      this.allActors = addActors(of(new User(rawActivity?.actor)));
     }
 
     // TODO: optimize this
     if (hasSeveralObjects(rawActivity)) {
-      // this.primaryObject = new Resource(getFirstObject(rawActivity));
-      // this.secondaryObject = new Resource(getSecondaryObject(rawActivity));
-      this.allObjects = getObjectCollection(rawActivity).map(eachObject => {
-        return new Resource(eachObject);
-      });
+      this.allObjects = addObjects(
+        getObjectCollection(rawActivity).map(eachObject => {
+          return new Resource(eachObject);
+        }),
+      );
     } else {
-      this.allObjects = of(new Resource(rawActivity?.object));
+      this.allObjects = addObjects(of(new Resource(rawActivity?.object)));
     }
 
     // TODO: optimize this
     if (hasSeveralTargets(rawActivity)) {
-      // this.primaryTarget = new Resource(getFirstTarget(rawActivity));
-      // this.secondaryTarget = new Resource(getSecondaryTarget(rawActivity));
-      this.allTargets = getTargetCollection(rawActivity).map(eachTarget => {
-        return new Resource(eachTarget);
-      });
+      this.allTargets = addTargets(
+        getTargetCollection(rawActivity).map(eachTarget => {
+          return new Resource(eachTarget);
+        }),
+      );
     } else if (hasSingleTarget(rawActivity)) {
-      this.allTargets = of(new Resource(rawActivity?.target));
-    } else {
-      // this.allTargets = null
+      this.allTargets = addTargets(of(new Resource(rawActivity?.target)));
     }
 
     const isOneOfCommentActivities = includes(getActivityType(rawActivity), COMMENT_ACTIVITY_TYPES);

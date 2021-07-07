@@ -1,4 +1,4 @@
-import { and, __, not, has, equals, prop, pipe, length, gt } from 'ramda';
+import { isNil, and, __, not, has, equals, prop, pipe, length, gt, isEmpty } from 'ramda';
 
 const isOne = equals(1);
 const isTwo = equals(2);
@@ -127,18 +127,21 @@ const generateSummary = function (me, activityItem) {
     actorCount: null,
     objectCount: null,
   };
+  const isDefined = pipe(isNil, not);
 
   const activityIs = pipe(activityTypeOf, equals)(activityItem);
 
+  // TODO this is wrong
   const hasPrimaryActor = pipe(prop(ALL_ACTORS), length, isGreaterThanZero);
   const hasSecondaryActor = pipe(prop(ALL_ACTORS), length, isGreaterThanOne);
 
+  // TODO this is wrong
   const hasPrimaryObject = pipe(prop(ALL_OBJECTS), length, isGreaterThanZero);
   const hasSecondaryObject = pipe(prop(ALL_OBJECTS), length, isGreaterThanOne);
 
-  const hasTargets = has('allTargets');
-  const hasPrimaryTarget = pipe(prop(ALL_TARGETS), length, isGreaterThanZero);
-  const hasSecondaryTarget = pipe(prop(ALL_TARGETS), length, isGreaterThanOne);
+  const hasTargets = pipe(prop(ALL_TARGETS), isEmpty, not);
+  const hasPrimaryTarget = activity => isDefined(activity.getPrimaryTarget());
+  const hasSecondaryTarget = activity => isDefined(activity.getSecondaryTarget());
 
   const numberOfActors = pipe(prop(ALL_ACTORS), length);
   const numberOfObjects = pipe(prop(ALL_OBJECTS), length);
@@ -159,7 +162,7 @@ const generateSummary = function (me, activityItem) {
       setSummaryPropertiesForEntity(i18nDynamicValues, 'actor2', activityItem.getSecondaryActor());
     }
   } else {
-    actor1 = activityItem.primaryActor;
+    actor1 = activityItem.getPrimaryActor();
   }
 
   // Apply the actor1 information to the summary properties
@@ -180,7 +183,7 @@ const generateSummary = function (me, activityItem) {
       setSummaryPropertiesForEntity(i18nDynamicValues, 'object2', activityItem.getSecondaryObject());
     }
   } else {
-    object1 = activityItem.primaryObject;
+    object1 = activityItem.getPrimaryObject();
   }
 
   // Apply the object1 information to the summary properties
@@ -188,6 +191,7 @@ const generateSummary = function (me, activityItem) {
 
   // Prepare the target-related variables that will be present in the i18n keys
   let target1Obj = null;
+
   if (hasTargets(activityItem)) {
     i18nDynamicValues.targetCount = 1;
     if (hasPrimaryTarget(activityItem)) {
@@ -201,7 +205,7 @@ const generateSummary = function (me, activityItem) {
         setSummaryPropertiesForEntity(i18nDynamicValues, 'target2', activityItem.getSecondaryTarget());
       }
     } else {
-      target1Obj = activityItem.target;
+      target1Obj = activityItem.getPrimaryTarget();
     }
 
     // Apply the target1 information to the summary properties

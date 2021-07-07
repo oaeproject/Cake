@@ -11,10 +11,6 @@
   import anylogger from 'anylogger';
   import { onMount } from 'svelte';
 
-  import { defaultTo } from 'ramda';
-
-  const defaultToEmptyArray = defaultTo([]);
-
   export let activityItem;
 
   const log = anylogger('oae-newsfeed');
@@ -24,7 +20,6 @@
     activityItem.summary = activityItem.getSummary($user);
     activitySummary = $_(activityItem.summary.i18nKey, { values: activityItem.summary.properties });
 
-    activityItem.allTargets = defaultToEmptyArray(activityItem.allTargets);
     log.warn(activityItem);
   });
 </script>

@@ -1,9 +1,9 @@
-import { isNil, and, __, not, has, equals, prop, pipe, length, gt, isEmpty } from 'ramda';
+import { isNil, and, __, not, equals, prop, pipe, length, gt, isEmpty } from 'ramda';
 
 const isOne = equals(1);
 const isTwo = equals(2);
-const isGreaterThanZero = gt(__, 0);
 const isGreaterThanOne = gt(__, 1);
+const isDefined = pipe(isNil, not);
 
 const ACTOR = 'actor';
 const actorOf = prop(ACTOR);
@@ -22,9 +22,6 @@ const objectTypeOf = prop(OBJECT_TYPE);
 
 const VISIBILITY = 'visibility';
 const visibilityOf = prop(VISIBILITY);
-
-// const PRIMARY_OBJECT = 'primaryObject';
-// const primaryObjectOf = prop(PRIMARY_OBJECT);
 
 const ACTIVITY_TYPE = 'activityType';
 const activityTypeOf = prop(ACTIVITY_TYPE);
@@ -127,22 +124,18 @@ const generateSummary = function (me, activityItem) {
     actorCount: null,
     objectCount: null,
   };
-  const isDefined = pipe(isNil, not);
-
   const activityIs = pipe(activityTypeOf, equals)(activityItem);
 
-  // TODO this is wrong
-  const hasPrimaryActor = pipe(prop(ALL_ACTORS), length, isGreaterThanZero);
-  const hasSecondaryActor = pipe(prop(ALL_ACTORS), length, isGreaterThanOne);
+  const hasPrimaryActor = activity => isDefined(activity.getPrimaryActor());
+  const hasSecondaryActor = activity => isDefined(activity.getSecondaryActor());
 
-  // TODO this is wrong
-  const hasPrimaryObject = pipe(prop(ALL_OBJECTS), length, isGreaterThanZero);
-  const hasSecondaryObject = pipe(prop(ALL_OBJECTS), length, isGreaterThanOne);
+  const hasPrimaryObject = activity => isDefined(activity.getPrimaryObject());
+  const hasSecondaryObject = activity => isDefined(activity.getSecondaryObject());
 
-  const hasTargets = pipe(prop(ALL_TARGETS), isEmpty, not);
   const hasPrimaryTarget = activity => isDefined(activity.getPrimaryTarget());
   const hasSecondaryTarget = activity => isDefined(activity.getSecondaryTarget());
 
+  const hasTargets = pipe(prop(ALL_TARGETS), isEmpty, not);
   const numberOfActors = pipe(prop(ALL_ACTORS), length);
   const numberOfObjects = pipe(prop(ALL_OBJECTS), length);
   const numberOfTargets = pipe(prop(ALL_TARGETS), length);

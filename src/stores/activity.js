@@ -1,10 +1,9 @@
-import { assoc, lensProp, values, both, assocPath, equals, prop, compose, set, map } from 'ramda';
+import { assoc, values, both, assocPath, equals, prop, compose, map } from 'ramda';
 import { ActivityItem } from '../models/activity';
 import anylogger from 'anylogger';
 import { derived, writable } from 'svelte/store';
 import { user } from './user';
 import { prepareActivity } from '../helpers/activity';
-import { generateSummary } from '../helpers/activity-summary';
 
 const log = anylogger('activity-store');
 const activities = writable([]);

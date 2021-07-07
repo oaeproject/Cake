@@ -30,11 +30,15 @@
         <div class="level-item">
           <div class="column is-flex news-feed-nav">
             <figure class="image avatar-news-feed">
-              <img
-                alt="primary-actor"
-                class="is-rounded avatar-news-feed"
-                src={activityItem.primaryActor.mediumPicture}
-              />
+              {#if activityItem.getPrimaryActor().mediumPicture}
+                <img
+                  alt="primary-actor"
+                  class="is-rounded avatar-news-feed"
+                  src={activityItem.getPrimaryActor().mediumPicture}
+                />
+              {:else}
+                <img alt="primary-actor" class="is-rounded avatar-news-feed" src="assets/images/avatar.jpg" />
+              {/if}
             </figure>
             <section>
               <p class="user-info">
@@ -49,42 +53,42 @@
           </div>
         </div>
       </div>
-      <div class="level-right">
-        <!-- I have no idea what the markup should be, so here it goes -->
+      <div class="level-right" />
+    </nav>
+    {#each activityItem.allObjects as eachObject}
+      <!-- I have no idea what the markup should be, so here it goes -->
+      {#if eachObject.image}
         <img
           alt="object-thumbnail"
-          max-height={activityItem?.primaryObject?.image?.height}
-          max-width={activityItem?.primaryObject?.image?.width}
-          src={activityItem?.primaryObject?.image?.url}
+          max-height={eachObject?.image?.height}
+          max-width={eachObject?.image?.width}
+          src={eachObject?.image?.url}
         />
-        <p class="level-item">
-          <button class="button news-pin">
-            <iron-icon icon="icons:more-vert" />
-          </button>
-        </p>
-      </div>
-    </nav>
+      {/if}
+    {/each}
 
-    <nav class="level bottom-nav-news">
-      <div class="level-left">
-        <div class="level-item">
-          <a href="/" class="button comments-button">
-            <span class="comments-icon">
-              <iron-icon icon="communication:forum" />
-            </span>
-            <span>View (25) comments</span>
-          </a>
+    {#if false}
+      <nav class="level bottom-nav-news">
+        <div class="level-left">
+          <div class="level-item">
+            <a href="/" class="button comments-button">
+              <span class="comments-icon">
+                <iron-icon icon="communication:forum" />
+              </span>
+              <span>View (25) comments</span>
+            </a>
+          </div>
+          <div class="level-item">
+            <a href="/" class="button reply-button">
+              <span class="reply-icon">
+                <iron-icon icon="communication:import-export" />
+              </span>
+              <span>Reply</span>
+            </a>
+          </div>
         </div>
-        <div class="level-item">
-          <a href="/" class="button reply-button">
-            <span class="reply-icon">
-              <iron-icon icon="communication:import-export" />
-            </span>
-            <span>Reply</span>
-          </a>
-        </div>
-      </div>
-    </nav>
+      </nav>
+    {/if}
   </div>
 </div>
 

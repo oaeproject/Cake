@@ -1,23 +1,46 @@
-import { and, not, has, equals, head, nth, prop, pipe, length, gt } from 'ramda';
-import { ActivityItem } from '../models/activity';
+import { and, __, not, has, equals, prop, pipe, length, gt } from 'ramda';
 
 const isOne = equals(1);
 const isTwo = equals(2);
-const second = nth(1);
-const moreThanOne = gt(1);
+const isGreaterThanZero = gt(__, 0);
+const isGreaterThanOne = gt(__, 1);
 
 const ACTOR = 'actor';
-const OBJECT = 'object';
+const actorOf = prop(ACTOR);
+
 const TARGET = 'target';
+const targetOf = prop(TARGET);
 
 const ID = 'id';
-const SUB_TYPE = 'subType';
-const VISIBILITY = 'visibility';
-const PRIMARY_OBJECT = 'primaryObject';
-const OBJECT_TYPE = 'objectType';
-const PUBLIC = 'public';
-const LOGGEDIN = 'loggedin';
+const idOf = prop(ID);
 
+const SUB_TYPE = 'subType';
+const subTypeOf = prop(SUB_TYPE);
+
+const OBJECT_TYPE = 'objectType';
+const objectTypeOf = prop(OBJECT_TYPE);
+
+const VISIBILITY = 'visibility';
+const visibilityOf = prop(VISIBILITY);
+
+// const PRIMARY_OBJECT = 'primaryObject';
+// const primaryObjectOf = prop(PRIMARY_OBJECT);
+
+const ACTIVITY_TYPE = 'activityType';
+const activityTypeOf = prop(ACTIVITY_TYPE);
+
+const PUBLIC = 'public';
+const isPublic = equals(PUBLIC);
+
+const LOGGEDIN = 'loggedin';
+const isLoggedIn = equals(LOGGEDIN);
+
+const ALL_ACTORS = 'allActors';
+const ALL_OBJECTS = 'allObjects';
+const ALL_TARGETS = 'allTargets';
+const OBJECT_COUNT = 'objectCount';
+const ACTOR_COUNT = 'actorCount';
+const TARGET_COUNT = 'targetCount';
 const USER = 'user';
 const GROUP = 'group';
 const FOLDER = 'folder';
@@ -25,8 +48,18 @@ const FILE = 'file';
 const LINK = 'link';
 const COLLABDOC = 'collabdoc';
 const COLLABSHEET = 'collabsheet';
-const COLLECTION = 'oae:collection';
-const ACTIVITY_TYPE = 'activityType';
+
+const countIsOne = (count, properties) => isOne(prop(count, properties));
+const countIsTwo = (count, properties) => isTwo(prop(count, properties));
+const countIsMoreThanOne = (count, properties) => isGreaterThanOne(prop(count, properties));
+
+const typeIs = (attribute, activity) => pipe(prop(attribute), objectTypeOf, equals)(activity);
+const objectSubTypeIs = activity => pipe(subTypeOf, equals)(activity.getPrimaryObject());
+const targetSubTypeIs = activity => pipe(subTypeOf, equals)(activity.getPrimaryTarget());
+
+const isTargetTheCurrentUser = (activity, currentUserId) => pipe(targetOf, idOf, equals(currentUserId))(activity);
+const objectIsCurrentUser = (activity, currentUserId) => pipe(idOf, equals(currentUserId))(activity.getPrimaryActor());
+const actorIsCurrentUser = (activity, currentUserId) => pipe(actorOf, idOf, equals(currentUserId))(activity);
 
 // dont know why the keys __are__like__this__ but oh well
 const transformKey = i18nKey => {
@@ -90,217 +123,201 @@ const setSummaryPropertiesForEntity = function (properties, propertyKey, entity)
  * @api private
  */
 const generateSummary = function (me, activityItem) {
-  // The dictionary that can be used to translate the dynamic values in the i18n keys
-  const properties /*: { actorCount: number; objectCount: number } */ = {
+  const i18nDynamicValues /*: { actorCount: number; objectCount: number } */ = {
     actorCount: null,
     objectCount: null,
   };
 
-  const activityIs = pipe(prop(ACTIVITY_TYPE), equals)(activityItem);
+  const activityIs = pipe(activityTypeOf, equals)(activityItem);
 
-  const hasTarget = has(TARGET);
+  const hasPrimaryActor = pipe(prop(ALL_ACTORS), length, isGreaterThanZero);
+  const hasSecondaryActor = pipe(prop(ALL_ACTORS), length, isGreaterThanOne);
 
-  const getCollection = prop(COLLECTION);
-  const getActor = prop(ACTOR);
-  const getObject = prop(OBJECT);
-  const getTarget = prop(TARGET);
+  const hasPrimaryObject = pipe(prop(ALL_OBJECTS), length, isGreaterThanZero);
+  const hasSecondaryObject = pipe(prop(ALL_OBJECTS), length, isGreaterThanOne);
 
-  const hasSeveralActors = pipe(getActor, has(COLLECTION));
-  const hasSeveralObjects = pipe(getObject, has(COLLECTION));
-  const hasSeveralTargets = pipe(getTarget, has(COLLECTION));
+  const hasTargets = has('allTargets');
+  const hasPrimaryTarget = pipe(prop(ALL_TARGETS), length, isGreaterThanZero);
+  const hasSecondaryTarget = pipe(prop(ALL_TARGETS), length, isGreaterThanOne);
 
-  const getActorCollection = pipe(getActor, getCollection);
-  const getObjectCollection = pipe(getObject, getCollection);
-  const getTargetCollection = pipe(getTarget, getCollection);
-
-  const numberOfActors = pipe(getActorCollection, length);
-  const numberOfObjects = pipe(getObjectCollection, length);
-  const numberOfTargets = pipe(getTargetCollection, length);
-
-  const moreThanOneActor = pipe(numberOfActors, moreThanOne);
-  const moreThanOneObject = pipe(numberOfObjects, moreThanOne);
-  const moreThanOneTarget = pipe(numberOfTargets, moreThanOne);
-
-  const getFirstActor = pipe(getActorCollection, head);
-  const getFirstObject = pipe(getObjectCollection, head);
-  const getFirstTarget = pipe(getTargetCollection, head);
-
-  const getSecondActor = pipe(getActorCollection, second);
-  const getSecondObject = pipe(getObjectCollection, second);
-  const getSecondTarget = pipe(getTargetCollection, second);
+  const numberOfActors = pipe(prop(ALL_ACTORS), length);
+  const numberOfObjects = pipe(prop(ALL_OBJECTS), length);
+  const numberOfTargets = pipe(prop(ALL_TARGETS), length);
 
   // Prepare the actor-related variables that will be present in the i18n keys
   let actor1 = null;
-  properties.actorCount = 1;
+  i18nDynamicValues.actorCount = 1;
 
-  if (hasSeveralActors(activityItem)) {
-    actor1 = getFirstActor(activityItem);
-    if (moreThanOneActor(activityItem)) {
+  if (hasPrimaryActor(activityItem)) {
+    actor1 = activityItem.getPrimaryActor();
+    if (hasSecondaryActor(activityItem)) {
       // Apply the actor count information to the summary properties
-      properties.actorCount = numberOfActors(activityItem);
-      properties.actorCountMinusOne = properties.actorCount - 1; // TODO: remove this
+      i18nDynamicValues.actorCount = numberOfActors(activityItem);
+      i18nDynamicValues.actorCountMinusOne = i18nDynamicValues.actorCount - 1; // TODO: remove this
 
       // Apply additional actor information
-      setSummaryPropertiesForEntity(properties, 'actor2', getSecondActor(activityItem));
+      setSummaryPropertiesForEntity(i18nDynamicValues, 'actor2', activityItem.getSecondaryActor());
     }
   } else {
     actor1 = activityItem.primaryActor;
   }
 
   // Apply the actor1 information to the summary properties
-  setSummaryPropertiesForEntity(properties, 'actor1', actor1);
+  setSummaryPropertiesForEntity(i18nDynamicValues, 'actor1', actor1);
 
   // Prepare the object-related variables that will be present in the i18n keys
   let object1 = null;
-  properties.objectCount = 1;
+  i18nDynamicValues.objectCount = 1;
 
-  if (hasSeveralObjects(activityItem)) {
-    object1 = getFirstObject(activityItem);
-    if (moreThanOneObject(activityItem)) {
+  if (hasPrimaryObject(activityItem)) {
+    object1 = activityItem.getPrimaryObject();
+    if (hasSecondaryObject(activityItem)) {
       // Apply the object count information to the summary properties
-      properties.objectCount = numberOfObjects(activityItem);
-      properties.objectCountMinusOne = properties.objectCount - 1; // TODO: remove this
+      i18nDynamicValues.objectCount = numberOfObjects(activityItem);
+      i18nDynamicValues.objectCountMinusOne = i18nDynamicValues.objectCount - 1; // TODO: remove this
 
       // Apply additional object information
-      setSummaryPropertiesForEntity(properties, 'object2', getSecondObject(activityItem));
+      setSummaryPropertiesForEntity(i18nDynamicValues, 'object2', activityItem.getSecondaryObject());
     }
   } else {
     object1 = activityItem.primaryObject;
   }
 
   // Apply the object1 information to the summary properties
-  setSummaryPropertiesForEntity(properties, 'object1', object1);
+  setSummaryPropertiesForEntity(i18nDynamicValues, 'object1', object1);
 
   // Prepare the target-related variables that will be present in the i18n keys
   let target1Obj = null;
-  if (hasTarget(activityItem)) {
-    properties.targetCount = 1;
-    if (hasSeveralTargets(activityItem)) {
-      target1Obj = getFirstTarget(activityItem);
-      if (moreThanOneTarget(activityItem)) {
+  if (hasTargets(activityItem)) {
+    i18nDynamicValues.targetCount = 1;
+    if (hasPrimaryTarget(activityItem)) {
+      target1Obj = activityItem.getPrimaryTarget();
+      if (hasSecondaryTarget(activityItem)) {
         // Apply the target count information to the summary properties
-        properties.targetCount = numberOfTargets(activityItem);
-        properties.targetCountMinusOne = properties.targetCount - 1; // TODO: remove this
+        i18nDynamicValues.targetCount = numberOfTargets(activityItem);
+        i18nDynamicValues.targetCountMinusOne = i18nDynamicValues.targetCount - 1; // TODO: remove this
 
         // Apply additional target information
-        setSummaryPropertiesForEntity(properties, 'target2', getSecondTarget);
+        setSummaryPropertiesForEntity(i18nDynamicValues, 'target2', activityItem.getSecondaryTarget());
       }
     } else {
       target1Obj = activityItem.target;
     }
 
     // Apply the target1 information to the summary properties
-    setSummaryPropertiesForEntity(properties, 'target1', target1Obj);
+    setSummaryPropertiesForEntity(i18nDynamicValues, 'target1', target1Obj);
   }
 
-  // Depending on the activity type, we render a different template that is specific to that activity,
-  // to make sure that the summary is as accurate and descriptive as possible
+  /**
+   * Depending on the activity type, we render a different template that is specific to that activity,
+   * to make sure that the summary is as accurate and descriptive as possible
+   */
 
   if (activityIs('content-add-to-library')) {
-    return generateContentAddToLibrarySummary(me, activityItem, properties);
+    return generateContentAddToLibrarySummary(me, activityItem, i18nDynamicValues);
   }
 
   if (activityIs('content-comment')) {
-    return generateContentCommentSummary(me, activityItem, properties);
+    return generateContentCommentSummary(me, activityItem, i18nDynamicValues);
   }
 
   if (activityIs('content-create')) {
-    return generateContentCreateSummary(me, activityItem, properties);
+    return generateContentCreateSummary(me, activityItem, i18nDynamicValues);
   }
 
   if (activityIs('content-restored-revision')) {
-    return generateContentRestoredRevision(activityItem, properties);
+    return generateContentRestoredRevision(activityItem, i18nDynamicValues);
   }
 
   if (activityIs('content-revision')) {
-    return generateContentRevisionSummary(me, activityItem, properties);
+    return generateContentRevisionSummary(me, activityItem, i18nDynamicValues);
   }
 
   if (activityIs('content-share')) {
-    return generateContentShareSummary(me, activityItem, properties);
+    return generateContentShareSummary(me, activityItem, i18nDynamicValues);
   }
 
   if (activityIs('content-update')) {
-    return generateContentUpdateSummary(me, activityItem, properties);
+    return generateContentUpdateSummary(me, activityItem, i18nDynamicValues);
   }
 
   if (activityIs('content-update-member-role')) {
-    return generateContentUpdateMemberRoleSummary(me, activityItem, properties);
+    return generateContentUpdateMemberRoleSummary(me, activityItem, i18nDynamicValues);
   }
 
   if (activityIs('content-update-visibility')) {
-    return generateContentUpdateVisibilitySummary(me, activityItem, properties);
+    return generateContentUpdateVisibilitySummary(me, activityItem, i18nDynamicValues);
   }
 
   if (activityIs('discussion-add-to-library')) {
-    return generateDiscussionAddToLibrarySummary(me, activityItem, properties);
+    return generateDiscussionAddToLibrarySummary(me, activityItem, i18nDynamicValues);
   }
 
   if (activityIs('discussion-create')) {
-    return generateDiscussionCreateSummary(me, activityItem, properties);
+    return generateDiscussionCreateSummary(me, activityItem, i18nDynamicValues);
   }
 
   if (activityIs('discussion-message')) {
-    return generateDiscussionMessageSummary(me, activityItem, properties);
+    return generateDiscussionMessageSummary(me, activityItem, i18nDynamicValues);
   } else if (activityIs('discussion-share')) {
-    return generateDiscussionShareSummary(me, activityItem, properties);
+    return generateDiscussionShareSummary(me, activityItem, i18nDynamicValues);
   } else if (activityIs('discussion-update')) {
-    return generateDiscussionUpdateSummary(me, activityItem, properties);
+    return generateDiscussionUpdateSummary(me, activityItem, i18nDynamicValues);
   } else if (activityIs('discussion-update-member-role')) {
-    return generateDiscussionUpdateMemberRoleSummary(me, activityItem, properties);
+    return generateDiscussionUpdateMemberRoleSummary(me, activityItem, i18nDynamicValues);
   } else if (activityIs('discussion-update-visibility')) {
-    return generateDiscussionUpdateVisibilitySummary(me, activityItem, properties);
+    return generateDiscussionUpdateVisibilitySummary(me, activityItem, i18nDynamicValues);
   } else if (activityIs('folder-add-to-folder')) {
-    return generateFolderAddToFolderSummary(me, activityItem, properties);
+    return generateFolderAddToFolderSummary(me, activityItem, i18nDynamicValues);
   } else if (activityIs('folder-add-to-library')) {
-    return generateFolderAddToLibrarySummary(me, activityItem, properties);
+    return generateFolderAddToLibrarySummary(me, activityItem, i18nDynamicValues);
   } else if (activityIs('folder-comment')) {
-    return generateFolderCommentSummary(me, activityItem, properties);
+    return generateFolderCommentSummary(me, activityItem, i18nDynamicValues);
   } else if (activityIs('folder-create')) {
-    return generateFolderCreateSummary(me, activityItem, properties);
+    return generateFolderCreateSummary(me, activityItem, i18nDynamicValues);
   } else if (activityIs('folder-share')) {
-    return generateFolderShareSummary(me, activityItem, properties);
+    return generateFolderShareSummary(me, activityItem, i18nDynamicValues);
   } else if (activityIs('folder-update')) {
-    return generateFolderUpdateSummary(me, activityItem, properties);
+    return generateFolderUpdateSummary(me, activityItem, i18nDynamicValues);
   } else if (activityIs('folder-update-member-role')) {
-    return generateFolderUpdateMemberRoleSummary(me, activityItem, properties);
+    return generateFolderUpdateMemberRoleSummary(me, activityItem, i18nDynamicValues);
   } else if (activityIs('folder-update-visibility')) {
-    return generateFolderUpdateVisibilitySummary(me, activityItem, properties);
+    return generateFolderUpdateVisibilitySummary(me, activityItem, i18nDynamicValues);
   } else if (activityIs('following-follow')) {
-    return generateFollowingSummary(me, activityItem, properties);
+    return generateFollowingSummary(me, activityItem, i18nDynamicValues);
   } else if (activityIs('group-add-member')) {
-    return generateGroupAddMemberSummary(me, activityItem, properties);
+    return generateGroupAddMemberSummary(me, activityItem, i18nDynamicValues);
   } else if (activityIs('group-create')) {
-    return generateGroupCreateSummary(me, activityItem, properties);
+    return generateGroupCreateSummary(me, activityItem, i18nDynamicValues);
   } else if (activityIs('group-join')) {
-    return generateGroupJoinSummary(me, activityItem, properties);
+    return generateGroupJoinSummary(me, activityItem, i18nDynamicValues);
   } else if (activityIs('group-update')) {
-    return generateGroupUpdateSummary(me, activityItem, properties);
+    return generateGroupUpdateSummary(me, activityItem, i18nDynamicValues);
   } else if (activityIs('group-update-member-role')) {
-    return generateGroupUpdateMemberRoleSummary(me, activityItem, properties);
+    return generateGroupUpdateMemberRoleSummary(me, activityItem, i18nDynamicValues);
   } else if (activityIs('group-update-visibility')) {
-    return generateGroupUpdateVisibilitySummary(me, activityItem, properties);
+    return generateGroupUpdateVisibilitySummary(me, activityItem, i18nDynamicValues);
   } else if (activityIs('invite') || activityIs('invitation-accept')) {
-    return generateInvitationSummary(me, activityItem, properties);
+    return generateInvitationSummary(me, activityItem, i18nDynamicValues);
   } else if (activityIs('meeting-jitsi-create')) {
-    return generateMeetingJitsiCreateSummary(me, activityItem, properties);
+    return generateMeetingJitsiCreateSummary(me, activityItem, i18nDynamicValues);
   } else if (activityIs('meeting-jitsi-message')) {
-    return generateMeetingJitsiMessageSummary(me, activityItem, properties);
+    return generateMeetingJitsiMessageSummary(me, activityItem, i18nDynamicValues);
   } else if (activityIs('meeting-jitsi-share')) {
-    return generateMeetingJitsiShareSummary(me, activityItem, properties);
+    return generateMeetingJitsiShareSummary(me, activityItem, i18nDynamicValues);
   } else if (activityIs('meeting-jitsi-update')) {
-    return generateMeetingJitsiUpdateSummary(me, activityItem, properties);
+    return generateMeetingJitsiUpdateSummary(me, activityItem, i18nDynamicValues);
   } else if (activityIs('meeting-jitsi-update-member-role')) {
-    return generateMeetingJitsiUpdateMemberRoleSummary(me, activityItem, properties);
+    return generateMeetingJitsiUpdateMemberRoleSummary(me, activityItem, i18nDynamicValues);
   } else if (activityIs('meeting-jitsi-update-visibility')) {
-    return generateMeetingJitsiUpdateVisibilitySummary(me, activityItem, properties);
+    return generateMeetingJitsiUpdateVisibilitySummary(me, activityItem, i18nDynamicValues);
   } else if (activityIs('request-to-join-group')) {
-    return generateRequestToJoinGroupSummary(me, activityItem, properties);
+    return generateRequestToJoinGroupSummary(me, activityItem, i18nDynamicValues);
     // Fall back on the default activity summary if no specific template is found for the activity type
   } else if (activityIs('request-to-join-group-rejected')) {
-    return generateRejectedRequestToJoinGroup(me, activityItem, properties);
+    return generateRejectedRequestToJoinGroup(me, activityItem, i18nDynamicValues);
   } else {
-    return generateDefaultSummary(me, activityItem, properties);
+    return generateDefaultSummary(me, activityItem, i18nDynamicValues);
   }
 };
 
@@ -316,28 +333,32 @@ const generateSummary = function (me, activityItem) {
 const generateContentAddToLibrarySummary = function (me, activity, properties) {
   let i18nKey = null;
 
-  const activityObjectIs = pipe(prop(PRIMARY_OBJECT), prop(SUB_TYPE), equals)(activity);
-  const justTheOneObject = isOne(properties.objectCount);
-  const severalObjects = isTwo(properties.objectCount);
+  const singleObject = countIsOne(OBJECT_COUNT, properties);
+  const coupleObjects = countIsTwo(OBJECT_COUNT, properties);
+
+  const isCollabdoc = objectSubTypeIs(activity, COLLABDOC);
+  const isCollabsheet = objectSubTypeIs(activity, COLLABSHEET);
+  const isFile = objectSubTypeIs(activity, FILE);
+  const isLink = objectSubTypeIs(activity, LINK);
 
   switch (true) {
-    case justTheOneObject:
+    case singleObject:
       switch (true) {
-        case activityObjectIs(COLLABDOC):
+        case isCollabdoc:
           i18nKey = '__MSG__ACTIVITY_CONTENT_ADD_LIBRARY_COLLABDOC__';
           break;
-        case activityObjectIs(COLLABSHEET):
+        case isCollabsheet:
           i18nKey = '__MSG__ACTIVITY_CONTENT_ADD_LIBRARY_COLLABSHEET__';
           break;
-        case activityObjectIs(FILE):
+        case isFile:
           i18nKey = '__MSG__ACTIVITY_CONTENT_ADD_LIBRARY_FILE__';
           break;
-        case activityObjectIs(LINK):
+        case isLink:
           i18nKey = '__MSG__ACTIVITY_CONTENT_ADD_LIBRARY_LINK__';
           break;
       }
       break;
-    case severalObjects:
+    case coupleObjects:
       i18nKey = '__MSG__ACTIVITY_CONTENT_ADD_LIBRARY_2__';
       break;
     default:
@@ -361,17 +382,21 @@ const generateContentAddToLibrarySummary = function (me, activity, properties) {
 const generateContentCommentSummary = function (me, activity, properties) {
   let i18nKey = null;
 
-  const activityTargetIs = pipe(prop(TARGET), prop(SUB_TYPE), equals)(activity);
-  const justTheOneActor = isOne(properties.actorCount);
-  const severalActors = isTwo(properties.actorCount);
+  const singleActor = countIsOne(ACTOR_COUNT, properties);
+  const coupleActors = countIsTwo(ACTOR_COUNT, properties);
+
+  const targetIsCollabdoc = targetSubTypeIs(activity)(COLLABDOC);
+  const targetIsCollabsheet = targetSubTypeIs(activity)(COLLABSHEET);
+  const targetIsFile = targetSubTypeIs(activity)(FILE);
+  const targetIsLink = targetSubTypeIs(activity)(LINK);
 
   switch (true) {
-    case activityTargetIs(COLLABDOC):
+    case targetIsCollabdoc:
       switch (true) {
-        case justTheOneActor:
+        case singleActor:
           i18nKey = '__MSG__ACTIVITY_CONTENT_COMMENT_COLLABDOC_1__';
           break;
-        case severalActors:
+        case coupleActors:
           i18nKey = '__MSG__ACTIVITY_CONTENT_COMMENT_COLLABDOC_2__';
           break;
         default:
@@ -379,12 +404,12 @@ const generateContentCommentSummary = function (me, activity, properties) {
           break;
       }
       break;
-    case activityTargetIs(COLLABSHEET):
+    case targetIsCollabsheet:
       switch (true) {
-        case justTheOneActor:
+        case singleActor:
           i18nKey = '__MSG__ACTIVITY_CONTENT_COMMENT_COLLABSHEET_1__';
           break;
-        case severalActors:
+        case coupleActors:
           i18nKey = '__MSG__ACTIVITY_CONTENT_COMMENT_COLLABSHEET_2__';
           break;
         default:
@@ -392,12 +417,12 @@ const generateContentCommentSummary = function (me, activity, properties) {
           break;
       }
       break;
-    case activityTargetIs(FILE):
+    case targetIsFile:
       switch (true) {
-        case justTheOneActor:
+        case singleActor:
           i18nKey = '__MSG__ACTIVITY_CONTENT_COMMENT_FILE_1__';
           break;
-        case severalActors:
+        case coupleActors:
           i18nKey = '__MSG__ACTIVITY_CONTENT_COMMENT_FILE_2__';
           break;
         default:
@@ -405,12 +430,12 @@ const generateContentCommentSummary = function (me, activity, properties) {
           break;
       }
       break;
-    case activityTargetIs(LINK):
+    case targetIsLink:
       switch (true) {
-        case justTheOneActor:
+        case singleActor:
           i18nKey = '__MSG__ACTIVITY_CONTENT_COMMENT_LINK_1__';
           break;
-        case severalActors:
+        case coupleActors:
           i18nKey = '__MSG__ACTIVITY_CONTENT_COMMENT_LINK_2__';
           break;
         default:
@@ -420,6 +445,7 @@ const generateContentCommentSummary = function (me, activity, properties) {
       break;
   }
 
+  i18nKey = transformKey(i18nKey);
   return { i18nKey, properties };
 };
 
@@ -435,24 +461,24 @@ const generateContentCommentSummary = function (me, activity, properties) {
 const generateContentCreateSummary = function (me, activity, properties) {
   let i18nKey = null;
 
-  const justTheOneObject = isOne(properties.objectCount);
-  const justTheTwoObjects = isTwo(properties.objectCount);
+  const singleObject = countIsOne(OBJECT_COUNT, properties);
+  const coupleObjects = countIsTwo(OBJECT_COUNT, properties);
 
-  const justTheOneTarget = isOne(properties.targetCount);
+  const singleTarget = countIsOne(TARGET_COUNT, properties);
 
-  const targetTypeIs = pipe(prop('target'), prop('objectType'), equals)(activity);
-  const objectTypeIs = pipe(prop('primaryObject'), prop('subType'), equals)(activity);
+  const targetTypeIs = typeIs(TARGET, activity);
+  const objectTypeIs = objectSubTypeIs(activity);
 
-  const targetIsCurrentUser = pipe(prop(TARGET), prop(ID), equals(me.id))(activity);
-  const targetIsNotTheCurrentUser = not(targetIsCurrentUser);
+  const targetIsTheCurrentUser = isTargetTheCurrentUser(activity, me.id);
+  const targetIsNotTheCurrentUser = not(targetIsTheCurrentUser);
 
   /**
    * Add the target to the activity summary when a target is present on the
    * activity and the target is not a user different from the current user
    */
-  if (justTheOneTarget && not(and(targetTypeIs(USER), targetIsNotTheCurrentUser))) {
-    if (targetIsCurrentUser) {
-      if (justTheOneObject) {
+  if (singleTarget && not(and(targetTypeIs(USER), targetIsNotTheCurrentUser))) {
+    if (targetIsTheCurrentUser) {
+      if (singleObject) {
         if (objectTypeIs(COLLABDOC)) {
           i18nKey = '__MSG__ACTIVITY_CONTENT_CREATE_COLLABDOC_YOU__';
         } else if (objectTypeIs(COLLABSHEET)) {
@@ -462,13 +488,13 @@ const generateContentCreateSummary = function (me, activity, properties) {
         } else if (objectTypeIs(LINK)) {
           i18nKey = '__MSG__ACTIVITY_CONTENT_CREATE_LINK_YOU__';
         }
-      } else if (justTheTwoObjects) {
+      } else if (coupleObjects) {
         i18nKey = '__MSG__ACTIVITY_CONTENT_CREATE_2_YOU__';
       } else {
         i18nKey = '__MSG__ACTIVITY_CONTENT_CREATE_2+_YOU__';
       }
     } else if (targetTypeIs(FOLDER)) {
-      if (justTheOneObject) {
+      if (singleObject) {
         if (objectTypeIs(COLLABDOC)) {
           i18nKey = '__MSG__ACTIVITY_CONTENT_CREATE_COLLABDOC_FOLDER__';
         } else if (objectTypeIs(COLLABSHEET)) {
@@ -478,13 +504,13 @@ const generateContentCreateSummary = function (me, activity, properties) {
         } else if (objectTypeIs(LINK)) {
           i18nKey = '__MSG__ACTIVITY_CONTENT_CREATE_LINK_FOLDER__';
         }
-      } else if (justTheTwoObjects) {
+      } else if (coupleObjects) {
         i18nKey = '__MSG__ACTIVITY_CONTENT_CREATE_2_FOLDER__';
       } else {
         i18nKey = '__MSG__ACTIVITY_CONTENT_CREATE_2+_FOLDER__';
       }
     } else if (targetTypeIs(GROUP)) {
-      if (justTheOneObject) {
+      if (singleObject) {
         if (objectTypeIs(COLLABDOC)) {
           i18nKey = '__MSG__ACTIVITY_CONTENT_CREATE_COLLABDOC_GROUP__';
         } else if (objectTypeIs(COLLABSHEET)) {
@@ -494,13 +520,13 @@ const generateContentCreateSummary = function (me, activity, properties) {
         } else if (objectTypeIs(LINK)) {
           i18nKey = '__MSG__ACTIVITY_CONTENT_CREATE_LINK_GROUP__';
         }
-      } else if (justTheTwoObjects) {
+      } else if (coupleObjects) {
         i18nKey = '__MSG__ACTIVITY_CONTENT_CREATE_2_GROUP__';
       } else {
         i18nKey = '__MSG__ACTIVITY_CONTENT_CREATE_2+_GROUP__';
       }
     }
-  } else if (justTheOneObject) {
+  } else if (singleObject) {
     if (objectTypeIs(COLLABDOC)) {
       i18nKey = '__MSG__ACTIVITY_CONTENT_CREATE_COLLABDOC__';
     } else if (objectTypeIs(COLLABSHEET)) {
@@ -510,7 +536,7 @@ const generateContentCreateSummary = function (me, activity, properties) {
     } else if (objectTypeIs(LINK)) {
       i18nKey = '__MSG__ACTIVITY_CONTENT_CREATE_LINK__';
     }
-  } else if (justTheTwoObjects) {
+  } else if (coupleObjects) {
     i18nKey = '__MSG__ACTIVITY_CONTENT_CREATE_2__';
   } else {
     i18nKey = '__MSG__ACTIVITY_CONTENT_CREATE_2+__';
@@ -532,18 +558,18 @@ const generateContentCreateSummary = function (me, activity, properties) {
 const generateContentRestoredRevision = function (activity, properties) {
   let i18nKey = null;
 
-  const objectTypeIs = pipe(prop(PRIMARY_OBJECT), prop(SUB_TYPE))(activity);
+  const activityObjectTypeIs = objectSubTypeIs(activity);
 
-  const justTheOneActor = isOne(properties.actorCount);
-  const justTheTwoActors = isTwo(properties.actorCount);
+  const singleActor = countIsOne(ACTOR_COUNT, properties);
+  const coupleActors = countIsTwo(ACTOR_COUNT, properties);
 
   switch (true) {
-    case objectTypeIs(COLLABDOC):
+    case activityObjectTypeIs(COLLABDOC):
       switch (true) {
-        case justTheOneActor:
+        case singleActor:
           i18nKey = '__MSG__ACTIVITY_CONTENT_RESTORED_COLLABDOC_1__';
           break;
-        case justTheTwoActors:
+        case coupleActors:
           i18nKey = '__MSG__ACTIVITY_CONTENT_RESTORED_COLLABDOC_2__';
           break;
         default:
@@ -551,12 +577,12 @@ const generateContentRestoredRevision = function (activity, properties) {
           break;
       }
       break;
-    case objectTypeIs(COLLABSHEET):
+    case activityObjectTypeIs(COLLABSHEET):
       switch (true) {
-        case justTheOneActor:
+        case singleActor:
           i18nKey = '__MSG__ACTIVITY_CONTENT_RESTORED_COLLABSHEET_1__';
           break;
-        case justTheTwoActors:
+        case coupleActors:
           i18nKey = '__MSG__ACTIVITY_CONTENT_RESTORED_COLLABSHEET_2__';
           break;
         default:
@@ -564,12 +590,12 @@ const generateContentRestoredRevision = function (activity, properties) {
           break;
       }
       break;
-    case objectTypeIs(FILE):
+    case activityObjectTypeIs(FILE):
       switch (true) {
-        case justTheOneActor:
+        case singleActor:
           i18nKey = '__MSG__ACTIVITY_CONTENT_RESTORED_FILE_1__';
           break;
-        case justTheTwoActors:
+        case coupleActors:
           i18nKey = '__MSG__ACTIVITY_CONTENT_RESTORED_FILE_2__';
           break;
         default:
@@ -595,19 +621,18 @@ const generateContentRestoredRevision = function (activity, properties) {
 const generateContentRevisionSummary = function (me, activity, properties) {
   let i18nKey = null;
 
-  // TODO this is redundant, make it not so
-  const justTheOneActor = isOne(properties.actorCount);
-  const justTheTwoActors = isTwo(properties.actorCount);
-  // TODO this is redundant, make it not so
-  const objectTypeIs = pipe(prop(PRIMARY_OBJECT), prop(SUB_TYPE))(activity);
+  const singleActor = countIsOne(ACTOR_COUNT, properties);
+  const coupleActors = countIsTwo(ACTOR_COUNT, properties);
+
+  const objectTypeIs = objectSubTypeIs(activity);
 
   switch (true) {
     case objectTypeIs(COLLABDOC):
       switch (true) {
-        case justTheOneActor:
+        case singleActor:
           i18nKey = '__MSG__ACTIVITY_CONTENT_REVISION_COLLABDOC_1__';
           break;
-        case justTheTwoActors:
+        case coupleActors:
           i18nKey = '__MSG__ACTIVITY_CONTENT_REVISION_COLLABDOC_2__';
           break;
         default:
@@ -617,10 +642,10 @@ const generateContentRevisionSummary = function (me, activity, properties) {
       break;
     case objectTypeIs(COLLABSHEET):
       switch (true) {
-        case justTheOneActor:
+        case singleActor:
           i18nKey = '__MSG__ACTIVITY_CONTENT_REVISION_COLLABSHEET_1__';
           break;
-        case justTheTwoActors:
+        case coupleActors:
           i18nKey = '__MSG__ACTIVITY_CONTENT_REVISION_COLLABSHEET_2__';
           break;
         default:
@@ -630,10 +655,10 @@ const generateContentRevisionSummary = function (me, activity, properties) {
       break;
     case objectTypeIs(FILE):
       switch (true) {
-        case justTheOneActor:
+        case singleActor:
           i18nKey = '__MSG__ACTIVITY_CONTENT_REVISION_FILE_1__';
           break;
-        case justTheTwoActors:
+        case coupleActors:
           i18nKey = '__MSG__ACTIVITY_CONTENT_REVISION_FILE_2__';
           break;
         default:
@@ -643,10 +668,10 @@ const generateContentRevisionSummary = function (me, activity, properties) {
       break;
     case objectTypeIs(LINK):
       switch (true) {
-        case justTheOneActor:
+        case singleActor:
           i18nKey = '__MSG__ACTIVITY_CONTENT_REVISION_LINK_1__';
           break;
-        case justTheTwoActors:
+        case coupleActors:
           i18nKey = '__MSG__ACTIVITY_CONTENT_REVISION_LINK_2__';
           break;
         default:
@@ -672,71 +697,73 @@ const generateContentRevisionSummary = function (me, activity, properties) {
 const generateContentShareSummary = function (me, activity, properties) {
   let i18nKey = null;
 
-  const justTheOneObject = isOne(properties.objectCount);
-  const justTheTwoObjects = isTwo(properties.objectCount);
-  const justTheOneTarget = isOne(properties.targetCount);
-  const justTheTwoTargets = isTwo(properties.targetCount);
-  const objectTypeIs = pipe(prop(PRIMARY_OBJECT), prop(SUB_TYPE))(activity);
+  const singleObject = countIsOne(OBJECT_COUNT, properties);
+  const coupleObjects = countIsTwo(OBJECT_COUNT, properties);
 
-  const targetIsCurrentUser = pipe(prop(TARGET), prop(ID), equals(me.id))(activity);
+  const singleTarget = countIsOne(TARGET_COUNT, properties);
+  const coupleTargets = countIsTwo(TARGET_COUNT, properties);
 
-  if (justTheOneObject) {
+  const objectTypeIs = objectSubTypeIs(activity);
+
+  const activityTargetIsCurrentUser = isTargetTheCurrentUser(activity, me.id);
+
+  if (singleObject) {
     if (objectTypeIs(COLLABDOC)) {
-      if (justTheOneTarget) {
-        if (targetIsCurrentUser) {
+      if (singleTarget) {
+        if (activityTargetIsCurrentUser) {
           i18nKey = '__MSG__ACTIVITY_CONTENT_SHARE_COLLABDOC_YOU__';
         } else {
           i18nKey = '__MSG__ACTIVITY_CONTENT_SHARE_COLLABDOC_1__';
         }
-      } else if (justTheTwoTargets) {
+      } else if (coupleTargets) {
         i18nKey = '__MSG__ACTIVITY_CONTENT_SHARE_COLLABDOC_2__';
       } else {
         i18nKey = '__MSG__ACTIVITY_CONTENT_SHARE_COLLABDOC_2+__';
       }
     } else if (objectTypeIs(COLLABSHEET)) {
-      if (justTheOneTarget) {
-        if (targetIsCurrentUser) {
+      if (singleTarget) {
+        if (activityTargetIsCurrentUser) {
           i18nKey = '__MSG__ACTIVITY_CONTENT_SHARE_COLLABSHEET_YOU__';
         } else {
           i18nKey = '__MSG__ACTIVITY_CONTENT_SHARE_COLLABSHEET_1__';
         }
-      } else if (justTheTwoTargets) {
+      } else if (coupleTargets) {
         i18nKey = '__MSG__ACTIVITY_CONTENT_SHARE_COLLABSHEET_2__';
       } else {
         i18nKey = '__MSG__ACTIVITY_CONTENT_SHARE_COLLABSHEET_2+__';
       }
     } else if (objectTypeIs(FILE)) {
-      if (justTheOneTarget) {
-        if (targetIsCurrentUser) {
+      if (singleTarget) {
+        if (activityTargetIsCurrentUser) {
           i18nKey = '__MSG__ACTIVITY_CONTENT_SHARE_FILE_YOU__';
         } else {
           i18nKey = '__MSG__ACTIVITY_CONTENT_SHARE_FILE_1__';
         }
-      } else if (justTheTwoTargets) {
+      } else if (coupleTargets) {
         i18nKey = '__MSG__ACTIVITY_CONTENT_SHARE_FILE_2__';
       } else {
         i18nKey = '__MSG__ACTIVITY_CONTENT_SHARE_FILE_2+__';
       }
     } else if (objectTypeIs(LINK)) {
-      if (justTheOneTarget) {
-        if (targetIsCurrentUser) {
+      if (singleTarget) {
+        if (activityTargetIsCurrentUser) {
           i18nKey = '__MSG__ACTIVITY_CONTENT_SHARE_LINK_YOU__';
         } else {
           i18nKey = '__MSG__ACTIVITY_CONTENT_SHARE_LINK_1__';
         }
-      } else if (justTheTwoTargets) {
+      } else if (coupleTargets) {
         i18nKey = '__MSG__ACTIVITY_CONTENT_SHARE_LINK_2__';
       } else {
         i18nKey = '__MSG__ACTIVITY_CONTENT_SHARE_LINK_2+__';
       }
     }
-  } else if (justTheTwoObjects) {
-    if (targetIsCurrentUser) {
+  } else if (coupleObjects) {
+    if (activityTargetIsCurrentUser) {
       i18nKey = '__MSG__ACTIVITY_CONTENT_SHARE_YOU_2__';
     } else {
       i18nKey = '__MSG__ACTIVITY_CONTENT_SHARE_2__';
     }
-  } else if (targetIsCurrentUser) {
+  } else if (activityTargetIsCurrentUser) {
     i18nKey = '__MSG__ACTIVITY_CONTENT_SHARE_YOU_2+__';
   } else {
     i18nKey = '__MSG__ACTIVITY_CONTENT_SHARE_2+__';
@@ -758,55 +785,54 @@ const generateContentShareSummary = function (me, activity, properties) {
 const generateContentUpdateMemberRoleSummary = function (me, activity, properties) {
   let i18nKey = null;
 
-  const targetTypeIs = pipe(prop(TARGET), prop(SUB_TYPE))(activity);
-  const justTheOneObject = isOne(properties.objectCount);
-  const justTheTwoObjects = isTwo(properties.objectCount);
-  const objectIsCurrentUser = pipe(prop(PRIMARY_OBJECT), prop(ID), equals(me.id))(activity);
+  const targetTypeIs = targetSubTypeIs(activity);
+  const singleObject = isOne(properties.objectCount);
+  const coupleObjects = isTwo(properties.objectCount);
 
   if (targetTypeIs(COLLABDOC)) {
-    if (justTheOneObject) {
-      if (objectIsCurrentUser) {
+    if (singleObject) {
+      if (objectIsCurrentUser(activity, me.id)) {
         i18nKey = '__MSG__ACTIVITY_CONTENT_UPDATE_MEMBER_ROLE_COLLABDOC_YOU__';
       } else {
         i18nKey = '__MSG__ACTIVITY_CONTENT_UPDATE_MEMBER_ROLE_COLLABDOC_1__';
       }
-    } else if (justTheTwoObjects) {
+    } else if (coupleObjects) {
       i18nKey = '__MSG__ACTIVITY_CONTENT_UPDATE_MEMBER_ROLE_COLLABDOC_2__';
     } else {
       i18nKey = '__MSG__ACTIVITY_CONTENT_UPDATE_MEMBER_ROLE_COLLABDOC_2+__';
     }
   } else if (targetTypeIs(COLLABSHEET)) {
-    if (justTheOneObject) {
-      if (objectIsCurrentUser) {
+    if (singleObject) {
+      if (objectIsCurrentUser(activity, me.id)) {
         i18nKey = '__MSG__ACTIVITY_CONTENT_UPDATE_MEMBER_ROLE_COLLABSHEET_YOU__';
       } else {
         i18nKey = '__MSG__ACTIVITY_CONTENT_UPDATE_MEMBER_ROLE_COLLABSHEET_1__';
       }
-    } else if (justTheTwoObjects) {
+    } else if (coupleObjects) {
       i18nKey = '__MSG__ACTIVITY_CONTENT_UPDATE_MEMBER_ROLE_COLLABSHEET_2__';
     } else {
       i18nKey = '__MSG__ACTIVITY_CONTENT_UPDATE_MEMBER_ROLE_COLLABSHEET_2+__';
     }
   } else if (targetTypeIs(FILE)) {
-    if (justTheOneObject) {
-      if (objectIsCurrentUser) {
+    if (singleObject) {
+      if (objectIsCurrentUser(activity, me.id)) {
         i18nKey = '__MSG__ACTIVITY_CONTENT_UPDATE_MEMBER_ROLE_FILE_YOU__';
       } else {
         i18nKey = '__MSG__ACTIVITY_CONTENT_UPDATE_MEMBER_ROLE_FILE_1__';
       }
-    } else if (justTheTwoObjects) {
+    } else if (coupleObjects) {
       i18nKey = '__MSG__ACTIVITY_CONTENT_UPDATE_MEMBER_ROLE_FILE_2__';
     } else {
       i18nKey = '__MSG__ACTIVITY_CONTENT_UPDATE_MEMBER_ROLE_FILE_2+__';
     }
   } else if (targetTypeIs(LINK)) {
-    if (justTheOneObject) {
-      if (objectIsCurrentUser) {
+    if (singleObject) {
+      if (objectIsCurrentUser(activity, me.id)) {
         i18nKey = '__MSG__ACTIVITY_CONTENT_UPDATE_MEMBER_ROLE_LINK_YOU__';
       } else {
         i18nKey = '__MSG__ACTIVITY_CONTENT_UPDATE_MEMBER_ROLE_LINK_1__';
       }
-    } else if (justTheTwoObjects) {
+    } else if (coupleObjects) {
       i18nKey = '__MSG__ACTIVITY_CONTENT_UPDATE_MEMBER_ROLE_LINK_2__';
     } else {
       i18nKey = '__MSG__ACTIVITY_CONTENT_UPDATE_MEMBER_ROLE_LINK_2+__';
@@ -835,17 +861,18 @@ const generateRejectedRequestToJoinGroup = function (me, activity, properties) {
 const generateRequestToJoinGroupSummary = function (me, activity, properties) {
   let i18nKey = null;
 
-  const justTheOneActor = isOne(properties.actorCount);
-  const justTheTwoActors = isTwo(properties.actorCount);
-  const actorIsCurrentUser = pipe(prop(ACTOR), prop(ID), equals(me.id))(activity);
+  const singleActor = countIsOne(ACTOR_COUNT, properties);
+  const coupleActors = countIsTwo(ACTOR_COUNT, properties);
 
-  if (justTheOneActor) {
-    if (actorIsCurrentUser) {
+  const isActorTheCurrentUser = actorIsCurrentUser(activity, me.id);
+
+  if (singleActor) {
+    if (isActorTheCurrentUser) {
       i18nKey = '__MSG__ACTIVITY_REQUEST_TO_JOIN_GROUP_YOU__';
     } else {
       i18nKey = '__MSG__ACTIVITY_REQUEST_TO_JOIN_GROUP_1__';
     }
-  } else if (justTheTwoActors) {
+  } else if (coupleActors) {
     i18nKey = '__MSG__ACTIVITY_REQUEST_TO_JOIN_GROUP_2__';
   } else {
     i18nKey = '__MSG__ACTIVITY_REQUEST_TO_JOIN_GROUP_2+__';
@@ -867,11 +894,12 @@ const generateRequestToJoinGroupSummary = function (me, activity, properties) {
 const generateMeetingJitsiUpdateVisibilitySummary = function (me, activity, properties) {
   let i18nKey = null;
 
-  const objectVisibilityIs = pipe(prop(PRIMARY_OBJECT), prop(VISIBILITY), equals)(activity);
+  const objectIsPublic = pipe(visibilityOf, isPublic)(activity.getPrimaryObject());
+  const objectIsLoggedIn = pipe(visibilityOf, isLoggedIn)(activity.getPrimaryObject());
 
-  if (objectVisibilityIs(PUBLIC)) {
+  if (objectIsPublic) {
     i18nKey = '__MSG__ACTIVITY_MEETING_VISIBILITY_PUBLIC__';
-  } else if (objectVisibilityIs(LOGGEDIN)) {
+  } else if (objectIsLoggedIn) {
     i18nKey = '__MSG__ACTIVITY_MEETING_VISIBILITY_LOGGEDIN__';
   } else {
     i18nKey = '__MSG__ACTIVITY_MEETING_VISIBILITY_PRIVATE__';
@@ -893,17 +921,17 @@ const generateMeetingJitsiUpdateVisibilitySummary = function (me, activity, prop
 const generateMeetingJitsiUpdateMemberRoleSummary = function (me, activity, properties) {
   let i18nKey = null;
 
-  const justTheOneObject = isOne(properties.objectCount);
-  const justTheTwoObjects = isTwo(properties.objectCount);
-  const objectIsCurrentUser = pipe(prop(PRIMARY_OBJECT), prop(ID), equals(me.id))(activity);
+  const singleObject = countIsOne(OBJECT_COUNT, properties);
+  const coupleObjects = countIsTwo(OBJECT_COUNT, properties);
+  const isObjectTheCurrentUser = objectIsCurrentUser(activity, me.id);
 
-  if (justTheOneObject) {
-    if (objectIsCurrentUser) {
+  if (singleObject) {
+    if (isObjectTheCurrentUser) {
       i18nKey = '__MSG__ACTIVITY_MEETING_UPDATE_MEMBER_ROLE_YOU__';
     } else {
       i18nKey = '__MSG__ACTIVITY_MEETING_UPDATE_MEMBER_ROLE_1__';
     }
-  } else if (justTheTwoObjects) {
+  } else if (coupleObjects) {
     i18nKey = '__MSG__ACTIVITY_MEETING_UPDATE_MEMBER_ROLE_2__';
   } else {
     i18nKey = '__MSG__ACTIVITY_MEETING_UPDATE_MEMBER_ROLE_2+__';
@@ -925,12 +953,12 @@ const generateMeetingJitsiUpdateMemberRoleSummary = function (me, activity, prop
 const generateMeetingJitsiUpdateSummary = function (me, activity, properties) {
   let i18nKey = null;
 
-  const justTheOneActor = isOne(properties.actorCount);
-  const justTheTwoActors = isTwo(properties.actorCount);
+  const singleActor = countIsOne(ACTOR_COUNT, properties);
+  const coupleActors = countIsTwo(ACTOR_COUNT, properties);
 
-  if (justTheOneActor) {
+  if (singleActor) {
     i18nKey = '__MSG__ACTIVITY_MEETING_UPDATE_1__';
-  } else if (justTheTwoActors) {
+  } else if (coupleActors) {
     i18nKey = '__MSG__ACTIVITY_MEETING_UPDATE_2__';
   } else {
     i18nKey = '__MSG__ACTIVITY_MEETING_UPDATE_2+__';
@@ -952,12 +980,12 @@ const generateMeetingJitsiUpdateSummary = function (me, activity, properties) {
 const generateMeetingJitsiMessageSummary = function (me, activity, properties) {
   let i18nKey = null;
 
-  const justTheOneActor = isOne(properties.actorCount);
-  const justTheTwoActors = isTwo(properties.actorCount);
+  const singleActor = countIsOne(ACTOR_COUNT, properties);
+  const coupleActors = countIsTwo(ACTOR_COUNT, properties);
 
-  if (justTheOneActor) {
+  if (singleActor) {
     i18nKey = '__MSG__ACTIVITY_MEETING_MESSAGE_1__';
-  } else if (justTheTwoActors) {
+  } else if (coupleActors) {
     i18nKey = '__MSG__ACTIVITY_MEETING_MESSAGE_2__';
   } else {
     i18nKey = '__MSG__ACTIVITY_MEETING_MESSAGE_2+__';
@@ -979,36 +1007,38 @@ const generateMeetingJitsiMessageSummary = function (me, activity, properties) {
 const generateContentUpdateSummary = function (me, activity, properties) {
   let i18nKey = null;
 
-  const objectTypeIs = pipe(prop(PRIMARY_OBJECT), prop(SUB_TYPE), equals)(activity);
+  const objectTypeIs = objectSubTypeIs(activity);
+  const singleActor = countIsOne(ACTOR_COUNT, properties);
+  const coupleActors = countIsTwo(ACTOR_COUNT, properties);
 
   if (objectTypeIs(COLLABDOC)) {
-    if (properties.actorCount === 1) {
+    if (singleActor) {
       i18nKey = '__MSG__ACTIVITY_CONTENT_UPDATE_COLLABDOC_1__';
-    } else if (properties.actorCount === 2) {
+    } else if (coupleActors) {
       i18nKey = '__MSG__ACTIVITY_CONTENT_UPDATE_COLLABDOC_2__';
     } else {
       i18nKey = '__MSG__ACTIVITY_CONTENT_UPDATE_COLLABDOC_2+__';
     }
-  } else if (activity.primaryObject.subType === COLLABSHEET) {
-    if (properties.actorCount === 1) {
+  } else if (objectTypeIs(COLLABSHEET)) {
+    if (singleActor) {
       i18nKey = '__MSG__ACTIVITY_CONTENT_UPDATE_COLLABSHEET_1__';
-    } else if (properties.actorCount === 2) {
+    } else if (coupleActors) {
       i18nKey = '__MSG__ACTIVITY_CONTENT_UPDATE_COLLABSHEET_2__';
     } else {
       i18nKey = '__MSG__ACTIVITY_CONTENT_UPDATE_COLLABSHEET_2+__';
     }
-  } else if (activity.primaryObject.subType === FILE) {
-    if (properties.actorCount === 1) {
+  } else if (objectTypeIs(FILE)) {
+    if (singleActor) {
       i18nKey = '__MSG__ACTIVITY_CONTENT_UPDATE_FILE_1__';
-    } else if (properties.actorCount === 2) {
+    } else if (coupleActors) {
       i18nKey = '__MSG__ACTIVITY_CONTENT_UPDATE_FILE_2__';
     } else {
       i18nKey = '__MSG__ACTIVITY_CONTENT_UPDATE_FILE_2+__';
     }
-  } else if (activity.primaryObject.subType === LINK) {
-    if (properties.actorCount === 1) {
+  } else if (objectTypeIs(LINK)) {
+    if (singleActor) {
       i18nKey = '__MSG__ACTIVITY_CONTENT_UPDATE_LINK_1__';
-    } else if (properties.actorCount === 2) {
+    } else if (coupleActors) {
       i18nKey = '__MSG__ACTIVITY_CONTENT_UPDATE_LINK_2__';
     } else {
       i18nKey = '__MSG__ACTIVITY_CONTENT_UPDATE_LINK_2+__';
@@ -1031,16 +1061,17 @@ const generateContentUpdateSummary = function (me, activity, properties) {
 const generateContentUpdateVisibilitySummary = function (me, activity, properties) {
   let i18nKey = null;
 
-  const objectTypeIs = pipe(prop(PRIMARY_OBJECT), prop(SUB_TYPE), equals)(activity);
-  const visibilityIs = pipe(prop(PRIMARY_OBJECT), prop(VISIBILITY), equals)(activity);
+  const objectTypeIs = objectSubTypeIs(activity);
+  const primaryObjectIsPublic = pipe(visibilityOf, isPublic)(activity.getPrimaryObject());
+  const primaryObjectIsLoggedIn = pipe(visibilityOf, isLoggedIn)(activity.getPrimaryObject());
 
   switch (true) {
     case objectTypeIs(COLLABDOC):
       switch (true) {
-        case visibilityIs(PUBLIC):
+        case primaryObjectIsPublic:
           i18nKey = '__MSG__ACTIVITY_CONTENT_VISIBILITY_COLLABDOC_PUBLIC__';
           break;
-        case visibilityIs(LOGGEDIN):
+        case primaryObjectIsLoggedIn:
           i18nKey = '__MSG__ACTIVITY_CONTENT_VISIBILITY_COLLABDOC_LOGGEDIN__';
           break;
         default:
@@ -1050,10 +1081,10 @@ const generateContentUpdateVisibilitySummary = function (me, activity, propertie
       break;
     case objectTypeIs(COLLABSHEET):
       switch (true) {
-        case visibilityIs(PUBLIC):
+        case primaryObjectIsPublic:
           i18nKey = '__MSG__ACTIVITY_CONTENT_VISIBILITY_COLLABSHEET_PUBLIC__';
           break;
-        case visibilityIs(LOGGEDIN):
+        case primaryObjectIsLoggedIn:
           i18nKey = '__MSG__ACTIVITY_CONTENT_VISIBILITY_COLLABSHEET_LOGGEDIN__';
           break;
         default:
@@ -1063,10 +1094,10 @@ const generateContentUpdateVisibilitySummary = function (me, activity, propertie
       break;
     case objectTypeIs(FILE):
       switch (true) {
-        case visibilityIs(PUBLIC):
+        case primaryObjectIsPublic:
           i18nKey = '__MSG__ACTIVITY_CONTENT_VISIBILITY_FILE_PUBLIC__';
           break;
-        case visibilityIs(LOGGEDIN):
+        case primaryObjectIsLoggedIn:
           i18nKey = '__MSG__ACTIVITY_CONTENT_VISIBILITY_FILE_LOGGEDIN__';
           break;
         default:
@@ -1076,10 +1107,10 @@ const generateContentUpdateVisibilitySummary = function (me, activity, propertie
       break;
     case objectTypeIs(LINK):
       switch (true) {
-        case visibilityIs(PUBLIC):
+        case primaryObjectIsPublic:
           i18nKey = '__MSG__ACTIVITY_CONTENT_VISIBILITY_LINK_PUBLIC__';
           break;
-        case visibilityIs(LOGGEDIN):
+        case primaryObjectIsLoggedIn:
           i18nKey = '__MSG__ACTIVITY_CONTENT_VISIBILITY_LINK_LOGGEDIN__';
           break;
         default:
@@ -1105,46 +1136,47 @@ const generateContentUpdateVisibilitySummary = function (me, activity, propertie
 const generateMeetingJitsiCreateSummary = function (me, activity, properties) {
   let i18nKey = null;
 
-  const justTheOneTarget = isOne(properties.targetCount)
-  const justTheOneObject = isOne(properties.objectCount);
-  const justTheTwoObjects = isTwo(properties.objectCount);
+  const singleTarget = countIsOne(TARGET_COUNT, properties);
+  const singleObject = countIsOne(OBJECT_COUNT, properties);
+  const coupleObjects = countIsTwo(OBJECT_COUNT, properties);
 
-  const targetTypeIs = pipe(prop(TARGET), prop(OBJECT_TYPE), equals)(activity)
-  const targetIsCurrentUser = pipe(prop(TARGET), prop(ID), equals(me.id))(activity)
-  const targetIsNotTheCurrentUser = not(targetIsCurrentUser)
+  const targetTypeIs = typeIs(TARGET, activity);
+
+  const activityTargetIsCurrentUser = isTargetTheCurrentUser(activity, me.id);
+  const targetIsNotTheCurrentUser = not(activityTargetIsCurrentUser);
 
   /**
    * Add the target to the activity summary when a target is present on the
    *  activity and the target is not an user different from the current user
    */
-  if (justTheOneTarget && !(targetTypeIs(USER) && targetIsNotTheCurrentUser)) {
-    if (targetIsCurrentUser) {
-      if (justTheOneObject) {
+  if (singleTarget && not(targetTypeIs(USER) && targetIsNotTheCurrentUser)) {
+    if (activityTargetIsCurrentUser) {
+      if (singleObject) {
         i18nKey = '__MSG__ACTIVITY_MEETING_CREATE_1_YOU__';
-      } else if (justTheTwoObjects) {
+      } else if (coupleObjects) {
         i18nKey = '__MSG__ACTIVITY_MEETING_CREATE_2_YOU__';
       } else {
         i18nKey = '__MSG__ACTIVITY_MEETING_CREATE_2+_YOU__';
       }
     } else if (targetTypeIs(GROUP)) {
-      if (justTheOneObject) {
+      if (singleObject) {
         i18nKey = '__MSG__ACTIVITY_MEETING_CREATE_1_GROUP__';
-      } else if (justTheTwoObjects) {
+      } else if (coupleObjects) {
         i18nKey = '__MSG__ACTIVITY_MEETING_CREATE_2_GROUP__';
       } else {
         i18nKey = '__MSG__ACTIVITY_MEETING_CREATE_2+_GROUP__';
       }
     }
-  } else if (justTheOneObject) {
+  } else if (singleObject) {
     i18nKey = '__MSG__ACTIVITY_MEETING_CREATE_1__';
-  } else if (justTheTwoObjects) {
+  } else if (coupleObjects) {
     i18nKey = '__MSG__ACTIVITY_MEETING_CREATE_2__';
   } else {
     i18nKey = '__MSG__ACTIVITY_MEETING_CREATE_2+__';
   }
 
   i18nKey = transformKey(i18nKey);
-  return { i18nKey, properties }
+  return { i18nKey, properties };
 };
 
 /**
@@ -1159,40 +1191,40 @@ const generateMeetingJitsiCreateSummary = function (me, activity, properties) {
 const generateMeetingJitsiShareSummary = function (me, activity, properties) {
   let i18nKey = null;
 
-  const justTheOneObject = isOne(properties.objectCount);
-  const justTheTwoObjects = isTwo(properties.objectCount);
+  const singleObject = countIsOne(OBJECT_COUNT, properties);
+  const coupleObjects = countIsTwo(OBJECT_COUNT, properties);
 
-  const justTheOneTarget = isOne(properties.targetCount);
-  const justTheTwoTargets = isTwo(properties.targetCount);
+  const singleTarget = countIsOne(TARGET_COUNT, properties);
+  const coupleTargets = countIsTwo(TARGET_COUNT, properties);
 
-  const targetIsCurrentUser = pipe(prop(TARGET), prop(ID), equals(me.id))(activity)
+  const activityTargetIsCurrentUser = isTargetTheCurrentUser(activity, me.id);
 
-  if (justTheOneObject) {
-    if (justTheOneTarget) {
-      if (targetIsCurrentUser) {
+  if (singleObject) {
+    if (singleTarget) {
+      if (activityTargetIsCurrentUser) {
         i18nKey = '__MSG__ACTIVITY_MEETING_SHARE_YOU__';
       } else {
         i18nKey = '__MSG__ACTIVITY_MEETING_SHARE_1__';
       }
-    } else if (justTheTwoTargets) {
+    } else if (coupleTargets) {
       i18nKey = '__MSG__ACTIVITY_MEETING_SHARE_2__';
     } else {
       i18nKey = '__MSG__ACTIVITY_MEETING_SHARE_2+__';
     }
-  } else if (justTheTwoObjects) {
-    if (targetIsCurrentUser) {
+  } else if (coupleObjects) {
+    if (activityTargetIsCurrentUser) {
       i18nKey = '__MSG__ACTIVITY_MEETINGS_SHARE_2_YOU__';
     } else {
       i18nKey = '__MSG__ACTIVITY_MEETINGS_SHARE_2__';
     }
-  } else if (targetIsCurrentUser) {
+  } else if (activityTargetIsCurrentUser) {
     i18nKey = '__MSG__ACTIVITY_MEETINGS_SHARE_2+_YOU__';
   } else {
     i18nKey = '__MSG__ACTIVITY_MEETINGS_SHARE_2+__';
   }
 
   i18nKey = transformKey(i18nKey);
-  return { i18nKey, properties }
+  return { i18nKey, properties };
 };
 
 /**
@@ -1209,20 +1241,20 @@ const generateDefaultSummary = function (me, activity, properties) {
   let i18nKey = null;
   properties.verb = activity.verb;
 
-  const justTheOneActor = isOne(properties.actorCount)
-  const justTheTwoActors = isTwo(properties.actorCount)
+  const singleActor = countIsOne(ACTOR_COUNT, properties);
+  const coupleActors = countIsTwo(ACTOR_COUNT, properties);
 
   switch (true) {
-    case justTheOneActor:
-    i18nKey = '__MSG__ACTIVITY_DEFAULT_1__';
+    case singleActor:
+      i18nKey = '__MSG__ACTIVITY_DEFAULT_1__';
       break;
-    case justTheTwoActors:
-    i18nKey = '__MSG__ACTIVITY_DEFAULT_2__';
+    case coupleActors:
+      i18nKey = '__MSG__ACTIVITY_DEFAULT_2__';
       break;
     default:
-    i18nKey = '__MSG__ACTIVITY_DEFAULT_2+__';
+      i18nKey = '__MSG__ACTIVITY_DEFAULT_2+__';
       break;
-  }  
+  }
 
   i18nKey = transformKey(i18nKey);
   return { i18nKey, properties };
@@ -1240,23 +1272,23 @@ const generateDefaultSummary = function (me, activity, properties) {
 const generateDiscussionAddToLibrarySummary = function (me, activity, properties) {
   let i18nKey = null;
 
-  const justTheOneObject = isOne(properties.objectCount);
-  const justTheTwoObjects = isTwo(properties.objectCount);
+  const singleObject = countIsOne(OBJECT_COUNT, properties);
+  const coupleObjects = countIsTwo(OBJECT_COUNT, properties);
 
   switch (true) {
-    case justTheOneObject:
-    i18nKey = '__MSG__ACTIVITY_DISCUSSION_ADD_LIBRARY__';
+    case singleObject:
+      i18nKey = '__MSG__ACTIVITY_DISCUSSION_ADD_LIBRARY__';
       break;
-    case justTheTwoObjects:
-    i18nKey = '__MSG__ACTIVITY_DISCUSSION_ADD_LIBRARY_2__';
+    case coupleObjects:
+      i18nKey = '__MSG__ACTIVITY_DISCUSSION_ADD_LIBRARY_2__';
       break;
     default:
-    i18nKey = '__MSG__ACTIVITY_DISCUSSION_ADD_LIBRARY_2+__';
+      i18nKey = '__MSG__ACTIVITY_DISCUSSION_ADD_LIBRARY_2+__';
       break;
   }
 
   i18nKey = transformKey(i18nKey);
-  return { i18nKey, properties }
+  return { i18nKey, properties };
 };
 
 /**
@@ -1271,23 +1303,23 @@ const generateDiscussionAddToLibrarySummary = function (me, activity, properties
 const generateDiscussionCreateSummary = function (me, activity, properties) {
   let i18nKey = null;
 
-  const justTheOneObject = isOne(properties.objectCount);
-  const justTheTwoObjects = isTwo(properties.objectCount);
+  const singleObject = countIsOne(OBJECT_COUNT, properties);
+  const coupleObjects = countIsTwo(OBJECT_COUNT, properties);
 
   switch (true) {
-    case justTheOneObject:
-    i18nKey = '__MSG__ACTIVITY_DISCUSSION_CREATE_1__';
+    case singleObject:
+      i18nKey = '__MSG__ACTIVITY_DISCUSSION_CREATE_1__';
       break;
-    case justTheTwoObjects:
-    i18nKey = '__MSG__ACTIVITY_DISCUSSION_CREATE_2__';
+    case coupleObjects:
+      i18nKey = '__MSG__ACTIVITY_DISCUSSION_CREATE_2__';
       break;
     default:
-    i18nKey = '__MSG__ACTIVITY_DISCUSSION_CREATE_2+__';
+      i18nKey = '__MSG__ACTIVITY_DISCUSSION_CREATE_2+__';
       break;
   }
 
   i18nKey = transformKey(i18nKey);
-  return { i18nKey, properties }
+  return { i18nKey, properties };
 };
 
 /**
@@ -1302,14 +1334,14 @@ const generateDiscussionCreateSummary = function (me, activity, properties) {
 const generateDiscussionMessageSummary = function (me, activity, properties) {
   let i18nKey = null;
 
-  const justTheOneActor = isOne(properties.actorCount);
-  const justTheTwoActors = isTwo(properties.actorCount);
+  const singleActor = countIsOne(ACTOR_COUNT, properties);
+  const coupleActors = countIsTwo(ACTOR_COUNT, properties);
 
   switch (true) {
-    case justTheOneActor:
+    case singleActor:
       i18nKey = '__MSG__ACTIVITY_DISCUSSION_MESSAGE_1__';
       break;
-    case justTheTwoActors:
+    case coupleActors:
       i18nKey = '__MSG__ACTIVITY_DISCUSSION_MESSAGE_2__';
       break;
     default:
@@ -1318,7 +1350,7 @@ const generateDiscussionMessageSummary = function (me, activity, properties) {
   }
 
   i18nKey = transformKey(i18nKey);
-  return { i18nKey, properties }
+  return { i18nKey, properties };
 };
 
 /**
@@ -1333,38 +1365,38 @@ const generateDiscussionMessageSummary = function (me, activity, properties) {
 const generateDiscussionShareSummary = function (me, activity, properties) {
   let i18nKey = null;
 
-  const justTheOneObject = isOne(properties.objectCount);
-  const justTheTwoObjects = isTwo(properties.objectCount);
-  const justTheOneTarget = isOne(properties.targetCount)
-  const justTheTwoTargets = isTwo(properties.targetCount)
-  const targetIsCurrentUser = pipe(prop(TARGET), prop(ID), equals(me.id))(activity)
+  const singleObject = countIsOne(OBJECT_COUNT, properties);
+  const coupleObjects = countIsTwo(OBJECT_COUNT, properties);
+  const singleTarget = countIsOne(TARGET_COUNT, properties);
+  const coupleTargets = countIsTwo(TARGET_COUNT, properties);
+  const activityTargetIsCurrentUser = isTargetTheCurrentUser(activity, me.id);
 
-  if (justTheOneObject) {
-    if (justTheOneTarget) {
-      if (targetIsCurrentUser) {
+  if (singleObject) {
+    if (singleTarget) {
+      if (activityTargetIsCurrentUser) {
         i18nKey = '__MSG__ACTIVITY_DISCUSSION_SHARE_YOU__';
       } else {
         i18nKey = '__MSG__ACTIVITY_DISCUSSION_SHARE_1__';
       }
-    } else if (justTheTwoTargets) {
+    } else if (coupleTargets) {
       i18nKey = '__MSG__ACTIVITY_DISCUSSION_SHARE_2__';
     } else {
       i18nKey = '__MSG__ACTIVITY_DISCUSSION_SHARE_2+__';
     }
-  } else if (justTheTwoObjects) {
-    if (targetIsCurrentUser) {
+  } else if (coupleObjects) {
+    if (activityTargetIsCurrentUser) {
       i18nKey = '__MSG__ACTIVITY_DISCUSSIONS_SHARE_2_YOU__';
     } else {
       i18nKey = '__MSG__ACTIVITY_DISCUSSIONS_SHARE_2__';
     }
-  } else if (targetIsCurrentUser) {
+  } else if (activityTargetIsCurrentUser) {
     i18nKey = '__MSG__ACTIVITY_DISCUSSIONS_SHARE_2+_YOU__';
   } else {
     i18nKey = '__MSG__ACTIVITY_DISCUSSIONS_SHARE_2+__';
   }
 
   i18nKey = transformKey(i18nKey);
-  return { i18nKey, properties }
+  return { i18nKey, properties };
 };
 
 /**
@@ -1379,24 +1411,24 @@ const generateDiscussionShareSummary = function (me, activity, properties) {
 const generateDiscussionUpdateMemberRoleSummary = function (me, activity, properties) {
   let i18nKey = null;
 
-  const justTheOneObject = isOne(properties.objectCount);
-  const justTheTwoObjects = isTwo(properties.objectCount);
-  const primaryObjectIsCurrentUser = pipe(prop(PRIMARY_OBJECT), prop(ID), equals(me.id))(activity)
+  const singleObject = countIsOne(OBJECT_COUNT, properties);
+  const coupleObjects = countIsTwo(OBJECT_COUNT, properties);
+  const primaryObjectIsCurrentUser = objectIsCurrentUser(activity, me.id);
 
-  if (justTheOneObject) {
+  if (singleObject) {
     if (primaryObjectIsCurrentUser) {
       i18nKey = '__MSG__ACTIVITY_DISCUSSION_UPDATE_MEMBER_ROLE_YOU__';
     } else {
       i18nKey = '__MSG__ACTIVITY_DISCUSSION_UPDATE_MEMBER_ROLE_1__';
     }
-  } else if (justTheTwoObjects) {
+  } else if (coupleObjects) {
     i18nKey = '__MSG__ACTIVITY_DISCUSSION_UPDATE_MEMBER_ROLE_2__';
   } else {
     i18nKey = '__MSG__ACTIVITY_DISCUSSION_UPDATE_MEMBER_ROLE_2+__';
   }
 
   i18nKey = transformKey(i18nKey);
-  return { i18nKey, properties }
+  return { i18nKey, properties };
 };
 
 /**
@@ -1411,19 +1443,19 @@ const generateDiscussionUpdateMemberRoleSummary = function (me, activity, proper
 const generateDiscussionUpdateSummary = function (me, activity, properties) {
   let i18nKey = null;
 
-  const justTheOneActor = isOne(properties.actorCount);
-  const justTheTwoActors = isTwo(properties.actorCount);
+  const singleActor = countIsOne(ACTOR_COUNT, properties);
+  const coupleActors = countIsTwo(ACTOR_COUNT, properties);
 
-  if (justTheOneActor) {
+  if (singleActor) {
     i18nKey = '__MSG__ACTIVITY_DISCUSSION_UPDATE_1__';
-  } else if (justTheTwoActors) {
+  } else if (coupleActors) {
     i18nKey = '__MSG__ACTIVITY_DISCUSSION_UPDATE_2__';
   } else {
     i18nKey = '__MSG__ACTIVITY_DISCUSSION_UPDATE_2+__';
   }
 
   i18nKey = transformKey(i18nKey);
-  return { i18nKey, properties }
+  return { i18nKey, properties };
 };
 
 /**
@@ -1437,13 +1469,14 @@ const generateDiscussionUpdateSummary = function (me, activity, properties) {
  */
 const generateDiscussionUpdateVisibilitySummary = function (me, activity, properties) {
   let i18nKey = null;
-  const primaryObjectIs = pipe(prop(PRIMARY_OBJECT), prop(VISIBILITY), equals)(activity)
+  const primaryObjectIsPublic = pipe(visibilityOf, isPublic)(activity.getPrimaryObject());
+  const primaryObjectIsLoggedIn = pipe(visibilityOf, isLoggedIn)(activity.getPrimaryObject());
 
   switch (true) {
-    case primaryObjectIs(PUBLIC):
+    case primaryObjectIsPublic:
       i18nKey = '__MSG__ACTIVITY_DISCUSSION_VISIBILITY_PUBLIC__';
       break;
-    case primaryObjectIs(LOGGEDIN):
+    case primaryObjectIsLoggedIn:
       i18nKey = '__MSG__ACTIVITY_DISCUSSION_VISIBILITY_LOGGEDIN__';
       break;
     default:
@@ -1452,7 +1485,7 @@ const generateDiscussionUpdateVisibilitySummary = function (me, activity, proper
   }
 
   i18nKey = transformKey(i18nKey);
-  return { i18nKey, properties }
+  return { i18nKey, properties };
 };
 
 /**
@@ -1467,11 +1500,11 @@ const generateDiscussionUpdateVisibilitySummary = function (me, activity, proper
 const generateFolderAddToFolderSummary = function (me, activity, properties) {
   let i18nKey = null;
 
-  const justTheOneObject = isOne(properties.objectCount);
-  const justTheTwoObjects = isTwo(properties.objectCount);
-  const objectTypeIs = pipe(prop(PRIMARY_OBJECT), prop(SUB_TYPE), equals)(activity)
+  const singleObject = countIsOne(OBJECT_COUNT, properties);
+  const coupleObjects = countIsTwo(OBJECT_COUNT, properties);
+  const objectTypeIs = objectSubTypeIs(activity);
 
-  if (justTheOneObject) {
+  if (singleObject) {
     if (objectTypeIs(COLLABDOC)) {
       i18nKey = '__MSG__ACTIVITY_FOLDER_ADD_FOLDER_COLLABDOC__';
     } else if (objectTypeIs(FILE)) {
@@ -1479,14 +1512,14 @@ const generateFolderAddToFolderSummary = function (me, activity, properties) {
     } else if (objectTypeIs(LINK)) {
       i18nKey = '__MSG__ACTIVITY_FOLDER_ADD_FOLDER_LINK__';
     }
-  } else if (justTheTwoObjects) {
+  } else if (coupleObjects) {
     i18nKey = '__MSG__ACTIVITY_FOLDER_ADD_FOLDER_2__';
   } else {
     i18nKey = '__MSG__ACTIVITY_FOLDER_ADD_FOLDER_2+__';
   }
 
   i18nKey = transformKey(i18nKey);
-  return { i18nKey, properties }
+  return { i18nKey, properties };
 };
 
 /**
@@ -1500,15 +1533,20 @@ const generateFolderAddToFolderSummary = function (me, activity, properties) {
  */
 const generateFolderAddToLibrarySummary = function (me, activity, properties) {
   let i18nKey = null;
-  if (properties.objectCount === 1) {
+
+  const singleObject = countIsOne(OBJECT_COUNT, properties);
+  const coupleObjects = countIsTwo(OBJECT_COUNT, properties);
+
+  if (singleObject) {
     i18nKey = '__MSG__ACTIVITY_FOLDER_ADD_LIBRARY__';
-  } else if (properties.objectCount === 2) {
+  } else if (coupleObjects) {
     i18nKey = '__MSG__ACTIVITY_FOLDER_ADD_LIBRARY_2__';
   } else {
     i18nKey = '__MSG__ACTIVITY_FOLDER_ADD_LIBRARY_2+__';
   }
 
-  return new ActivityItem(i18nKey, properties);
+  i18nKey = transformKey(i18nKey);
+  return { i18nKey, properties };
 };
 
 /**
@@ -1522,15 +1560,20 @@ const generateFolderAddToLibrarySummary = function (me, activity, properties) {
  */
 const generateFolderCommentSummary = function (me, activity, properties) {
   let i18nKey = null;
-  if (properties.actorCount === 1) {
+
+  const singleActor = countIsOne(ACTOR_COUNT, properties);
+  const coupleActors = countIsTwo(ACTOR_COUNT, properties);
+
+  if (singleActor) {
     i18nKey = '__MSG__ACTIVITY_FOLDER_COMMENT_1__';
-  } else if (properties.actorCount === 2) {
+  } else if (coupleActors) {
     i18nKey = '__MSG__ACTIVITY_FOLDER_COMMENT_2__';
   } else {
     i18nKey = '__MSG__ACTIVITY_FOLDER_COMMENT_2+__';
   }
 
-  return new ActivityItem(i18nKey, properties);
+  i18nKey = transformKey(i18nKey);
+  return { i18nKey, properties };
 };
 
 /**
@@ -1544,35 +1587,46 @@ const generateFolderCommentSummary = function (me, activity, properties) {
  */
 const generateFolderCreateSummary = function (me, activity, properties) {
   let i18nKey = null;
-  // Add the target to the activity summary when a target is present on the
-  // activity and the target is not a user different from the current user
-  if (properties.targetCount === 1 && !(activity.target.objectType === 'user' && activity.target['oae:id'] !== me.id)) {
-    if (activity.target['oae:id'] === me.id) {
-      if (properties.objectCount === 1) {
+
+  const singleObject = countIsOne(OBJECT_COUNT, properties);
+  const coupleObjects = countIsTwo(OBJECT_COUNT, properties);
+  const singleTarget = countIsOne(TARGET_COUNT, properties);
+  const targetTypeIs = typeIs(TARGET, activity);
+  const targetIsTheCurrentUser = isTargetTheCurrentUser(activity, me.id);
+  const targetIsNotTheCurrentUser = not(targetIsTheCurrentUser);
+
+  /**
+   * Add the target to the activity summary when a target is present on the
+   * activity and the target is not a user different from the current user
+   */
+  if (singleTarget && not(targetTypeIs(USER) && targetIsNotTheCurrentUser)) {
+    if (targetIsTheCurrentUser) {
+      if (singleObject) {
         i18nKey = '__MSG__ACTIVITY_FOLDER_CREATE_1_YOU__';
-      } else if (properties.objectCount === 2) {
+      } else if (coupleObjects) {
         i18nKey = '__MSG__ACTIVITY_FOLDER_CREATE_2_YOU__';
       } else {
         i18nKey = '__MSG__ACTIVITY_FOLDER_CREATE_2+_YOU__';
       }
-    } else if (activity.target.objectType === 'group') {
-      if (properties.objectCount === 1) {
+    } else if (targetTypeIs(GROUP)) {
+      if (singleObject) {
         i18nKey = '__MSG__ACTIVITY_FOLDER_CREATE_1_GROUP__';
-      } else if (properties.objectCount === 2) {
+      } else if (coupleObjects) {
         i18nKey = '__MSG__ACTIVITY_FOLDER_CREATE_2_GROUP__';
       } else {
         i18nKey = '__MSG__ACTIVITY_FOLDER_CREATE_2+_GROUP__';
       }
     }
-  } else if (properties.objectCount === 1) {
+  } else if (singleObject) {
     i18nKey = '__MSG__ACTIVITY_FOLDER_CREATE_1__';
-  } else if (properties.objectCount === 2) {
+  } else if (coupleObjects) {
     i18nKey = '__MSG__ACTIVITY_FOLDER_CREATE_2__';
   } else {
     i18nKey = '__MSG__ACTIVITY_FOLDER_CREATE_2+__';
   }
 
-  return new ActivityItem(i18nKey, properties);
+  i18nKey = transformKey(i18nKey);
+  return { i18nKey, properties };
 };
 
 /**
@@ -1586,31 +1640,40 @@ const generateFolderCreateSummary = function (me, activity, properties) {
  */
 const generateFolderShareSummary = function (me, activity, properties) {
   let i18nKey = null;
-  if (properties.objectCount === 1) {
-    if (properties.targetCount === 1) {
-      if (activity.target['oae:id'] === me.id) {
+
+  const singleObject = countIsOne(OBJECT_COUNT, properties);
+  const coupleObjects = countIsTwo(OBJECT_COUNT, properties);
+  const singleTarget = countIsOne(TARGET_COUNT, properties);
+  const coupleTargets = countIsTwo(TARGET_COUNT, properties);
+
+  const targetIsTheCurrentUser = isTargetTheCurrentUser(activity, me.id);
+
+  if (singleObject) {
+    if (singleTarget) {
+      if (targetIsTheCurrentUser) {
         i18nKey = '__MSG__ACTIVITY_FOLDER_SHARE_YOU__';
       } else {
         i18nKey = '__MSG__ACTIVITY_FOLDER_SHARE_1__';
       }
-    } else if (properties.targetCount === 2) {
+    } else if (coupleTargets) {
       i18nKey = '__MSG__ACTIVITY_FOLDER_SHARE_2__';
     } else {
       i18nKey = '__MSG__ACTIVITY_FOLDER_SHARE_2+__';
     }
-  } else if (properties.objectCount === 2) {
-    if (activity.target['oae:id'] === me.id) {
+  } else if (coupleObjects) {
+    if (targetIsTheCurrentUser) {
       i18nKey = '__MSG__ACTIVITY_FOLDERS_SHARE_2_YOU__';
     } else {
       i18nKey = '__MSG__ACTIVITY_FOLDERS_SHARE_2__';
     }
-  } else if (activity.target['oae:id'] === me.id) {
+  } else if (targetIsTheCurrentUser) {
     i18nKey = '__MSG__ACTIVITY_FOLDERS_SHARE_2+_YOU__';
   } else {
     i18nKey = '__MSG__ACTIVITY_FOLDERS_SHARE_2+__';
   }
 
-  return new ActivityItem(i18nKey, properties);
+  i18nKey = transformKey(i18nKey);
+  return { i18nKey, properties };
 };
 
 /**
@@ -1624,15 +1687,20 @@ const generateFolderShareSummary = function (me, activity, properties) {
  */
 const generateFolderUpdateSummary = function (me, activity, properties) {
   let i18nKey = null;
-  if (properties.actorCount === 1) {
+
+  const singleActor = countIsOne(ACTOR_COUNT, properties);
+  const coupleActors = countIsTwo(ACTOR_COUNT, properties);
+
+  if (singleActor) {
     i18nKey = '__MSG__ACTIVITY_FOLDER_UPDATE_1__';
-  } else if (properties.actorCount === 2) {
+  } else if (coupleActors) {
     i18nKey = '__MSG__ACTIVITY_FOLDER_UPDATE_2__';
   } else {
     i18nKey = '__MSG__ACTIVITY_FOLDER_UPDATE_2+__';
   }
 
-  return new ActivityItem(i18nKey, properties);
+  i18nKey = transformKey(i18nKey);
+  return { i18nKey, properties };
 };
 
 /**
@@ -1646,19 +1714,26 @@ const generateFolderUpdateSummary = function (me, activity, properties) {
  */
 const generateFolderUpdateMemberRoleSummary = function (me, activity, properties) {
   let i18nKey = null;
-  if (properties.objectCount === 1) {
-    if (activity.primaryObject['oae:id'] === me.id) {
+
+  const singleObject = countIsOne(OBJECT_COUNT, properties);
+  const coupleObjects = countIsTwo(OBJECT_COUNT, properties);
+
+  const objectIsTheCurrentUser = objectIsCurrentUser(activity, me.id);
+
+  if (singleObject) {
+    if (objectIsTheCurrentUser) {
       i18nKey = '__MSG__ACTIVITY_FOLDER_UPDATE_MEMBER_ROLE_YOU__';
     } else {
       i18nKey = '__MSG__ACTIVITY_FOLDER_UPDATE_MEMBER_ROLE_1__';
     }
-  } else if (properties.objectCount === 2) {
+  } else if (coupleObjects) {
     i18nKey = '__MSG__ACTIVITY_FOLDER_UPDATE_MEMBER_ROLE_2__';
   } else {
     i18nKey = '__MSG__ACTIVITY_FOLDER_UPDATE_MEMBER_ROLE_2+__';
   }
 
-  return new ActivityItem(i18nKey, properties);
+  i18nKey = transformKey(i18nKey);
+  return { i18nKey, properties };
 };
 
 /**
@@ -1672,15 +1747,20 @@ const generateFolderUpdateMemberRoleSummary = function (me, activity, properties
  */
 const generateFolderUpdateVisibilitySummary = function (me, activity, properties) {
   let i18nKey = null;
-  if (activity.primaryObject['oae:visibility'] === 'public') {
+
+  const objectIsPublic = pipe(visibilityOf, isPublic)(activity.getPrimaryObject());
+  const objectIsLoggedIn = pipe(visibilityOf, isLoggedIn)(activity.getPrimaryObject());
+
+  if (objectIsPublic) {
     i18nKey = '__MSG__ACTIVITY_FOLDER_VISIBILITY_PUBLIC__';
-  } else if (activity.primaryObject['oae:visibility'] === 'loggedin') {
+  } else if (objectIsLoggedIn) {
     i18nKey = '__MSG__ACTIVITY_FOLDER_VISIBILITY_LOGGEDIN__';
   } else {
     i18nKey = '__MSG__ACTIVITY_FOLDER_VISIBILITY_PRIVATE__';
   }
 
-  return new ActivityItem(i18nKey, properties);
+  i18nKey = transformKey(i18nKey);
+  return { i18nKey, properties };
 };
 
 /**
@@ -1694,31 +1774,39 @@ const generateFolderUpdateVisibilitySummary = function (me, activity, properties
  */
 const generateFollowingSummary = function (me, activity, properties) {
   let i18nKey = null;
-  if (properties.actorCount > 1) {
-    if (properties.actorCount === 2) {
-      if (activity.primaryObject['oae:id'] === me.id) {
+
+  const multipleActors = countIsMoreThanOne(ACTOR_COUNT, properties);
+  const coupleActors = countIsTwo(ACTOR_COUNT, properties);
+
+  const multipleObjects = countIsMoreThanOne(OBJECT_COUNT, properties);
+  const objectIsTheCurrentUser = objectIsCurrentUser(activity, me.id);
+
+  if (multipleActors) {
+    if (coupleActors) {
+      if (objectIsTheCurrentUser) {
         i18nKey = '__MSG__ACTIVITY_FOLLOWING_2_YOU__';
       } else {
         i18nKey = '__MSG__ACTIVITY_FOLLOWING_2_1__';
       }
-    } else if (activity.primaryObject['oae:id'] === me.id) {
+    } else if (objectIsTheCurrentUser) {
       i18nKey = '__MSG__ACTIVITY_FOLLOWING_2+_YOU__';
     } else {
       i18nKey = '__MSG__ACTIVITY_FOLLOWING_2+_1__';
     }
-  } else if (properties.objectCount > 1) {
+  } else if (multipleObjects) {
     if (properties.objectCount === 2) {
       i18nKey = '__MSG__ACTIVITY_FOLLOWING_1_2__';
     } else {
       i18nKey = '__MSG__ACTIVITY_FOLLOWING_1_2+__';
     }
-  } else if (activity.primaryObject['oae:id'] === me.id) {
+  } else if (objectIsTheCurrentUser) {
     i18nKey = '__MSG__ACTIVITY_FOLLOWING_1_YOU__';
   } else {
     i18nKey = '__MSG__ACTIVITY_FOLLOWING_1_1__';
   }
 
-  return new ActivityItem(i18nKey, properties);
+  i18nKey = transformKey(i18nKey);
+  return { i18nKey, properties };
 };
 
 /**
@@ -1732,19 +1820,25 @@ const generateFollowingSummary = function (me, activity, properties) {
  */
 const generateGroupAddMemberSummary = function (me, activity, properties) {
   let i18nKey = null;
-  if (properties.objectCount === 1) {
-    if (activity.primaryObject['oae:id'] === me.id) {
+
+  const singleObject = countIsOne(OBJECT_COUNT, properties);
+  const coupleObjects = countIsTwo(OBJECT_COUNT, properties);
+  const objectIsTheCurrentUser = objectIsCurrentUser(activity, me.id);
+
+  if (singleObject) {
+    if (objectIsTheCurrentUser) {
       i18nKey = '__MSG__ACTIVITY_GROUP_ADD_MEMBER_YOU__';
     } else {
       i18nKey = '__MSG__ACTIVITY_GROUP_ADD_MEMBER_1__';
     }
-  } else if (properties.objectCount === 2) {
+  } else if (coupleObjects) {
     i18nKey = '__MSG__ACTIVITY_GROUP_ADD_MEMBER_2__';
   } else {
     i18nKey = '__MSG__ACTIVITY_GROUP_ADD_MEMBER_2+__';
   }
 
-  return new ActivityItem(i18nKey, properties);
+  i18nKey = transformKey(i18nKey);
+  return { i18nKey, properties };
 };
 
 /**
@@ -1758,19 +1852,26 @@ const generateGroupAddMemberSummary = function (me, activity, properties) {
  */
 const generateGroupUpdateMemberRoleSummary = function (me, activity, properties) {
   let i18nKey = null;
-  if (properties.objectCount === 1) {
-    if (activity.primaryObject['oae:id'] === me.id) {
+
+  const singleObject = countIsOne(OBJECT_COUNT, properties);
+  const coupleObjects = countIsTwo(OBJECT_COUNT, properties);
+
+  const objectIsTheCurrentUser = objectIsCurrentUser(activity, me.id);
+
+  if (singleObject) {
+    if (objectIsTheCurrentUser) {
       i18nKey = '__MSG__ACTIVITY_GROUP_UPDATE_MEMBER_ROLE_YOU__';
     } else {
       i18nKey = '__MSG__ACTIVITY_GROUP_UPDATE_MEMBER_ROLE_1__';
     }
-  } else if (properties.objectCount === 2) {
+  } else if (coupleObjects) {
     i18nKey = '__MSG__ACTIVITY_GROUP_UPDATE_MEMBER_ROLE_2__';
   } else {
     i18nKey = '__MSG__ACTIVITY_GROUP_UPDATE_MEMBER_ROLE_2+__';
   }
 
-  return new ActivityItem(i18nKey, properties);
+  i18nKey = transformKey(i18nKey);
+  return { i18nKey, properties };
 };
 
 /**
@@ -1784,15 +1885,20 @@ const generateGroupUpdateMemberRoleSummary = function (me, activity, properties)
  */
 const generateGroupCreateSummary = function (me, activity, properties) {
   let i18nKey = null;
-  if (properties.objectCount === 1) {
+
+  const singleObject = countIsOne(OBJECT_COUNT, properties);
+  const coupleObjects = countIsTwo(OBJECT_COUNT, properties);
+
+  if (singleObject) {
     i18nKey = '__MSG__ACTIVITY_GROUP_CREATE_1__';
-  } else if (properties.objectCount === 2) {
+  } else if (coupleObjects) {
     i18nKey = '__MSG__ACTIVITY_GROUP_CREATE_2__';
   } else {
     i18nKey = '__MSG__ACTIVITY_GROUP_CREATE_2+__';
   }
 
-  return new ActivityItem(i18nKey, properties);
+  i18nKey = transformKey(i18nKey);
+  return { i18nKey, properties };
 };
 
 /**
@@ -1806,15 +1912,20 @@ const generateGroupCreateSummary = function (me, activity, properties) {
  */
 const generateGroupJoinSummary = function (me, activity, properties) {
   let i18nKey = null;
-  if (properties.actorCount === 1) {
+
+  const singleActor = countIsOne(ACTOR_COUNT, properties);
+  const coupleActors = countIsTwo(ACTOR_COUNT, properties);
+
+  if (singleActor) {
     i18nKey = '__MSG__ACTIVITY_GROUP_JOIN_1__';
-  } else if (properties.actorCount === 2) {
+  } else if (coupleActors) {
     i18nKey = '__MSG__ACTIVITY_GROUP_JOIN_2__';
   } else {
     i18nKey = '__MSG__ACTIVITY_GROUP_JOIN_2+__';
   }
 
-  return new ActivityItem(i18nKey, properties);
+  i18nKey = transformKey(i18nKey);
+  return { i18nKey, properties };
 };
 
 /**
@@ -1828,15 +1939,20 @@ const generateGroupJoinSummary = function (me, activity, properties) {
  */
 const generateGroupUpdateSummary = function (me, activity, properties) {
   let i18nKey = null;
-  if (properties.actorCount === 1) {
+
+  const singleActor = countIsOne(ACTOR_COUNT, properties);
+  const coupleActors = countIsTwo(ACTOR_COUNT, properties);
+
+  if (singleActor) {
     i18nKey = '__MSG__ACTIVITY_GROUP_UPDATE_1__';
-  } else if (properties.actorCount === 2) {
+  } else if (coupleActors) {
     i18nKey = '__MSG__ACTIVITY_GROUP_UPDATE_2__';
   } else {
     i18nKey = '__MSG__ACTIVITY_GROUP_UPDATE_2+__';
   }
 
-  return new ActivityItem(i18nKey, properties);
+  i18nKey = transformKey(i18nKey);
+  return { i18nKey, properties };
 };
 
 /**
@@ -1850,15 +1966,20 @@ const generateGroupUpdateSummary = function (me, activity, properties) {
  */
 const generateGroupUpdateVisibilitySummary = function (me, activity, properties) {
   let i18nKey = null;
-  if (activity.primaryObject['oae:visibility'] === 'public') {
+
+  const objectIsPublic = pipe(visibilityOf, isPublic)(activity.getPrimaryObject());
+  const objectIsLoggedIn = pipe(visibilityOf, isLoggedIn)(activity.getPrimaryObject());
+
+  if (objectIsPublic) {
     i18nKey = '__MSG__ACTIVITY_GROUP_VISIBILITY_PUBLIC__';
-  } else if (activity.primaryObject['oae:visibility'] === 'loggedin') {
+  } else if (objectIsLoggedIn) {
     i18nKey = '__MSG__ACTIVITY_GROUP_VISIBILITY_LOGGEDIN__';
   } else {
     i18nKey = '__MSG__ACTIVITY_GROUP_VISIBILITY_PRIVATE__';
   }
 
-  return new ActivityItem(i18nKey, properties);
+  i18nKey = transformKey(i18nKey);
+  return { i18nKey, properties };
 };
 
 /**
@@ -1940,22 +2061,24 @@ const generateGroupUpdateVisibilitySummary = function (me, activity, properties)
  * @return {ActivityItem}                    A summary object
  * @api private
  */
+// TODO refactor this one
 const generateInvitationSummary = function (me, activity, properties) {
   const labels = ['ACTIVITY'];
-  const activityType = activity['oae:activityType'];
-  const actorId = activity.actor['oae:id'];
-  const objectId = activity.primaryObject['oae:id'];
+  const activityType = activity.activityType;
+  const actorId = activity.actor.id;
+  const objectId = activity.primaryObject.id;
 
   if (activityType === 'invite') {
     labels.push('INVITE');
   } else if (activityType === 'invitation-accept') {
     labels.push('INVITATION_ACCEPT');
 
-    // Find the "who" label, which indicates if the current user in context is either the
-    // inviter or the invited user. When that is the case, we alter the language to be in
-    // the form "You"/"Your" as opposed to the display name of the user. This is only
-    // applicable for the invitation accept activity because the invite is only seen by the
-    // user who was invited
+    /**
+     * Find the "who" label, which indicates if the current user in context is either the
+     * inviter or the invited user. When that is the case, we alter the language to be in
+     * the form "You"/"Your" as opposed to the display name of the user. This is only
+     * applicable for the invitation accept activity because the invite is only seen by the user who was invited
+     */
     if (me.id === actorId) {
       labels.push('YOU_OTHER');
     } else if (me.id === objectId) {
@@ -1992,9 +2115,9 @@ const generateInvitationSummary = function (me, activity, properties) {
   labels.push(countLabel);
 
   // Generate the activity i18n key according to the labels we determined
-  const i18nKey = '__MSG__' + labels.join('_') + '__';
-
-  return new ActivityItem(i18nKey, properties);
+  let i18nKey = '__MSG__' + labels.join('_') + '__';
+  i18nKey = transformKey(i18nKey);
+  return { i18nKey, properties };
 };
 
 export { generateSummary };

@@ -86,42 +86,35 @@ export class ActivityItem {
     this.published = new Date(rawActivity?.published);
     this.verb = rawActivity?.verb;
 
-    const addObjects = concat(this.allObjects);
-    const addActors = concat(this.allActors);
-    const addTargets = concat(this.allTargets);
-
-    // TODO: optimize this
+    let actors = [];
     if (hasSeveralActors(rawActivity)) {
-      this.allActors = addActors(
-        getActorCollection(rawActivity).map(eachActor => {
-          return new User(eachActor);
-        }),
-      );
+      actors = getActorCollection(rawActivity).map(eachActor => {
+        return new User(eachActor);
+      });
     } else {
-      this.allActors = addActors(of(new User(rawActivity?.actor)));
+      actors = of(new User(rawActivity?.actor));
     }
+    this.allActors = actors;
 
-    // TODO: optimize this
+    let objects = [];
     if (hasSeveralObjects(rawActivity)) {
-      this.allObjects = addObjects(
-        getObjectCollection(rawActivity).map(eachObject => {
-          return new Resource(eachObject);
-        }),
-      );
+      objects = getObjectCollection(rawActivity).map(eachObject => {
+        return new Resource(eachObject);
+      });
     } else {
-      this.allObjects = addObjects(of(new Resource(rawActivity?.object)));
+      objects = of(new Resource(rawActivity?.object));
     }
+    this.allObjects = objects;
 
-    // TODO: optimize this
+    let targets = [];
     if (hasSeveralTargets(rawActivity)) {
-      this.allTargets = addTargets(
-        getTargetCollection(rawActivity).map(eachTarget => {
-          return new Resource(eachTarget);
-        }),
-      );
+      targets = getTargetCollection(rawActivity).map(eachTarget => {
+        return new Resource(eachTarget);
+      });
     } else if (hasSingleTarget(rawActivity)) {
-      this.allTargets = addTargets(of(new Resource(rawActivity?.target)));
+      targets = of(new Resource(rawActivity?.target));
     }
+    this.allTargets = targets;
 
     const isOneOfCommentActivities = includes(getActivityType(rawActivity), COMMENT_ACTIVITY_TYPES);
     if (isOneOfCommentActivities) {

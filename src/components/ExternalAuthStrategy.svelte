@@ -39,7 +39,7 @@
       <span class="icon">
         <i class={icon} />
       </span>
-      <span>{$_(name)}</span>
+      <span>{@html $_(name)}</span>
     </button>
   </div>
 </form>
@@ -54,10 +54,11 @@
     background-color: #f7f9fa;
     border-radius: 2px;
     border-color: #d1e0ff;
+
     &:hover {
       box-shadow: 0 1px 2px rgba(206, 212, 218, 1);
       background-color: white;
-      box-shadow: 0px 3px 10px #dce2ee;
+      box-shadow: 0 3px 10px #dce2ee;
       border-radius: 2px;
       border-color: #d1e0ff;
     }

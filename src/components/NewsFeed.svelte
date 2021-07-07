@@ -11,6 +11,10 @@
   import anylogger from 'anylogger';
   import { onMount } from 'svelte';
 
+  import { defaultTo } from 'ramda';
+
+  const defaultToEmptyArray = defaultTo([]);
+
   export let activityItem;
 
   const log = anylogger('oae-newsfeed');
@@ -19,6 +23,8 @@
   onMount(async () => {
     activityItem.summary = activityItem.getSummary($user);
     activitySummary = $_(activityItem.summary.i18nKey, { values: activityItem.summary.properties });
+
+    activityItem.allTargets = defaultToEmptyArray(activityItem.allTargets);
     log.warn(activityItem);
   });
 </script>
@@ -68,6 +74,17 @@
         </div>
       {/if}
     {/each}
+
+    {#if activityItem.allTargets}
+      {#each activityItem.allTargets as eachTarget}
+        <!-- I have no idea what the markup should be, so here it goes -->
+        {#if eachTarget.image}
+          <div class="overlay-{eachTarget.visibility}">
+            <img alt="target-thumbnail" src={eachTarget?.image?.url} />
+          </div>
+        {/if}
+      {/each}
+    {/if}
 
     {#if false}
       <nav class="level bottom-nav-news">

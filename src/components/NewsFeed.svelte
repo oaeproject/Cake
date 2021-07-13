@@ -1,4 +1,9 @@
 <script>
+  /**
+   * TODOs
+   * - [ ] When someone else is the activity actor, we need to fetch her avatar first
+   */
+
   import { user } from '../stores/user';
   import '@polymer/iron-icons/iron-icons.js';
   import '@polymer/iron-icons/social-icons.js';
@@ -6,21 +11,18 @@
   import '@polymer/iron-icons/hardware-icons.js';
   import '@polymer/iron-icons/communication-icons.js';
 
+  import NewsFeedComment from '../components/NewsFeedComment.svelte';
   import { _ } from 'svelte-i18n';
   import { formatDistance } from 'date-fns';
-  import anylogger from 'anylogger';
   import { onMount } from 'svelte';
 
   export let activityItem;
 
-  const log = anylogger('oae-newsfeed');
   let activitySummary;
 
   onMount(async () => {
     activityItem.summary = activityItem.getSummary($user);
     activitySummary = $_(activityItem.summary.i18nKey, { values: activityItem.summary.properties });
-
-    log.warn(activityItem);
   });
 </script>
 
@@ -56,6 +58,17 @@
       </div>
       <div class="level-right" />
     </nav>
+    {#if activityItem.allTargets}
+      {#each activityItem.allTargets as eachTarget}
+        <!-- I have no idea what the markup should be, so here it goes -->
+        {#if eachTarget.image}
+          <div class="overlay-{eachTarget.visibility}">
+            <img alt="target-thumbnail" src={eachTarget?.image?.url} />
+          </div>
+        {/if}
+      {/each}
+    {/if}
+
     {#each activityItem.allObjects as eachObject}
       <!-- I have no idea what the markup should be, so here it goes -->
       {#if eachObject.image}
@@ -70,17 +83,11 @@
       {/if}
     {/each}
 
-    {#if activityItem.allTargets}
-      {#each activityItem.allTargets as eachTarget}
-        <!-- I have no idea what the markup should be, so here it goes -->
-        {#if eachTarget.image}
-          <div class="overlay-{eachTarget.visibility}">
-            <img alt="target-thumbnail" src={eachTarget?.image?.url} />
-          </div>
-        {/if}
-      {/each}
-    {/if}
+    {#each activityItem.latestComments as eachComment}
+      <NewsFeedComment comment={eachComment} />
+    {/each}
 
+    <!-- I'll just leave this here for @oakrita to remember the previous markup before deleting it -->
     {#if false}
       <nav class="level bottom-nav-news">
         <div class="level-left">

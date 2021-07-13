@@ -2,12 +2,15 @@ import { User } from './user';
 import { Resource } from './resource';
 import { Comment } from './comment';
 import { generateSummary } from '../helpers/activity-summary';
-import { of, nth, has, head as first, prop, pipe } from 'ramda';
+import { map, defaultTo, of, nth, has, head as first, prop, pipe } from 'ramda';
+import { prepareActivity } from '../helpers/activity';
 
 const COLLECTION = 'oae:collection';
 const ACTOR = 'actor';
 const OBJECT = 'object';
 const TARGET = 'target';
+const COMMENT = 'comment';
+const LATEST_COMMENTS = 'latestComments';
 
 const second = nth(1);
 const getActor = prop(ACTOR);
@@ -24,6 +27,9 @@ const hasSeveralObjects = pipe(getObject, has(COLLECTION));
 const hasSeveralTargets = pipe(getTarget, has(COLLECTION));
 const hasSingleTarget = has(TARGET);
 
+const isThisAComment = has(COMMENT);
+const otherwiseEmptyArray = defaultTo([]);
+
 // Variable that keeps track of the different activity types that are used for comment activities
 export const COMMENT_ACTIVITY_TYPES = [
   'content-comment',
@@ -34,9 +40,9 @@ export const COMMENT_ACTIVITY_TYPES = [
 
 // Variable that keeps track of the different activity types that are used for sharing activities
 const SHARE_ACTIVITY_TYPES = ['content-share', 'discussion-share', 'folder-share', 'meeting-jitsi-share'];
-
 const getActivityType = prop('oae:activityType');
 const getId = prop('oae:activityId');
+const convertToCommentModel = eachComment => new Comment(eachComment.comment, eachComment.level);
 
 export class ActivityItem {
   /**
@@ -67,7 +73,7 @@ export class ActivityItem {
   summary;
 
   /** @type {Comment[]} */
-  allComments;
+  // allComments;
 
   /** @type {Comment[]} */
   latestComments;
@@ -87,6 +93,23 @@ export class ActivityItem {
     this.published = new Date(rawActivity?.published);
     this.verb = rawActivity?.verb;
 
+    /**
+     * Temporary
+     */
+    // Move the relevant items (comments, previews, ..) to the top
+    rawActivity = prepareActivity(rawActivity);
+    this.latestComments = otherwiseEmptyArray(rawActivity.object.latestComments);
+
+    /**
+     * Convert the latest comments into Comment model objects
+     */
+    this.latestComments = pipe(
+      prop(OBJECT),
+      prop(LATEST_COMMENTS),
+      otherwiseEmptyArray,
+      map(convertToCommentModel),
+    )(rawActivity);
+
     let actors = [];
     if (hasSeveralActors(rawActivity)) {
       actors = getActorCollection(rawActivity).map(eachActor => {
@@ -101,7 +124,7 @@ export class ActivityItem {
     if (hasSeveralObjects(rawActivity)) {
       objects = getObjectCollection(rawActivity).map(eachObject => {
         // TODO make this simpler
-        if (has('comment', eachObject)) {
+        if (isThisAComment(eachObject)) {
           return new Comment(eachObject.comment, eachObject.level);
         } else {
           return new Resource(eachObject);
@@ -121,15 +144,6 @@ export class ActivityItem {
       targets = of(new Resource(rawActivity?.target));
     }
     this.allTargets = targets;
-
-    /*
-    const isOneOfCommentActivities = includes(getActivityType(rawActivity), COMMENT_ACTIVITY_TYPES);
-    if (isOneOfCommentActivities) {
-      this.allComments = rawActivity.object['oae:collection'];
-      let comments = [];
-      this.latestComments = rawActivity.object.latestComments;
-    }
-    */
   }
 
   getSummary(currentUser) {

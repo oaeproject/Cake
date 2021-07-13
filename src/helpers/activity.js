@@ -1,5 +1,32 @@
 // import { humanize } from '@jsdevtools/humanize-anything';
+import {
+  defaultTo,
+  set,
+  of,
+  clone,
+  pipe,
+  reverse,
+  sort,
+  has,
+  includes,
+  both,
+  assocPath,
+  equals,
+  prop,
+  compose,
+  lensProp,
+} from 'ramda';
 import { COMMENT_ACTIVITY_TYPES } from '../models/activity';
+
+const COLLECTION = 'oae:collection';
+const OBJECT = 'object';
+const ACTOR = 'actor';
+const TARGET = 'target';
+const ACTIVITY_TYPE = 'oae:activityType';
+
+const areThereSeveralOf = has(COLLECTION);
+const getCollectionOf = prop(COLLECTION);
+const getActivityType = prop(ACTIVITY_TYPE);
 
 const humanizeActivityVerb = verb => {
   return ` ${verb}d`;
@@ -151,7 +178,8 @@ const constructLatestCommentTree = function (comments) {
 };
 
 /**
- * Process a list of comments into an ordered tree that contains the comments they were replies to, if any,
+ * Process a list of comments into an ordered tree that contains
+ * the comments they were replies to, if any,
  * as well as the level at which all of these comments need to be rendered.
  *
  * @param  {Comment[]}   comments   The array of comments to turn into an ordered tree
@@ -240,30 +268,38 @@ const flattenCommentTree = function (flatCommentTree, commentTree, _level = 0) {
  * @api private
  */
 const prepareActivity = function (activity) {
-  // Sort the entity collections based on whether or not they have a thumbnail
-  if (activity.actor['oae:collection']) {
-    // Reverse the items so the item that was changed last is shown first
-    activity.actor['oae:collection'].reverse().sort(sortEntityCollection);
+  // Reverse the items so the item that was changed last is shown first
+  if (areThereSeveralOf(activity.actor)) {
+    const reversedActors = pipe(prop(ACTOR, getCollectionOf, reverse, sort(sortEntityCollection)))(activity);
+    set(lensProp(COLLECTION), reversedActors, activity.actor);
   }
 
-  if (activity.object && activity.object['oae:collection']) {
-    // Reverse the items so the item that was changed last is shown first
-    activity.object['oae:collection'].reverse().sort(sortEntityCollection);
+  // Reverse the items so the item that was changed last is shown first
+  if (areThereSeveralOf(activity.object)) {
+    const reversedObjects = pipe(prop(OBJECT), getCollectionOf, reverse, sort(sortEntityCollection))(activity);
+    set(lensProp(COLLECTION), reversedObjects, activity.object);
   }
 
-  if (activity.target && activity.target['oae:collection']) {
-    // Reverse the items so the item that was changed last is shown first
-    activity.target['oae:collection'].reverse().sort(sortEntityCollection);
+  // Reverse the items so the item that was changed last is shown first
+  if (areThereSeveralOf(activity.target)) {
+    const reversedTargets = pipe(prop(TARGET), getCollectionOf, reverse(), sort(sortEntityCollection))(activity);
+    set(lensProp(COLLECTION), reversedTargets, activity.target);
   }
 
   // We process the comments into an ordered set
-  if (COMMENT_ACTIVITY_TYPES.indexOf(activity['oae:activityType']) !== -1) {
-    let comments = activity.object['oae:collection'];
+  const isOneOfCommentActivities = includes(getActivityType(activity), COMMENT_ACTIVITY_TYPES);
+  if (isOneOfCommentActivities) {
+    const cloneOfActivityObject = pipe(prop(OBJECT), clone, of)(activity);
+    let comments = defaultTo(cloneOfActivityObject, activity.object['oae:collection']);
+    /*
     if (!comments) {
-      comments = [activity.object];
+      comments = of(clone(activity.object));
     }
-    // Keep track of the full list of comments on the activity. This will be used to check
-    // whether or not all comments on the activity have made it into the final ordered list
+    */
+    /**
+     * Keep track of the full list of comments on the activity. This will be used to check
+     * whether or not all comments on the activity have made it into the final ordered list
+     */
     // const originalComments = comments.slice();
 
     // Sort the comments based on the created timestamp
@@ -280,6 +316,55 @@ const prepareActivity = function (activity) {
     activity.object['oae:collection'] = allComments;
     activity.object.latestComments = latestComments;
   }
+
+  return activity;
 };
 
-export { humanizeActivityVerb, sortEntityCollection, sortComments, find, findComment, constructLatestCommentTree, constructCommentTree, flattenCommentTree, prepareActivity };
+const parseActivityActor = (eachActivityActor, currentUser) => {
+  const copySmallPictureFromCurrentUser = assocPath(['picture', 'small'], currentUser.smallPicture);
+  const copyMediumPictureFromCurrentUser = assocPath(['picture', 'medium'], currentUser.mediumPicture);
+  const copyLargePictureFromCurrentUser = assocPath(['picture', 'large'], currentUser.largePicture);
+
+  const getActorId = prop('oae:id');
+  const hasAnyPicture = prop('hasAnyPicture');
+  const sameAsActivityActor = compose(equals(getActorId(eachActivityActor)), prop('id'));
+  const isCurrentUserTheActorAndDoesItHavePictures = both(sameAsActivityActor, hasAnyPicture)(currentUser);
+
+  if (isCurrentUserTheActorAndDoesItHavePictures) {
+    eachActivityActor = compose(
+      copySmallPictureFromCurrentUser,
+      copyMediumPictureFromCurrentUser,
+      copyLargePictureFromCurrentUser,
+    )(eachActivityActor);
+  } else {
+    // TODO simplify
+    if (eachActivityActor.image && eachActivityActor.image.url) {
+      eachActivityActor.thumbnailUrl = eachActivityActor.image.url;
+    }
+
+    // TODO simplify
+    if (eachActivityActor['oae:wideImage'] && eachActivityActor['oae:wideImage'].url) {
+      eachActivityActor.wideImageUrl = eachActivityActor['oae:wideImage'].url;
+    }
+
+    // TODO simplify
+    if (eachActivityActor['oae:mimeType']) {
+      eachActivityActor.mime = eachActivityActor['oae:mimeType'];
+    }
+  }
+
+  return eachActivityActor;
+};
+
+export {
+  humanizeActivityVerb,
+  sortEntityCollection,
+  parseActivityActor,
+  sortComments,
+  find,
+  findComment,
+  constructLatestCommentTree,
+  constructCommentTree,
+  flattenCommentTree,
+  prepareActivity,
+};

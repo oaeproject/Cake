@@ -2,17 +2,27 @@ import { Tenant } from './tenant';
 import { User } from './user';
 
 export class Comment {
-  /* @type {number} */
+  /** @type {number} */
   level;
+  /** @type {User} */
   author;
+  /** @type {string} */
   content;
+  /** @type {number} */
   id;
+  /** @type {string} */
   apiUrl;
+  /** @type {number} */
   messageBoxId;
+  /** @type {number} */
   threadKey;
+  /** @type {string} */
   objectType;
+  /** @type {Date} */
   published;
+  /** @type {Comment[]} */
   replies;
+  /** @type {string} */
   url;
 
   constructor(rawComment, level) {

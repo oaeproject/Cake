@@ -1,8 +1,5 @@
 import { Tenant } from './tenant';
 
-/** @type {string} */
-const DISCUSSION = 'discussion';
-
 export class Resource {
   /** @type {string} */
   displayName;

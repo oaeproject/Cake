@@ -1,6 +1,6 @@
 // @ts-check
 import { Tenant } from './tenant';
-import { pipe, when, has, __, prop, assoc, dissoc, isNil, compose, any, path, not } from 'ramda';
+import { pipe, when, has, prop, isNil, compose, any, path, not } from 'ramda';
 
 const includesTenantData = compose(not, isNil, prop('tenant'));
 const exists = compose(not, isNil);

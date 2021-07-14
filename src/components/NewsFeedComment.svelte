@@ -2,7 +2,7 @@
   /**
    * TODOs
    * - [ ] instead of fetching comment author over and over, cache it somehow
-   * - [ ] use avatar placeholder in comment (nothing shows when not defined)
+   * - [x] use avatar placeholder in comment (nothing shows when not defined)
    */
 
   import { formatDistance } from 'date-fns';
@@ -27,7 +27,11 @@
 </script>
 
 <section class="comment-section">
-  <img alt="avatar" src={comment?.author?.smallPicture} />
+  {#if comment.author.smallPicture}
+    <img alt="avatar" src={comment?.author?.smallPicture} />
+  {:else}
+    <img alt="avatar" src="assets/images/avatar.jpg" class="commenter-avatar" />
+  {/if}
   <a href={comment.author.profilePath}>
     {comment.author.displayName}
   </a>
@@ -38,6 +42,11 @@
 </section>
 
 <style lang="scss">
+  .commenter-avatar {
+    max-height: 40px;
+    max-width: 40px;
+  }
+
   .comment-section {
     margin-top: 20px;
     border: dashed #035 1px;

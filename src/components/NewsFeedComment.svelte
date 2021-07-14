@@ -28,7 +28,9 @@
 
 <section class="comment-section">
   <img alt="avatar" src={comment?.author?.smallPicture} />
-  <span>{comment.author.displayName}</span>
+  <a href={comment.author.profilePath}>
+    {comment.author.displayName}
+  </a>
   <span class="level{comment.level}-indentation">{comment.content}</span>
   <span class="smaller">
     {formatDistance(comment.published, new Date(), { addSuffix: true })}

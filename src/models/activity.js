@@ -149,21 +149,27 @@ export class ActivityItem {
   getSummary(currentUser) {
     return generateSummary(currentUser, this);
   }
+
   getPrimaryActor() {
     return first(this.allActors);
   }
+
   getSecondaryActor() {
     return second(this.allActors);
   }
+
   getPrimaryObject() {
     return first(this.allObjects);
   }
+
   getSecondaryObject() {
     return second(this.allObjects);
   }
+
   getPrimaryTarget() {
     return first(this.allTargets);
   }
+
   getSecondaryTarget() {
     return second(this.allTargets);
   }

@@ -242,4 +242,8 @@ export class User {
   get hasAnyPicture() {
     return any(exists, [this.smallPicture, this.mediumPicture, this.largePicture]);
   }
+
+  get hasNoPicture() {
+    return not(this.hasAnyPicture);
+  }
 }

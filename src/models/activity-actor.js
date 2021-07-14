@@ -1,3 +1,4 @@
+import { any, exists, not } from 'ramda';
 // import { BackendActivityActor, SignedUrl } from '../types';
 
 export class ActivityActor {
@@ -35,5 +36,13 @@ export class ActivityActor {
     // TODO check this
     this.mime = actorData['oae:mimeType'];
     this.wideImageUrl = actorData['oae:wideImage']?.url;
+  }
+
+  get hasAnyPicture() {
+    return any(exists, [this.smallPictureUri, this.mediumPictureUri, this.largePictureUri]);
+  }
+
+  get hasNoPicture() {
+    return not(this.hasAnyPicture);
   }
 }

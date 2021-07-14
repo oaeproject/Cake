@@ -4,7 +4,6 @@
    * - [ ] When someone else is the activity actor, we need to fetch her avatar first
    */
 
-  import { user } from '../stores/user';
   import '@polymer/iron-icons/iron-icons.js';
   import '@polymer/iron-icons/social-icons.js';
   import '@polymer/iron-icons/av-icons.js';
@@ -15,14 +14,26 @@
   import { _ } from 'svelte-i18n';
   import { formatDistance } from 'date-fns';
   import { onMount } from 'svelte';
+  import { defaultTo } from 'ramda';
+  import { user } from '../stores/user';
+  import { getAvatar, usersInfo } from '../stores/users';
+
+  const DEFAULT_AVATAR = 'assets/images/avatar.jpg';
+  const defaultToPlaceholderAvatar = defaultTo(DEFAULT_AVATAR);
 
   export let activityItem;
-
   let activitySummary;
+  let actorAvatar; // = activityItem.getPrimaryActor().mediumPicture;
 
   onMount(async () => {
     activityItem.summary = activityItem.getSummary($user);
     activitySummary = $_(activityItem.summary.i18nKey, { values: activityItem.summary.properties });
+
+    /**
+     * if activity primary author is someone else other than current user
+     * let's fetch her avatar image and store it as cache
+     */
+    actorAvatar = defaultToPlaceholderAvatar(await getAvatar(activityItem.getPrimaryActor(), $usersInfo));
   });
 </script>
 
@@ -33,15 +44,7 @@
         <div class="level-item">
           <div class="column is-flex news-feed-nav">
             <figure class="image avatar-news-feed">
-              {#if activityItem.getPrimaryActor().mediumPicture}
-                <img
-                  alt="primary-actor"
-                  class="is-rounded avatar-news-feed"
-                  src={activityItem.getPrimaryActor().mediumPicture}
-                />
-              {:else}
-                <img alt="primary-actor" class="is-rounded avatar-news-feed" src="assets/images/avatar.jpg" />
-              {/if}
+              <img alt="primary-actor" class="is-rounded avatar-news-feed" src={actorAvatar} />
             </figure>
             <section>
               <p class="user-info">

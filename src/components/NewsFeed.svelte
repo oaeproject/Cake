@@ -1,7 +1,7 @@
 <script>
   /**
    * TODOs
-   * - [ ] When someone else is the activity actor, we need to fetch her avatar first
+   * - [x] When someone else is the activity actor, we need to fetch her avatar first
    */
 
   import '@polymer/iron-icons/iron-icons.js';
@@ -19,11 +19,11 @@
   import { getAvatar, usersInfo } from '../stores/users';
 
   const DEFAULT_AVATAR = 'assets/images/avatar.jpg';
-  const defaultToPlaceholderAvatar = defaultTo(DEFAULT_AVATAR);
+  const defaultToTemplateAvatar = defaultTo(DEFAULT_AVATAR);
 
   export let activityItem;
   let activitySummary;
-  let actorAvatar; // = activityItem.getPrimaryActor().mediumPicture;
+  let actorAvatar;
 
   onMount(async () => {
     activityItem.summary = activityItem.getSummary($user);
@@ -31,9 +31,9 @@
 
     /**
      * if activity primary author is someone else other than current user
-     * let's fetch her avatar image and store it as cache
+     * let's fetch her avatar image and store it as cache in a store
      */
-    actorAvatar = defaultToPlaceholderAvatar(await getAvatar(activityItem.getPrimaryActor(), $usersInfo));
+    actorAvatar = defaultToTemplateAvatar(await getAvatar(activityItem.getPrimaryActor(), $usersInfo));
   });
 </script>
 

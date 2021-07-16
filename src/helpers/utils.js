@@ -1,10 +1,11 @@
-import { assoc, replace, pipe, prop, defaultTo } from "ramda";
-const INVITATION_TOKEN = "invitationToken";
-const INVITATION_EMAIL = "invitationEmail";
+import { assoc, replace, pipe, prop, defaultTo } from 'ramda';
+const INVITATION_TOKEN = 'invitationToken';
+const INVITATION_EMAIL = 'invitationEmail';
+const DEFAULT_AVATAR = 'assets/images/avatar.jpg';
 
 function getRedirectUrl(location = document.location.toString()) {
   const parameters = new URL(location).searchParams;
-  return defaultTo("", parameters.get("url"));
+  return defaultTo('', parameters.get('url'));
 }
 
 function getUrlParameters(url) {
@@ -17,7 +18,7 @@ function getUrlParameters(url) {
       const { 1: key, 2: value } = args;
       parameters = assoc(key, value, parameters);
     },
-    url
+    url,
   );
 
   return parameters;
@@ -31,9 +32,8 @@ function getInvitationInfo(location) {
     getUrlParameters
   )();
   */
-  const parameters = getUrlParameters(defaultTo("", getRedirectUrl(location)));
-  const extractURLParameter = (parameterName) =>
-    pipe(prop(parameterName), decodeURIComponent)(parameters);
+  const parameters = getUrlParameters(defaultTo('', getRedirectUrl(location)));
+  const extractURLParameter = parameterName => pipe(prop(parameterName), decodeURIComponent)(parameters);
 
   const token = extractURLParameter(INVITATION_TOKEN);
   const email = extractURLParameter(INVITATION_EMAIL);
@@ -44,4 +44,6 @@ function getInvitationInfo(location) {
   };
 }
 
-export { getRedirectUrl, getInvitationInfo };
+const defaultToTemplateAvatar = defaultTo(DEFAULT_AVATAR);
+
+export { defaultToTemplateAvatar, getRedirectUrl, getInvitationInfo };

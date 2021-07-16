@@ -14,12 +14,9 @@
   import { _ } from 'svelte-i18n';
   import { formatDistance } from 'date-fns';
   import { onMount } from 'svelte';
-  import { defaultTo } from 'ramda';
+  import { defaultToTemplateAvatar } from '../helpers/utils';
   import { user } from '../stores/user';
-  import { getAvatar, usersInfo } from '../stores/users';
-
-  const DEFAULT_AVATAR = 'assets/images/avatar.jpg';
-  const defaultToTemplateAvatar = defaultTo(DEFAULT_AVATAR);
+  import { avatars } from '../stores/users';
 
   export let activityItem;
   let activitySummary;
@@ -33,7 +30,36 @@
      * if activity primary author is someone else other than current user
      * let's fetch her avatar image and store it as cache in a store
      */
-    actorAvatar = defaultToTemplateAvatar(await getAvatar(activityItem.getPrimaryActor(), $usersInfo));
+    const userIsCached = $avatars.has(activityItem.getPrimaryActor().id);
+
+    // TODO debug
+    console.log('Avatars size: ' + $avatars.toArray().length);
+
+    let pictureSet;
+    if (userIsCached) {
+      pictureSet = $avatars.get(activityItem.getPrimaryActor().id);
+      actorAvatar = defaultToTemplateAvatar(pictureSet.small);
+      // TODO debug
+      console.log('user ' + activityItem.getPrimaryActor().displayName + ' was cache, returning!');
+    } else {
+      // TODO debug
+      console.log('fetching user ' + activityItem.getPrimaryActor().displayName + ' from Hilary!');
+
+      fetch(activityItem.getPrimaryActor().apiUrl)
+        .then(data => data.json())
+        .then(data => data.picture)
+        .then(pictureSet => {
+          avatars.addEntry(activityItem.getPrimaryActor().id, pictureSet);
+
+          // TODO debug
+          console.log('Is user cached now? ' + $avatars.has(activityItem.getPrimaryActor().id));
+
+          // avatars.setTo($avatars.set(activityItem.getPrimaryActor().id, pictureSet));
+          actorAvatar = defaultToTemplateAvatar(pictureSet.small);
+        });
+    }
+    // actorAvatar = await getAvatar(activityItem.getPrimaryActor(), userIsCached);
+    // actorAvatar = defaultToTemplateAvatar(actorAvatar.medium);
   });
 </script>
 

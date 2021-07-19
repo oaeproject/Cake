@@ -270,7 +270,7 @@ const flattenCommentTree = function (flatCommentTree, commentTree, _level = 0) {
 const prepareActivity = function (activity) {
   // Reverse the items so the item that was changed last is shown first
   if (areThereSeveralOf(activity.actor)) {
-    const reversedActors = pipe(prop(ACTOR, getCollectionOf, reverse, sort(sortEntityCollection)))(activity);
+    const reversedActors = pipe(prop(ACTOR), getCollectionOf, reverse, sort(sortEntityCollection))(activity);
     set(lensProp(COLLECTION), reversedActors, activity.actor);
   }
 

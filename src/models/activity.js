@@ -147,7 +147,13 @@ export class ActivityItem {
   }
 
   getSummary(currentUser) {
-    return generateSummary(currentUser, this);
+    const summary = generateSummary(currentUser, this);
+
+    if (summary.properties.target1URL === currentUser.profilePath) {
+      summary.properties.target1Link = 'You';
+    }
+
+    return summary;
   }
 
   getPrimaryActor() {

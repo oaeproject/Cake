@@ -2,7 +2,7 @@ import { User } from './user';
 import { Resource } from './resource';
 import { Comment } from './comment';
 import { generateSummary } from '../helpers/activity-summary';
-import { map, defaultTo, of, nth, has, head as first, prop, pipe } from 'ramda';
+import { when, path, lensPath, set, equals, map, defaultTo, of, nth, has, head as first, prop, pipe } from 'ramda';
 import { prepareActivity } from '../helpers/activity';
 
 const COLLECTION = 'oae:collection';
@@ -11,6 +11,10 @@ const OBJECT = 'object';
 const TARGET = 'target';
 const COMMENT = 'comment';
 const LATEST_COMMENTS = 'latestComments';
+const PROPERTIES = 'properties';
+const TARGET_URL = 'target1URL';
+const TARGET_LINK = 'target1Link';
+const YOU = 'You';
 
 const second = nth(1);
 const getActor = prop(ACTOR);
@@ -146,14 +150,21 @@ export class ActivityItem {
     this.allTargets = targets;
   }
 
+  /**
+   * Gets the i18n summary for the activity item, which will be displayed on the activity feed
+   * It also tries to replace the currentUser's displayName with "you" when possible. Example:
+   * "UserA shared a file with <CurrentUser>" becomes "UserA shared a file with you"
+   *
+   * @function getSummary
+   * @param  {User} currentUser   The current `User` authenticated
+   * @return {Object}             The i18n summary object
+   */
   getSummary(currentUser) {
-    const summary = generateSummary(currentUser, this);
+    const targetIsCurrentUser = pipe(path([PROPERTIES, TARGET_URL]), equals(currentUser.profilePath));
+    const targetLink = lensPath([PROPERTIES, TARGET_LINK]);
+    const replaceDisplayNameWithYou = set(targetLink, YOU);
 
-    if (summary.properties.target1URL === currentUser.profilePath) {
-      summary.properties.target1Link = 'You';
-    }
-
-    return summary;
+    return when(targetIsCurrentUser, replaceDisplayNameWithYou)(generateSummary(currentUser, this));
   }
 
   getPrimaryActor() {

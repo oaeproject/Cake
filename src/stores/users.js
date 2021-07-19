@@ -1,87 +1,54 @@
 import { writable } from 'svelte/store';
 import { Map } from 'immutable';
+import { not } from 'ramda';
 
 /**
  * This store is in fact a Map where for every userId there is
  * an object with all picture sizes like this
  * { small:, medium:, large: }
  */
-// const usersAvatars = writable(new Map());
+const pictureStore = writable(new Map());
 
 /**
- * @function fetchUserAvatar
- * @param  {User} actor   The actor/user we're fetching the profile from the backend
- * @param  {Map}  users   The Map holding the cache for users' profile pictures
- * @return {Object}       An object with all picture sizes (`small`, `medium` and `large`)
+ * @function cachedFetch
+ * @param  {String} userId  The user id which serves as the key for the cache (which is a Map)
+ * @param  {String} apiUrl  The API URL we need to GET in order to obtain the profile JSON
+ * @return {Promise}        A pending promise consisting of fetching the user profile from the backend
  */
-const fetchUserAvatar = async (actor, userIsCached) => {
-  // const userIsCached = usersAvatars.has(actor.id);
-  let pictureSet = null;
+const cachedFetch = async (userId, apiUrl) => {
+  let cacheMap;
+  const unsubscribe = pictureStore.subscribe(_avatars => {
+    cacheMap = _avatars;
+  });
+  const userIsNotCached = not(cacheMap.has(userId));
 
-  if (userIsCached) {
-    // TODO debug
-    console.log(`Fetching avatar for ${actor.displayName} from cache!`);
+  /**
+   * If user avatar isn't cached yet
+   * let's fetch it and store the Promise in cache
+   * so other components may `await` it
+   */
+  if (userIsNotCached) {
+    pictureStore.set(cacheMap.set(userId, promiseToFetch(apiUrl)));
+  }
 
-    pictureSet = usersAvatars.get(actor.id);
-    return pictureSet;
-  } else {
-    // TODO debug
-    console.log(`Fetching avatar for ${actor.displayName} from Hilary!`);
+  unsubscribe();
+  return cacheMap.get(userId);
+};
 
-    /*
-    let data = await fetch(actor.apiUrl);
-    data = await data.json();
-    pictureSet = data.picture;
-
-    // TODO: Side-effect, not a pure function anymore
-    usersAvatars.set(users.set(actor.id, pictureSet));
-
-    // TODO debug
-    console.log(`Cache size: ${users.size}`);
-    return pictureSet;
-    */
-
-    return fetch(actor.apiUrl)
+/**
+ * A simple function that wraps a fetch within a new Promise and returns it
+ *
+ * @function promiseToFetch
+ * @param  {String} apiUrl  The API URL we need to GET in order to obtain the profile JSON
+ * @return {Promise}        A pending promise consisting of fetching the user profile from the backend
+ */
+const promiseToFetch = apiUrl => {
+  return new Promise((resolve, reject) => {
+    fetch(apiUrl)
       .then(data => data.json())
-      .then(data => data.picture)
-      .then(pictureSet => {
-        usersAvatars.set(usersAvatars.set(actor.id, pictureSet));
-        // TODO debug
-        console.log(`Cache size: ${usersAvatars.size}`);
-        return pictureSet;
-      });
-  }
+      .then(data => resolve(data.picture))
+      .catch(e => reject(e));
+  });
 };
 
-/**
- * @function getAvatar
- * @param  {User} actor   The actor/user we're fetching the profile from the backend
- * @param  {Map}  users   The Map holding the cache for users' profile pictures
- * @return {String}       The medium picture Uri
- */
-const getAvatar = async (actor, users) => {
-  switch (true) {
-    case actor.hasNoPicture:
-      return fetchUserAvatar(actor, users);
-    case actor.hasAnyPicture:
-      return { small: actor.smallPicture, medium: actor.mediumPicture, large: actor.largePicture };
-  }
-};
-
-function createAvatarMap() {
-  const { subscribe, set, update } = writable(new Map());
-
-  return {
-    subscribe,
-    addEntry: (key, value) =>
-      update(old => {
-        const oldSize = old.size;
-        const newMap = old.set(key, value);
-        // console.log('cache size: ' + oldSize + ' -> ' + newMap.size);
-        return newMap;
-      }),
-    setTo: newMap => set(newMap),
-  };
-}
-
-export const avatars = createAvatarMap();
+export { cachedFetch, pictureStore };

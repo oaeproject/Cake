@@ -1,9 +1,4 @@
 <script>
-  /**
-   * TODOs
-   * - [x] When someone else is the activity actor, we need to fetch her avatar first
-   */
-
   import '@polymer/iron-icons/iron-icons.js';
   import '@polymer/iron-icons/social-icons.js';
   import '@polymer/iron-icons/av-icons.js';
@@ -58,7 +53,8 @@
       {#each activityItem.allTargets as eachTarget}
         <!-- I have no idea what the markup should be, so here it goes -->
         {#if eachTarget.image}
-          <div class="overlay-{eachTarget.visibility}">
+          <p>This image is {eachTarget.visibility}</p>
+          <div>
             <img alt="target-thumbnail" src={eachTarget?.image?.url} />
           </div>
         {/if}
@@ -68,7 +64,8 @@
     {#each activityItem.allObjects as eachObject}
       <!-- I have no idea what the markup should be, so here it goes -->
       {#if eachObject.image}
-        <div class="overlay-{eachObject.visibility}">
+        <p>This image is {eachObject.visibility}</p>
+        <div>
           <img
             alt="object-thumbnail"
             max-height={eachObject?.image?.height}
@@ -110,51 +107,6 @@
 </div>
 
 <style lang="scss">
-  %overlay {
-    position: relative;
-    width: 20em;
-    height: 20em;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    &::before {
-      content: '';
-      display: block;
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      width: 20em;
-      height: 20em;
-    }
-  }
-
-  .overlay-public {
-    @extend %overlay;
-
-    &::before {
-      background: rgba(250, 140, 50, 0.6);
-    }
-  }
-
-  .overlay-private {
-    @extend %overlay;
-
-    &::before {
-      background: rgba(50, 140, 250, 0.6);
-    }
-  }
-
-  .overlay-loggedin {
-    @extend %overlay;
-
-    &::before {
-      background: rgba(25, 200, 150, 0.6);
-    }
-  }
-
   .box {
     background-color: white;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);

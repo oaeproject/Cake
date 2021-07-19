@@ -149,7 +149,7 @@ const generateSummary = function (me, activityItem) {
     if (hasSecondaryActor(activityItem)) {
       // Apply the actor count information to the summary properties
       i18nDynamicValues.actorCount = numberOfActors(activityItem);
-      i18nDynamicValues.actorCountMinusOne = i18nDynamicValues.actorCount - 1; // TODO: remove this
+      i18nDynamicValues.actorCountMinusOne = i18nDynamicValues.actorCount - 1;
 
       // Apply additional actor information
       setSummaryPropertiesForEntity(i18nDynamicValues, 'actor2', activityItem.getSecondaryActor());
@@ -170,7 +170,7 @@ const generateSummary = function (me, activityItem) {
     if (hasSecondaryObject(activityItem)) {
       // Apply the object count information to the summary properties
       i18nDynamicValues.objectCount = numberOfObjects(activityItem);
-      i18nDynamicValues.objectCountMinusOne = i18nDynamicValues.objectCount - 1; // TODO: remove this
+      i18nDynamicValues.objectCountMinusOne = i18nDynamicValues.objectCount - 1;
 
       // Apply additional object information
       setSummaryPropertiesForEntity(i18nDynamicValues, 'object2', activityItem.getSecondaryObject());
@@ -192,7 +192,7 @@ const generateSummary = function (me, activityItem) {
       if (hasSecondaryTarget(activityItem)) {
         // Apply the target count information to the summary properties
         i18nDynamicValues.targetCount = numberOfTargets(activityItem);
-        i18nDynamicValues.targetCountMinusOne = i18nDynamicValues.targetCount - 1; // TODO: remove this
+        i18nDynamicValues.targetCountMinusOne = i18nDynamicValues.targetCount - 1;
 
         // Apply additional target information
         setSummaryPropertiesForEntity(i18nDynamicValues, 'target2', activityItem.getSecondaryTarget());

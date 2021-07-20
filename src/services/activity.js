@@ -1,5 +1,13 @@
 import {
   assocPath,
+  __,
+  not,
+  isNil,
+  nth,
+  head,
+  last,
+  split,
+  and,
   equals,
   compose,
   both,
@@ -7,14 +15,43 @@ import {
   set,
   of,
   clone,
-  pipe,
   reverse,
   sort,
   has,
   includes,
   prop,
   lensProp,
+  find,
+  propEq,
 } from 'ramda';
+
+const ID = 'id';
+const THREAD_KEY = 'oae:threadKey';
+const WIDE_IMAGE = 'oae:wideImage';
+const MIME_TYPE = 'oae:mimeType';
+const PICTURE = 'picture';
+const SMALL = 'small';
+const MEDIUM = 'medium';
+const LARGE = 'large';
+const COMMENTS = 'comments';
+const IMAGE = 'image';
+const OAE_ID = 'oae:id';
+const HAS_ANY_PICTURE = 'hasAnyPicture';
+const OBJECT = 'object';
+const ACTOR = 'actor';
+const TARGET = 'target';
+const COLLECTION = 'oae:collection';
+const ACTIVITY_TYPE = 'oae:activityType';
+
+const hasImage = has(IMAGE);
+const hasNotImage = compose(not, has(IMAGE));
+const equalsId = propEq(OAE_ID);
+const getId = prop(OAE_ID);
+const getCommentId = getId;
+const hasAnyPicture = prop(HAS_ANY_PICTURE);
+const areThereSeveralOf = has(COLLECTION);
+const getCollectionOf = prop(COLLECTION);
+const getActivityType = prop(ACTIVITY_TYPE);
 
 // Constant that holds the different activity types that are used for comment activities
 export const COMMENT_ACTIVITY_TYPES = [
@@ -25,17 +62,7 @@ export const COMMENT_ACTIVITY_TYPES = [
 ];
 
 // Constant that holds the different activity types that are used for sharing activities
-const SHARE_ACTIVITY_TYPES = ['content-share', 'discussion-share', 'folder-share', 'meeting-jitsi-share'];
-
-const OBJECT = 'object';
-const ACTOR = 'actor';
-const TARGET = 'target';
-const COLLECTION = 'oae:collection';
-const ACTIVITY_TYPE = 'oae:activityType';
-
-const areThereSeveralOf = has(COLLECTION);
-const getCollectionOf = prop(COLLECTION);
-const getActivityType = prop(ACTIVITY_TYPE);
+// const SHARE_ACTIVITY_TYPES = ['content-share', 'discussion-share', 'folder-share', 'meeting-jitsi-share'];
 
 /**
  * Prepare an activity (in-place) in such a way that:
@@ -72,55 +99,59 @@ const prepareActivity = function (activity) {
   return activity;
 };
 
+// TODO jsdoc
 const setUpCommentTree = activity => {
-  const defaultToClone = pipe(prop(OBJECT), clone, of, defaultTo)(activity);
+  const defaultToClone = compose(defaultTo, of, clone, prop(OBJECT))(activity);
   const sortByTimestamp = sort(sortCommentsByTimestamp);
-  let sortComments = pipe(prop(OBJECT), getCollectionOf, defaultToClone, sortByTimestamp);
+  let sortComments = compose(sortByTimestamp, defaultToClone, getCollectionOf, prop(OBJECT));
 
   // Construct a tree of the last 2 comments and their parents
-  const latestComments = pipe(sortComments, constructLatestCommentTree)(activity);
+  const latestComments = compose(constructLatestCommentTree, sortComments)(activity);
 
   // Construct an ordered tree from the comments plus the ones they replied to, if any
-  const allComments = pipe(sortComments, constructCommentTree)(activity);
+  const allComments = compose(constructCommentTree, sortComments)(activity);
 
-  activity.object.objectType = 'comments';
-  activity.object['oae:collection'] = allComments;
+  activity.object.objectType = COMMENTS;
+  activity.object[COLLECTION] = allComments;
   activity.object.latestComments = latestComments;
 
   return activity;
 };
 
+// TODO jsdoc
 const reverseActors = activity => {
-  const updateActor = pipe(
-    prop(ACTOR),
-    getCollectionOf,
-    reverse,
-    sort(sortEntityCollection),
+  const updateActor = compose(
     set(lensProp(COLLECTION)),
+    sort(sortEntityCollection),
+    reverse,
+    getCollectionOf,
+    prop(ACTOR),
   )(activity);
 
   return updateActor(activity.actor);
 };
 
+// TODO jsdoc
 const reverseObjects = activity => {
-  const updateObject = pipe(
-    prop(OBJECT),
-    getCollectionOf,
-    reverse,
-    sort(sortEntityCollection),
+  const updateObject = compose(
     set(lensProp(COLLECTION)),
+    sort(sortEntityCollection),
+    reverse,
+    getCollectionOf,
+    prop(OBJECT),
   )(activity);
 
   return updateObject(activity.object);
 };
 
+// TODO jsdoc
 const reverseTargets = activity => {
-  const updateTarget = pipe(
-    prop(TARGET),
-    getCollectionOf,
-    reverse(),
-    sort(sortEntityCollection),
+  const updateTarget = compose(
     set(lensProp(COLLECTION)),
+    sort(sortEntityCollection),
+    reverse(),
+    getCollectionOf,
+    prop(TARGET),
   )(activity);
 
   return updateTarget(activity.target);
@@ -137,34 +168,46 @@ const reverseTargets = activity => {
 const constructLatestCommentTree = function (comments) {
   // This set will hold the last 2 comments (and their parents)
   const latestComments = [];
+  const firstComment = head(comments);
+  const secondComment = nth(1, comments);
 
   // Add the latest comment
-  latestComments.push(comments[0]);
+  latestComments.push(firstComment);
 
   // If the latest comment has a parent, include it
-  if (comments[0].inReplyTo) {
-    latestComments.push(findComment(comments, comments[0].inReplyTo));
+  if (firstComment.inReplyTo) {
+    latestComments.push(findOriginalComment(firstComment.inReplyTo, comments));
   }
 
-  // Check the next comment (if any)
-  if (comments[1]) {
-    // If the next comment is not in the tree yet, we add it. This happens
-    // when it's not the parent of the first comment
-    if (!find(latestComments, comments[1]['oae:id'])) {
-      latestComments.push(comments[1]);
+  if (secondComment) {
+    /**
+     * If the next comment is not in the tree yet, we add it.
+     * This happens when it's not the parent of the first comment
+     */
+    const withinLatestComments = find(__, latestComments);
+    const notInTree = compose(not, withinLatestComments, equalsId, getCommentId);
+    const isNotNil = compose(not, isNil);
+    const hasParentWhichIsNotInTree = compose(notInTree, isNotNil, prop('inReplyTo'));
 
-      // If this comment has a parent that's not in the latestComments
-      // set yet, we include it
-      if (comments[1].inReplyTo && !find(latestComments, comments[1].inReplyTo['oae:id'])) {
-        latestComments.push(findComment(comments, comments[1].inReplyTo));
+    // TODO this makes no sense... same code for if and for else?
+    if (notInTree(secondComment)) {
+      latestComments.push(secondComment);
+
+      /**
+       * If this comment has a parent that's not in the latestComments set yet, we include it
+       */
+      if (hasParentWhichIsNotInTree(secondComment)) {
+        latestComments.push(findOriginalComment(secondComment.inReplyTo, comments));
       }
 
-      // If the next comment was in the tree already, it means that it is
-      // the parent of the first comment. It might still have a parent that
-      // could be relevant to display in the activity stream though. If that
-      // is the case, we will end up with a tree that is 3 levels deep
-    } else if (comments[1].inReplyTo && !find(latestComments, comments[1].inReplyTo['oae:id'])) {
-      latestComments.push(findComment(comments, comments[1].inReplyTo));
+      /**
+       * If the next comment was in the tree already, it means that it is
+       * the parent of the first comment. It might still have a parent that
+       * could be relevant to display in the activity stream though. If that
+       * is the case, we will end up with a tree that is 3 levels deep
+       */
+    } else if (hasParentWhichIsNotInTree(secondComment)) {
+      latestComments.push(findOriginalComment(secondComment.inReplyTo, comments));
     }
   }
 
@@ -182,23 +225,29 @@ const constructLatestCommentTree = function (comments) {
  * @api private
  */
 const constructCommentTree = function (comments) {
-  // Because this method gets called multiple times and there's no good way to deep clone
-  // an array of objects in native JS, we ensure that any in-place edits to comment objects
-  // in a previous run don't have an impact now
+  /**
+   * Because this method gets called multiple times and there's no good way to deep clone
+   * an array of objects in native JS, we ensure that any in-place edits to comment objects
+   * in a previous run don't have an impact now
+   */
   comments.forEach(comment => {
     comment.replies = [];
   });
 
-  // Construct a proper graph wherein each object in the top level array is a comment
-  // If a comment has replies they will be made available on the `replies` property
+  /**
+   * Construct a proper graph wherein each object in the top level array is a comment
+   * If a comment has replies they will be made available on the `replies` property
+   */
   const commentTree = [];
   comments.forEach(comment => {
-    // If this comment was a reply to another comment, we try to find that parent comment
-    // and add the current comment as a reply to the parent. If the parent could not be found,
-    // we add the comment as a top level comment. This can happen when we're rendering a tree
-    // of the latest 4 comments for example
+    /**
+     * If this comment was a reply to another comment, we try to find that parent comment
+     * and add the current comment as a reply to the parent. If the parent could not be found,
+     * we add the comment as a top level comment. This can happen when we're rendering a tree
+     * of the latest 4 comments for example
+     */
     if (comment.inReplyTo) {
-      const parent = find(comments, comment.inReplyTo['oae:id']);
+      const parent = find(equalsId(getId(comment.inReplyTo)), comments);
       if (parent) {
         parent.replies.push(comment);
       } else {
@@ -254,50 +303,49 @@ const flattenCommentTree = function (flatCommentTree, commentTree, _level = 0) {
  * Sort entities based on whether or not they have a thumbnail. Entities with
  * thumbnails will be listed in front of those with no thumbnails, as we give
  * preference to these for UI rendering purposes.
+ *
+ * @function sortEntityCollection
+ * @param  {String} a   Some Activity item
+ * @param  {String} b   Some other Activity item
+ * @return {Number}     Either 1 or -1 to sort out which should come out first
  */
 const sortEntityCollection = function (a, b) {
-  if (a.image && !b.image) {
-    return -1;
-  }
+  const onlyFirstHasImage = and(hasImage(a), hasNotImage(b));
+  const onlySecondHasImage = and(hasNotImage(a), hasImage(b));
 
-  if (!a.image && b.image) {
-    return 1;
+  switch (true) {
+    case onlyFirstHasImage:
+      return -1;
+    case onlySecondHasImage:
+      return 1;
+    default:
+      return 0;
   }
-
-  return 0;
 };
 
 /**
  * Sort comments based on when they have been created.
  * The comments list will be ordered from new to old.
+ *
+ * @function sortCommentsByTimestamp
+ * @param  {String} a   Some Comment
+ * @param  {String} b   Some other Comment
+ * @return {Number}     Either 1 or -1 to sort out which should come out first
  */
 const sortCommentsByTimestamp = function (a, b) {
-  // Threadkeys will have the following format, primarily to allow for proper thread ordering:
-  //  - Top level comments: <createdTimeStamp>|
-  //  - Reply: <parentCreatedTimeStamp>#<createdTimeStamp>|
-  if (a['oae:threadKey'].split('#').pop() < b['oae:threadKey'].split('#').pop()) {
-    return 1;
+  /**
+   * Threadkeys will have the following format, primarily to allow for proper thread ordering:
+   *  - Top level comments: <createdTimeStamp>|
+   *  - Reply: <parentCreatedTimeStamp>#<createdTimeStamp>|
+   */
+  const getParentTimestamp = compose(last, split('#'), prop(THREAD_KEY));
+
+  switch (true) {
+    case getParentTimestamp(a) < getParentTimestamp(b):
+      return 1;
+    default:
+      return -1;
   }
-
-  return -1;
-};
-
-/**
- * Check if a set of comments contains a specific comment that is identified by its id
- *
- * @param  {Comment[]}  comments    The set of comments to check
- * @param  {String}     id          The id of the comment to search for
- * @return {Comment}                The comment if it was found, `undefined` otherwise
- * @api private
- */
-const find = function (comments, id) {
-  for (let i = 0; i < comments.length; i++) {
-    if (comments[i]['oae:id'] === id) {
-      return comments[i];
-    }
-  }
-
-  return undefined;
 };
 
 /**
@@ -329,56 +377,51 @@ const find = function (comments, id) {
  * that A is the parent of B. This function will return the full ("original")
  * B object rather than just the C.inReplyTo object.
  *
- * @param  {Comment[]}  comments    The set of comments to find the "original" comment in
+ * @param  {Comment[]}  setOfComments    The set of comments to find the "original" comment in
  * @param  {Comment}    comment     The comment for which to find the "original" comment
  * @return {Comment}                The "original" comment
  * @api private
  */
-const findComment = function (comments, comment) {
+const findOriginalComment = (comment, setOfComments) => {
   // Find the "original" parent comment object
-  const originalComment = find(comments, comment['oae:id']);
+  const findWithin = find(__, setOfComments);
+  const originalComment = compose(findWithin, equalsId, prop(ID))(comment);
 
   // Return the "original" comment object if there was one
-  if (originalComment) {
-    return originalComment;
+  if (originalComment) return originalComment;
 
-    // It's possible that we can't find the "original" comment object because
-    // it expired out of the aggregation cache. In that case we return the comment as is
-  }
-
+  /**
+   * It's possible that we can't find the "original" comment object because
+   * it expired out of the aggregation cache. In that case we return the comment as is
+   */
   return comment;
 };
 
 const parseActivityActor = (eachActivityActor, currentUser) => {
-  const copySmallPictureFromCurrentUser = assocPath(['picture', 'small'], currentUser.smallPicture);
-  const copyMediumPictureFromCurrentUser = assocPath(['picture', 'medium'], currentUser.mediumPicture);
-  const copyLargePictureFromCurrentUser = assocPath(['picture', 'large'], currentUser.largePicture);
+  const copySmallPictureFromCurrentUser = assocPath([PICTURE, SMALL], currentUser.smallPicture);
+  const copyMediumPictureFromCurrentUser = assocPath([PICTURE, MEDIUM], currentUser.mediumPicture);
+  const copyLargePictureFromCurrentUser = assocPath([PICTURE, LARGE], currentUser.largePicture);
 
-  const getActorId = prop('oae:id');
-  const hasAnyPicture = prop('hasAnyPicture');
-  const sameAsActivityActor = compose(equals(getActorId(eachActivityActor)), prop('id'));
-  const isCurrentUserTheActorAndDoesItHavePictures = both(sameAsActivityActor, hasAnyPicture)(currentUser);
+  const sameAsActivityActor = compose(equals(getId(eachActivityActor)), prop(ID));
+  const isActorAndHasPictures = both(sameAsActivityActor, hasAnyPicture)(currentUser);
 
-  if (isCurrentUserTheActorAndDoesItHavePictures) {
+  if (isActorAndHasPictures) {
     eachActivityActor = compose(
       copySmallPictureFromCurrentUser,
       copyMediumPictureFromCurrentUser,
       copyLargePictureFromCurrentUser,
     )(eachActivityActor);
   } else {
-    // TODO simplify
-    if (eachActivityActor.image && eachActivityActor.image.url) {
+    if (eachActivityActor?.image?.url) {
       eachActivityActor.thumbnailUrl = eachActivityActor.image.url;
     }
 
-    // TODO simplify
-    if (eachActivityActor['oae:wideImage'] && eachActivityActor['oae:wideImage'].url) {
-      eachActivityActor.wideImageUrl = eachActivityActor['oae:wideImage'].url;
+    if (eachActivityActor[WIDE_IMAGE]?.url) {
+      eachActivityActor.wideImageUrl = eachActivityActor[WIDE_IMAGE].url;
     }
 
-    // TODO simplify
-    if (eachActivityActor['oae:mimeType']) {
-      eachActivityActor.mime = eachActivityActor['oae:mimeType'];
+    if (eachActivityActor[MIME_TYPE]) {
+      eachActivityActor.mime = eachActivityActor[MIME_TYPE];
     }
   }
 

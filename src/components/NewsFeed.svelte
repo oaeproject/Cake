@@ -8,20 +8,30 @@
   import NewsFeedComment from '../components/NewsFeedComment.svelte';
   import { _ } from 'svelte-i18n';
   import { formatDistance } from 'date-fns';
+  import { has, filter, equals, prop, pipe, length } from 'ramda';
   import { onMount } from 'svelte';
   import { defaultToTemplateAvatar } from '../helpers/utils';
   import { user } from '../stores/user';
   import { cachedFetch } from '../stores/users';
 
+  const ALL_OBJECTS = 'allObjects';
+  const IMAGE = 'image';
+
+  const isZero = equals(0);
+  const includesImage = has(IMAGE);
+
   export let activityItem;
   let activitySummary;
   let actorAvatar;
+  let thereAreNoObjectImages;
 
   onMount(async () => {
     let activityActor = activityItem.getPrimaryActor();
     activityItem.summary = activityItem.getSummary($user);
     activitySummary = $_(activityItem.summary.i18nKey, { values: activityItem.summary.properties });
     actorAvatar = defaultToTemplateAvatar((await cachedFetch(activityActor.id, activityActor.apiUrl)).small);
+
+    thereAreNoObjectImages = pipe(prop(ALL_OBJECTS), filter(includesImage), length, isZero)(activityItem);
   });
 </script>
 
@@ -49,17 +59,6 @@
       </div>
       <div class="level-right" />
     </nav>
-    {#if activityItem.allTargets}
-      {#each activityItem.allTargets as eachTarget}
-        <!-- I have no idea what the markup should be, so here it goes -->
-        {#if eachTarget.image}
-          <p>This image is {eachTarget.visibility}</p>
-          <div>
-            <img alt="target-thumbnail" src={eachTarget?.image?.url} />
-          </div>
-        {/if}
-      {/each}
-    {/if}
 
     {#each activityItem.allObjects as eachObject}
       <!-- I have no idea what the markup should be, so here it goes -->
@@ -75,6 +74,18 @@
         </div>
       {/if}
     {/each}
+
+    {#if thereAreNoObjectImages}
+      {#each activityItem.allTargets as eachTarget}
+        <!-- I have no idea what the markup should be, so here it goes -->
+        {#if eachTarget.image}
+          <p>This image is {eachTarget.visibility}</p>
+          <div>
+            <img alt="target-thumbnail" src={eachTarget?.image?.url} />
+          </div>
+        {/if}
+      {/each}
+    {/if}
 
     {#each activityItem.latestComments as eachComment}
       <NewsFeedComment comment={eachComment} />

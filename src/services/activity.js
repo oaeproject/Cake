@@ -1,4 +1,20 @@
-import { defaultTo, set, of, clone, pipe, reverse, sort, has, includes, prop, lensProp } from 'ramda';
+import {
+  assocPath,
+  equals,
+  compose,
+  both,
+  defaultTo,
+  set,
+  of,
+  clone,
+  pipe,
+  reverse,
+  sort,
+  has,
+  includes,
+  prop,
+  lensProp,
+} from 'ramda';
 
 // Constant that holds the different activity types that are used for comment activities
 export const COMMENT_ACTIVITY_TYPES = [

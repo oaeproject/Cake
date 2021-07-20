@@ -32,6 +32,17 @@
           <a class="navbar-item is-active" href="#"> Recent Activity </a>
         </div>
       </div>
+      <div class="navbar-item">
+        <div class="control has-icons-left has-icons-right main-search">
+          <input class="input is-rounded main-search-input" type="search" placeholder="Search for anything" />
+          <span class="icon is-small is-left">
+            <i class="fas fa-search" />
+          </span>
+          <span class="icon is-small is-right">
+            <i class="fas fa-filter" />
+          </span>
+        </div>
+      </div>
     </div>
 
     <div class="navbar-end">
@@ -46,7 +57,7 @@
           </p>
           <p class="control">
             <figure class="image">
-              <img class="is-rounded" src={avatar}/>
+              <img class="is-rounded" alt="user avatar" src={avatar} />
             </figure>
           </p>
         </div>
@@ -58,6 +69,17 @@
 <style lang="scss">
   .main-layoutNav {
     background-color: #fdfdfd;
+    border-bottom: 1px solid #D7D7D7 !important;
+  }
+
+  .main-search {
+    margin-left: 4em;
+    width: 50em;
+  }
+
+  .main-search-input {
+    background: #EDEFFB;
+    border: none;
   }
 
   .notifications-button {

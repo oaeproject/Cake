@@ -46,60 +46,84 @@ const getActivityType = prop(ACTIVITY_TYPE);
  *  - each comment is assigned the level in the comment tree
  *
  * @param  {User}       me          The currently loggedin user
- * @param  {Activity}   activity    The activity to prepare
+ * @param  {Activity}   activity    The activity to "prepare" and transform
  * @api private
  */
 const prepareActivity = function (activity) {
-  // Reverse the items so the item that was changed last is shown first
   if (areThereSeveralOf(activity.actor)) {
-    const reversedActors = pipe(prop(ACTOR), getCollectionOf, reverse, sort(sortEntityCollection))(activity);
-    set(lensProp(COLLECTION), reversedActors, activity.actor);
+    activity.actor = reverseActors(activity);
   }
 
-  // Reverse the items so the item that was changed last is shown first
   if (areThereSeveralOf(activity.object)) {
-    const reversedObjects = pipe(prop(OBJECT), getCollectionOf, reverse, sort(sortEntityCollection))(activity);
-    set(lensProp(COLLECTION), reversedObjects, activity.object);
+    activity.object = reverseObjects(activity);
   }
 
-  // Reverse the items so the item that was changed last is shown first
   if (areThereSeveralOf(activity.target)) {
-    const reversedTargets = pipe(prop(TARGET), getCollectionOf, reverse(), sort(sortEntityCollection))(activity);
-    set(lensProp(COLLECTION), reversedTargets, activity.target);
+    activity.target = reverseTargets(activity);
   }
 
   // We process the comments into an ordered set
-  const isOneOfCommentActivities = includes(getActivityType(activity), COMMENT_ACTIVITY_TYPES);
-  if (isOneOfCommentActivities) {
-    const cloneOfActivityObject = pipe(prop(OBJECT), clone, of)(activity);
-    let comments = defaultTo(cloneOfActivityObject, activity.object['oae:collection']);
-    /*
-    if (!comments) {
-      comments = of(clone(activity.object));
-    }
-    */
-    /**
-     * Keep track of the full list of comments on the activity. This will be used to check
-     * whether or not all comments on the activity have made it into the final ordered list
-     */
-    // const originalComments = comments.slice();
+  const activityIsAComment = includes(getActivityType(activity), COMMENT_ACTIVITY_TYPES);
 
-    // Sort the comments based on the created timestamp
-    comments.sort(sortComments);
-
-    // Construct a tree of the last 2 comments and their parents
-    const latestComments = constructLatestCommentTree(comments);
-
-    // Convert these comments into an ordered tree that also includes the comments they were
-    // replies to, if any
-    const allComments = constructCommentTree(comments);
-
-    activity.object.objectType = 'comments';
-    activity.object['oae:collection'] = allComments;
-    activity.object.latestComments = latestComments;
+  if (activityIsAComment) {
+    activity = setUpCommentTree(activity);
   }
 
   return activity;
+};
+
+const setUpCommentTree = activity => {
+  const defaultToClone = pipe(prop(OBJECT), clone, of, defaultTo)(activity);
+  const sortByTimestamp = sort(sortCommentsByTimestamp);
+  let sortComments = pipe(prop(OBJECT), getCollectionOf, defaultToClone, sortByTimestamp);
+
+  // Construct a tree of the last 2 comments and their parents
+  const latestComments = pipe(sortComments, constructLatestCommentTree)(activity);
+
+  // Construct an ordered tree from the comments plus the ones they replied to, if any
+  const allComments = pipe(sortComments, constructCommentTree)(activity);
+
+  activity.object.objectType = 'comments';
+  activity.object['oae:collection'] = allComments;
+  activity.object.latestComments = latestComments;
+
+  return activity;
+};
+
+const reverseActors = activity => {
+  const updateActor = pipe(
+    prop(ACTOR),
+    getCollectionOf,
+    reverse,
+    sort(sortEntityCollection),
+    set(lensProp(COLLECTION)),
+  )(activity);
+
+  return updateActor(activity.actor);
+};
+
+const reverseObjects = activity => {
+  const updateObject = pipe(
+    prop(OBJECT),
+    getCollectionOf,
+    reverse,
+    sort(sortEntityCollection),
+    set(lensProp(COLLECTION)),
+  )(activity);
+
+  return updateObject(activity.object);
+};
+
+const reverseTargets = activity => {
+  const updateTarget = pipe(
+    prop(TARGET),
+    getCollectionOf,
+    reverse(),
+    sort(sortEntityCollection),
+    set(lensProp(COLLECTION)),
+  )(activity);
+
+  return updateTarget(activity.target);
 };
 
 /**
@@ -206,7 +230,7 @@ const constructCommentTree = function (comments) {
  */
 const flattenCommentTree = function (flatCommentTree, commentTree, _level = 0) {
   // Sort the comments on this level so newest comments are at the top
-  commentTree.sort(sortComments);
+  commentTree.sort(sortCommentsByTimestamp);
 
   // Visit each comment
   commentTree.forEach(comment => {
@@ -244,10 +268,10 @@ const sortEntityCollection = function (a, b) {
 };
 
 /**
- * Sort comments based on when they have been created. The comments list will be
- * ordered from new to old.
+ * Sort comments based on when they have been created.
+ * The comments list will be ordered from new to old.
  */
-const sortComments = function (a, b) {
+const sortCommentsByTimestamp = function (a, b) {
   // Threadkeys will have the following format, primarily to allow for proper thread ordering:
   //  - Top level comments: <createdTimeStamp>|
   //  - Reply: <parentCreatedTimeStamp>#<createdTimeStamp>|

@@ -1,6 +1,6 @@
 import { set, lensProp, values, map } from 'ramda';
 import { ActivityItem } from '../models/activity';
-import { parseActivityActor } from '../helpers/activity';
+import { parseActivityActor } from '../services/activity';
 import anylogger from 'anylogger';
 import { derived, writable } from 'svelte/store';
 import { user } from './user';

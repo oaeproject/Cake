@@ -3,7 +3,7 @@ import { Resource } from './resource';
 import { Comment } from './comment';
 import { generateSummary } from '../helpers/activity-summary';
 import { when, path, lensPath, set, equals, map, defaultTo, of, nth, has, head as first, prop, pipe } from 'ramda';
-import { prepareActivity } from '../helpers/activity';
+import { prepareActivity } from '../services/activity';
 
 const COLLECTION = 'oae:collection';
 const ACTOR = 'actor';
@@ -34,16 +34,6 @@ const hasSingleTarget = has(TARGET);
 const isThisAComment = has(COMMENT);
 const otherwiseEmptyArray = defaultTo([]);
 
-// Variable that keeps track of the different activity types that are used for comment activities
-export const COMMENT_ACTIVITY_TYPES = [
-  'content-comment',
-  'folder-comment',
-  'discussion-message',
-  'meeting-jitsi-message',
-];
-
-// Variable that keeps track of the different activity types that are used for sharing activities
-const SHARE_ACTIVITY_TYPES = ['content-share', 'discussion-share', 'folder-share', 'meeting-jitsi-share'];
 const getActivityType = prop('oae:activityType');
 const getId = prop('oae:activityId');
 const convertToCommentModel = eachComment => new Comment(eachComment.comment, eachComment.level);

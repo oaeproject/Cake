@@ -1,16 +1,36 @@
 <script>
   import { _ } from 'svelte-i18n';
-  import anylogger from 'anylogger';
+  import { afterUpdate, onMount } from 'svelte';
 
-  const log = anylogger('maintopbar');
-  const oaeLogo = '/assets/logos/oae-logo.svg';
   const avatar = '/assets/logos/avatar.jpg';
+  const DEFAULT_LOGO = 'oae-logo.svg';
+  let tenantLogo;
+
+  onMount(async () => {
+    try {
+      const response = await fetch('/api/ui/logo');
+      const text = await response.text();
+
+      // TODO we need to change the backend to deliver the correct filepath if default
+      const isDefaultLogo = pipe(split('/'), last, equals(DEFAULT_LOGO))(text);
+
+      let logoToDisplay;
+      if (isDefaultLogo) {
+        logoToDisplay = './assets/logos/oae-logo.svg';
+      } else {
+        logoToDisplay = text;
+      }
+      tenantLogo = logoToDisplay;
+    } catch (error) {
+      log.error(`Error fetching the tenant logo`, error);
+    }
+  });
 </script>
 
 <nav class="navbar main-layoutNav">
   <div class="navbar-brand">
     <a class="navbar-item" href="https://bulma.io">
-      <img alt="oae-logo" src={oaeLogo} />
+      <img alt="oae-logo" src={tenantLogo} />
     </a>
     <div class="navbar-burger" data-target="navbarExampleTransparentExample">
       <span />

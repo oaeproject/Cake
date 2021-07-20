@@ -11,8 +11,6 @@
   const { logout } = askAuthAPI;
 
   const log = anylogger('sidebar');
-  const oaeLogo = '/assets/logos/oae-logo.svg';
-  // TODO use default image if no avatar defined
 
   const didLogout = equals(200);
 
@@ -33,37 +31,6 @@
 </script>
 
 <aside class="menu">
-  <nav class="level sidebar-dropdown">
-    <div class="level-left">
-      <div class="level-item">
-        <figure class="image is-64x64">
-          <img alt="oae-logo" src={oaeLogo} />
-        </figure>
-      </div>
-      <div class="level-item">
-        <div class="dropdown is-hoverable">
-          <div class="dropdown-trigger">
-            <button class="button dropdown-sidebar" aria-haspopup="true" aria-controls="dropdown-menu4">
-              <span>Home</span>
-              <span class="icon is-small">
-                <i class="fas fa-angle-down" aria-hidden="true" />
-              </span>
-            </button>
-          </div>
-          <div class="dropdown-menu" id="dropdown-menu4" role="menu">
-            <div class="dropdown-content">
-              <div class="dropdown-item">
-                <p>
-                  You can insert <strong>any type of content</strong> within the dropdown menu.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </nav>
-
   <ul class="menu-list sidebar-topList">
     <li>
       <span class="icon sidebar-icon fa-lg">
@@ -124,6 +91,10 @@
 </aside>
 
 <style lang="scss">
+  .sidebar {
+    border-right: 1px solid #D7D7D7 !important;
+  }
+
   .sidebar-topList {
     margin-top: 8%;
   }

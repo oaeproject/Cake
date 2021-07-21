@@ -1,33 +1,31 @@
-// import { computed, observable, makeAutoObservable } from 'mobx';
-import { prop } from 'ramda';
-
+// @ts-check
 export class Tenant {
-  store; //: null;
-  alias; //: string;
-  displayName; //: string;
-  isGuestTenant; //: boolean;
-  isPrivate; //: boolean;
-  emailDomains; //: string[];
+  /** @type {string} */
+  alias;
+
+  /** @type {string} */
+  displayName;
+
+  /** @type {boolean} */
+  isGuestTenant;
+
+  /** @type {boolean} */
+  isPrivate;
+
+  /** @type {string[]} */
+  emailDomains;
 
   constructor(tenantData) {
-    // TODO do we need all these attributes to be observable?
-    /*
-    makeAutoObservable(this, {
-      // alias: observable,
-      displayName: observable,
-      isGuestTenant: observable,
-      isPrivate: observable,
-      asBackend: computed,
-    });
-    */
-
-    this.alias = prop('alias', tenantData);
-    this.displayName = prop('displayName', tenantData);
-    this.isGuestTenant = prop('isGuestTenant', tenantData);
-    this.isPrivate = prop('isPrivate', tenantData);
-    this.emailDomains = prop('emailDomains', tenantData);
+    this.alias = tenantData?.alias;
+    this.displayName = tenantData?.displayName;
+    this.isGuestTenant = tenantData?.isGuestTenant;
+    this.isPrivate = tenantData?.isPrivate;
+    this.emailDomains = tenantData?.emailDomains;
   }
 
+  /**
+   * Dummy method
+   */
   get asBackend() {
     return {
       alias: this.alias,

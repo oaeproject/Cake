@@ -1,8 +1,9 @@
-import fs from "fs";
-import Path from "path";
-import util from "util";
+import fs from 'fs';
+import Path from 'path';
+import util from 'util';
 import {
   map,
+  replace,
   equals,
   set,
   lensProp,
@@ -26,27 +27,29 @@ import {
   forEachObjIndexed,
   is,
   reject,
-} from "ramda";
+} from 'ramda';
 
 const isNotEmpty = pipe(isEmpty, not);
 const isAnObject = is(Object);
 const removeEmptyEntries = reject(either(isEmpty, isNil));
 const doesNotInclude = pipe(includes, not);
 const promiseToReadFile = util.promisify(fs.readFile);
-const splitLineByLine = pipe(toString, split("\n"));
-const splitByKeyValue = split("=");
-const extractKeyValuePairs = map((eachLine) => {
-  const [key, value] = splitByKeyValue(eachLine);
+const splitLineByLine = pipe(toString, split('\n'));
+const splitByKeyValue = split('=');
+const extractKeyValuePairs = map(eachLine => {
+  let [key, value] = splitByKeyValue(eachLine);
+  if (value) value = replace(/\${/g, '{', value);
+  // if (value) value = value.replaceAll('${', '{');
   return objOf(trim(key), value);
 });
 
-const ENGLISH_UK = "en_GB";
-const NAME = "name";
-const ALLOWED_ROOT_FOLDERS = ["packages", "shared"];
+const ENGLISH_UK = 'en_GB';
+const NAME = 'name';
+const ALLOWED_ROOT_FOLDERS = ['packages', 'shared'];
 
 const isUkEnglish = equals(ENGLISH_UK);
-const addPropertiesExtension = concat(__, ".properties");
-const returnDefaultPropertiesFile = () => addPropertiesExtension("default");
+const addPropertiesExtension = concat(__, '.properties');
+const returnDefaultPropertiesFile = () => addPropertiesExtension('default');
 const returnLocalePropertiesFile = addPropertiesExtension;
 
 async function extractKeyValuePairsFrom(filePath) {
@@ -57,7 +60,7 @@ async function extractKeyValuePairsFrom(filePath) {
     .catch(console.error);
 }
 
-const cleanEmptyEntries = (object) => {
+const cleanEmptyEntries = object => {
   let newObject = {};
 
   forEachObjIndexed((value, key) => {
@@ -76,27 +79,15 @@ const cleanEmptyEntries = (object) => {
   return removeEmptyEntries(newObject);
 };
 
-async function convertFolderTreeToObject(
-  locale,
-  folderPath,
-  rootObject,
-  root = false
-) {
+async function convertFolderTreeToObject(locale, folderPath, rootObject, root = false) {
   const folderChildren = await fs.promises.opendir(folderPath);
-  const localePropertiesFile = ifElse(
-    isUkEnglish,
-    returnDefaultPropertiesFile,
-    returnLocalePropertiesFile
-  )(locale);
+  const localePropertiesFile = ifElse(isUkEnglish, returnDefaultPropertiesFile, returnLocalePropertiesFile)(locale);
   const isRightLocale = pipe(prop(NAME), startsWith(localePropertiesFile));
 
   for await (const eachFolderChild of folderChildren) {
     const childPath = Path.join(folderPath, eachFolderChild.name);
     const isDirectory = eachFolderChild.isDirectory();
-    const isI18nFile = and(
-      eachFolderChild.isFile(),
-      isRightLocale(eachFolderChild)
-    );
+    const isI18nFile = and(eachFolderChild.isFile(), isRightLocale(eachFolderChild));
 
     /**
      * When downloading from crowdin, we get all the translations except English
@@ -104,10 +95,7 @@ async function convertFolderTreeToObject(
      * downloaded folder tree
      * Because of this, we must exclude 3akai-ux root folders, all except `ALLOWED_FOLDERS`
      */
-    const ifIllegalRootChildren =
-      root &&
-      isDirectory &&
-      doesNotInclude(eachFolderChild.name, ALLOWED_ROOT_FOLDERS);
+    const ifIllegalRootChildren = root && isDirectory && doesNotInclude(eachFolderChild.name, ALLOWED_ROOT_FOLDERS);
     if (ifIllegalRootChildren) {
       // console.log(`Skipping root folder ${eachFolderChild.name}`);
       continue;
@@ -118,7 +106,7 @@ async function convertFolderTreeToObject(
         rootObject = set(
           lensProp(eachFolderChild.name),
           await convertFolderTreeToObject(locale, childPath, {}),
-          rootObject
+          rootObject,
         );
         break;
       case isI18nFile:

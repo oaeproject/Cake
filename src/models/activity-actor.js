@@ -1,26 +1,48 @@
-import type { BackendActivityActor, SignedUrl } from '../types';
+import { any, exists, not } from 'ramda';
+// import { BackendActivityActor, SignedUrl } from '../types';
 
 export class ActivityActor {
-  id: string;
-  smallPictureUri: SignedUrl;
-  mediumPictureUri: SignedUrl;
-  largePicureUri: SignedUrl;
-  image: {
-    url: SignedUrl;
-  };
-  thumbnailUrl: SignedUrl;
-  mime: MimeType;
-  wideImageUrl: SignedUrl;
+  /** @type {string} */
+  id;
 
-  constructor(object: BackendActivityActor) {
-    this.id = object['oae:id'];
-    this.smallPictureUri = object.picture?.smallUri;
-    this.mediumPictureUri = object.picture?.mediumUri;
-    this.largePicureUri = object.picture?.largeUri;
-    this.image = object.image;
-    this.thumbnailUrl = object.thumbnailUrl;
+  /** @type {SignedUrl} */
+  smallPictureUri;
+
+  /** @type {SignedUrl} */
+  mediumPictureUri;
+
+  /** @type {SignedUrl} */
+  largePicureUri;
+
+  /** @type {SignedUrl} */
+  imageUrl;
+
+  /** @type {SignedUrl} */
+  thumbnailUrl;
+
+  /** @type {MimeType} */
+  mime;
+
+  /** @type {SignedUrl} */
+  wideImageUrl;
+
+  constructor(actorData) {
+    this.id = actorData['oae:id'];
+    this.smallPictureUri = actorData.picture?.smallUri;
+    this.mediumPictureUri = actorData.picture?.mediumUri;
+    this.largePicureUri = actorData.picture?.largeUri;
+    this.imageUrl = actorData?.image;
+    this.thumbnailUrl = actorData?.thumbnailUrl;
     // TODO check this
-    this.mime = object['oae:mimeType'] as unknown as MimeType;
-    this.wideImageUrl = object['oae:wideImage']?.url;
+    this.mime = actorData['oae:mimeType'];
+    this.wideImageUrl = actorData['oae:wideImage']?.url;
+  }
+
+  get hasAnyPicture() {
+    return any(exists, [this.smallPictureUri, this.mediumPictureUri, this.largePictureUri]);
+  }
+
+  get hasNoPicture() {
+    return not(this.hasAnyPicture);
   }
 }

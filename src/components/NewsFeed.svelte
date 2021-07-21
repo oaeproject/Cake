@@ -1,22 +1,37 @@
 <script>
-  import { ActivityItem } from '../models/activity';
   import '@polymer/iron-icons/iron-icons.js';
   import '@polymer/iron-icons/social-icons.js';
   import '@polymer/iron-icons/av-icons.js';
   import '@polymer/iron-icons/hardware-icons.js';
   import '@polymer/iron-icons/communication-icons.js';
 
+  import NewsFeedComment from '../components/NewsFeedComment.svelte';
+  import { _ } from 'svelte-i18n';
   import { formatDistance } from 'date-fns';
-  import { humanizeActivityVerb } from '../helpers/activity';
-  import anylogger from 'anylogger';
+  import { has, filter, equals, prop, pipe, length } from 'ramda';
   import { onMount } from 'svelte';
+  import { defaultToTemplateAvatar } from '../helpers/utils';
+  import { user } from '../stores/user';
+  import { cachedFetch } from '../stores/users';
+
+  const ALL_OBJECTS = 'allObjects';
+  const IMAGE = 'image';
+
+  const isZero = equals(0);
+  const includesImage = has(IMAGE);
 
   export let activityItem;
-
-  const log = anylogger('oae-newsfeed');
+  let activitySummary;
+  let actorAvatar;
+  let thereAreNoObjectImages;
 
   onMount(async () => {
-    log.warn(activityItem);
+    let activityActor = activityItem.getPrimaryActor();
+    activityItem.summary = activityItem.getSummary($user);
+    activitySummary = $_(activityItem.summary.i18nKey, { values: activityItem.summary.properties });
+    actorAvatar = defaultToTemplateAvatar((await cachedFetch(activityActor.id, activityActor.apiUrl)).small);
+
+    thereAreNoObjectImages = pipe(prop(ALL_OBJECTS), filter(includesImage), length, isZero)(activityItem);
   });
 </script>
 
@@ -27,15 +42,11 @@
         <div class="level-item">
           <div class="column is-flex news-feed-nav">
             <figure class="image avatar-news-feed">
-              <img alt="primary-actor" class="is-rounded avatar-news-feed" src={activityItem.primaryActor.mediumPicture} />
+              <img alt="primary-actor" class="is-rounded avatar-news-feed" src={actorAvatar} />
             </figure>
             <section>
               <p class="user-info">
-                <a class="feed-user" href="/">{activityItem.primaryActor.displayName}</a>
-                {humanizeActivityVerb(activityItem.verb)} a {activityItem.object.objectType}
-                <span class="panel-icon icon-feed">
-                  <iron-icon icon="icons:cloud-upload" />
-                </span>
+                {@html decodeURIComponent(activitySummary)}
               </p>
               <p>
                 {formatDistance(activityItem.published, new Date(), {
@@ -46,44 +57,72 @@
           </div>
         </div>
       </div>
-      <div class="level-right">
-        <p class="level-item">
-          <button class="button news-pin">
-            <iron-icon icon="icons:more-vert" />
-          </button>
-        </p>
-      </div>
+      <div class="level-right" />
     </nav>
 
-    <nav class="level bottom-nav-news">
-      <div class="level-left">
-        <div class="level-item">
-          <a href="/" class="button comments-button">
-            <span class="comments-icon">
-              <iron-icon icon="communication:forum" />
-            </span>
-            <span>View (25) comments</span>
-          </a>
+    {#each activityItem.allObjects as eachObject}
+      <!-- I have no idea what the markup should be, so here it goes -->
+      {#if eachObject.image}
+        <p>This image is {eachObject.visibility}</p>
+        <div>
+          <img
+            alt="object-thumbnail"
+            max-height={eachObject?.image?.height}
+            max-width={eachObject?.image?.width}
+            src={eachObject?.image?.url}
+          />
         </div>
-        <div class="level-item">
-          <a href="/" class="button reply-button">
-            <span class="reply-icon">
-              <iron-icon icon="communication:import-export" />
-            </span>
-            <span>Reply</span>
-          </a>
+      {/if}
+    {/each}
+
+    {#if thereAreNoObjectImages}
+      {#each activityItem.allTargets as eachTarget}
+        <!-- I have no idea what the markup should be, so here it goes -->
+        {#if eachTarget.image}
+          <p>This image is {eachTarget.visibility}</p>
+          <div>
+            <img alt="target-thumbnail" src={eachTarget?.image?.url} />
+          </div>
+        {/if}
+      {/each}
+    {/if}
+
+    {#each activityItem.latestComments as eachComment}
+      <NewsFeedComment comment={eachComment} />
+    {/each}
+
+    <!-- I'll just leave this here for @oakrita to remember the previous markup before deleting it -->
+    {#if false}
+      <nav class="level bottom-nav-news">
+        <div class="level-left">
+          <div class="level-item">
+            <a href="/" class="button comments-button">
+              <span class="comments-icon">
+                <iron-icon icon="communication:forum" />
+              </span>
+              <span>View (25) comments</span>
+            </a>
+          </div>
+          <div class="level-item">
+            <a href="/" class="button reply-button">
+              <span class="reply-icon">
+                <iron-icon icon="communication:import-export" />
+              </span>
+              <span>Reply</span>
+            </a>
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+    {/if}
   </div>
 </div>
 
 <style lang="scss">
   .box {
-    box-shadow: none;
     background-color: white;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+
     &:hover {
       //box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
       box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
@@ -97,7 +136,7 @@
   }
 
   * {
-    font-size: 1m;
+    font-size: 1em;
   }
 
   // Avatar
@@ -148,6 +187,7 @@
     text-decoration: none;
     color: #424242;
     font-weight: bold;
+
     &:hover {
       color: #2962ff;
       background-color: #f5f7ff;
@@ -177,6 +217,7 @@
     color: #424242;
     width: 0;
     margin-left: 55px;
+
     &:hover {
       color: #2962ff;
       text-decoration: underline;
@@ -190,6 +231,7 @@
     color: #424242;
     width: 0;
     margin-left: 90px;
+
     &:hover {
       color: #2962ff;
       text-decoration: underline;
@@ -199,6 +241,7 @@
   .comments-icon {
     color: #272b2e;
     margin-right: 5px;
+
     &:hover {
       color: #272b2e;
     }
@@ -207,6 +250,7 @@
   .reply-icon {
     color: #272b2e;
     margin-right: 5px;
+
     &:hover {
       color: #272b2e;
     }
@@ -224,9 +268,11 @@
     border: none;
     background-color: white;
     color: #424242;
+
     &:hover {
       color: #2962ff;
     }
+
     &:focus,
     :active {
       border: none;

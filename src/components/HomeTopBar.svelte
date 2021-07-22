@@ -2,7 +2,7 @@
   import { _ } from 'svelte-i18n';
   import ExternalAuthStrategy from './ExternalAuthStrategy.svelte';
   import LocalAuthStrategy from './LocalAuthStrategy.svelte';
-  import { and, not, values, pipe, last, split, equals } from 'ramda';
+  import { and, not, values, pipe, init, join, split, equals } from 'ramda';
   import anylogger from 'anylogger';
   import { afterUpdate, onMount } from 'svelte';
   import { user } from '../stores/user';
@@ -12,7 +12,7 @@
   import '@material/mwc-textfield';
 
   const log = anylogger('home-nav');
-  const DEFAULT_LOGO = 'oae-logo.svg';
+  const DEFAULT_LOGO = '/shared/oae/img';
 
   export let goToLogin;
   export let authenticationStrategy;
@@ -52,7 +52,7 @@
       const text = await response.text();
 
       // TODO we need to change the backend to deliver the correct filepath if default
-      const isDefaultLogo = pipe(split('/'), last, equals(DEFAULT_LOGO))(text);
+      const isDefaultLogo = pipe(split('/'), init, join('/'), equals(DEFAULT_LOGO))(text);
 
       let logoToDisplay;
       if (isDefaultLogo) {

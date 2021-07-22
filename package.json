@@ -10,7 +10,8 @@
     "lint": "eslint . --ext .js,.svelte --fix",
     "lint:css": "stylelint src/**/*.{css,html,svelte,svg}",
     "format": "prettier --write --plugin-search-dir=. ./**/*.html",
-    "test-translations": "node -r esm node_modules/.bin/mocha src/tests"
+    "test-translations": "node -r esm node_modules/.bin/mocha src/tests",
+    "e2e": "cypress open"
   },
   "devDependencies": {
     "@babel/core": "^7.14.3",
@@ -23,6 +24,7 @@
     "@rollup/plugin-node-resolve": "^11.0.0",
     "@rollup/plugin-replace": "^2.4.2",
     "chai": "^4.3.4",
+    "cypress": "^8.0.0",
     "eslint": "^7.27.0",
     "eslint-plugin-svelte3": "^3.2.0",
     "esm": "^3.2.25",

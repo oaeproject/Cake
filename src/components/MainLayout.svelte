@@ -1,7 +1,9 @@
 <script>
   import Sidebar from '../components/Sidebar.svelte';
+  import MainTopBar from '../components/MainTopBar.svelte';
 </script>
 
+<MainTopBar />
 <div class="container main-container">
   <div class="column sidebar">
     <div class="menu sticky">

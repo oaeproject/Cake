@@ -1,9 +1,11 @@
 <script>
-  import { _ } from 'svelte-i18n';
-  import { afterUpdate, onMount } from 'svelte';
+  import { onMount } from 'svelte';
+  import anylogger from 'anylogger';
+  import { pipe, init, join, split, equals } from 'ramda';
 
   const avatar = '/assets/logos/avatar.jpg';
-  const DEFAULT_LOGO = 'oae-logo.svg';
+  const DEFAULT_LOGO = '/shared/oae/img';
+  const log = anylogger('maintopbar');
   let tenantLogo;
 
   onMount(async () => {
@@ -12,11 +14,11 @@
       const text = await response.text();
 
       // TODO we need to change the backend to deliver the correct filepath if default
-      const isDefaultLogo = pipe(split('/'), last, equals(DEFAULT_LOGO))(text);
+      const isDefaultLogo = pipe(split('/'), init, join('/'), equals(DEFAULT_LOGO))(text);
 
       let logoToDisplay;
       if (isDefaultLogo) {
-        logoToDisplay = './assets/logos/oae-logo.svg';
+        logoToDisplay = 'assets/logos/oae-logo.svg';
       } else {
         logoToDisplay = text;
       }
@@ -71,7 +73,7 @@
           <p class="control">
             <span class="button notifications-button">
               <span class="icon">
-                <i class="fa fa-bell fas fa-lg" style="color: #EBEFFB;" />
+                <i class="fa fa-bell fas fa-lg" style="color: #ebeffb;" />
               </span>
             </span>
           </p>
@@ -89,7 +91,7 @@
 <style lang="scss">
   .main-layoutNav {
     background-color: #fdfdfd;
-    border-bottom: 1px solid #D7D7D7 !important;
+    border-bottom: 1px solid #d7d7d7 !important;
   }
 
   .main-search {
@@ -98,7 +100,7 @@
   }
 
   .main-search-input {
-    background: #EDEFFB;
+    background: #edeffb;
     border: none;
   }
 

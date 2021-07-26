@@ -1,3 +1,5 @@
 {
-  "baseUrl": "http://guest.oae.com"
+  "baseUrl": "http://guest.oae.com",
+  "viewportWidth": 1280,
+  "viewportHeight": 960
 }

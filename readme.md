@@ -78,6 +78,8 @@ Run linting check with `npm run lint`.
 
 Run (S)CSS linting with `npm run lint:css`.
 
+Run Cypress tests with `npm run e2e` (or `npm run e2e-headless` for headless mode)
+
 ## Debugging
 
 With VSCode use the following configuration (`launch.json`):

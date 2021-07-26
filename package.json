@@ -11,7 +11,8 @@
     "lint:css": "stylelint src/**/*.{css,html,svelte,svg}",
     "format": "prettier --write --plugin-search-dir=. ./**/*.html",
     "test-translations": "node -r esm node_modules/.bin/mocha src/tests",
-    "e2e": "cypress open"
+    "e2e": "cypress open",
+    "e2e-headless": "cypress run"
   },
   "devDependencies": {
     "@babel/core": "^7.14.3",

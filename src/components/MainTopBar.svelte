@@ -44,14 +44,14 @@
   <div id="navbarExampleTransparentExample" class="navbar-menu">
     <div class="navbar-start">
       <div class="navbar-item has-dropdown is-hoverable">
-        <a class="navbar-link" href="#"> Home </a>
+        <a class="navbar-link" href="Home"> Home </a>
         <div class="navbar-dropdown is-boxed">
-          <a class="navbar-item" href="#"> Design Matters </a>
-          <a class="navbar-item" href="#"> OAE2021 </a>
-          <a class="navbar-item" href="#"> OAE Internship </a>
+          <a class="navbar-item" href="Group-1"> Design Matters </a>
+          <a class="navbar-item" href="Group-2"> OAE2021 </a>
+          <a class="navbar-item" href="Group-3"> OAE Internship </a>
           <hr class="navbar-divider" />
-          <a class="navbar-item" href="#"> View recent groups </a>
-          <a class="navbar-item is-active" href="#"> Recent Activity </a>
+          <a class="navbar-item" href="View recent groups"> View recent groups </a>
+          <a class="navbar-item is-active" href="Recent Activity"> Recent Activity </a>
         </div>
       </div>
       <div class="navbar-item">

@@ -2,6 +2,22 @@
 
 Experimental new frontend for OAE
 
+## Project status
+
+<!-- current project status -->
+
+[![CodeFactor](https://www.codefactor.io/repository/github/oaeproject/cake/badge)](https://www.codefactor.io/repository/github/oaeproject/cake)
+[![Depfu](https://badges.depfu.com/badges/a370cfe7f14430c3faace6ebe5b8a6c7/overview.svg)](https://depfu.com/github/oaeproject/Cake?project_id=29893)
+[![Depfu](https://badges.depfu.com/badges/a370cfe7f14430c3faace6ebe5b8a6c7/count.svg)](https://depfu.com/github/oaeproject/Cake?project_id=29893)
+
+## Project standards
+
+<!-- standards used in project -->
+
+[![Datree](https://img.shields.io/badge/policy%20by-datree-yellow)](https://datree.io/?src=badge)
+![code style](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
+
 ## Get started
 
 Install the dependencies...

@@ -2,13 +2,22 @@
   import { onMount } from 'svelte';
   import anylogger from 'anylogger';
   import { pipe, init, join, split, equals } from 'ramda';
+  import { defaultToTemplateAvatar } from '../helpers/utils';
+  import { cachedFetch } from '../stores/users';
 
-  const avatar = '/assets/logos/avatar.jpg';
   const DEFAULT_LOGO = '/shared/oae/img';
   const log = anylogger('maintopbar');
   let tenantLogo;
 
+  // Dynamic User Avatar
+  export let activityItem;
+  let actorAvatar;
+
   onMount(async () => {
+    // Dynamic User Avatar
+    let activityActor = activityItem.getPrimaryActor();
+    actorAvatar = defaultToTemplateAvatar((await cachedFetch(activityActor.id, activityActor.apiUrl)).small);
+
     try {
       const response = await fetch('/api/ui/logo');
       const text = await response.text();
@@ -31,7 +40,7 @@
 
 <nav class="navbar main-layoutNav">
   <div class="navbar-brand">
-    <a class="navbar-item" href="https://bulma.io">
+    <a class="navbar-item" href="dashboard">
       <img alt="oae-logo" src={tenantLogo} />
     </a>
     <div class="navbar-burger" data-target="navbarExampleTransparentExample">
@@ -79,7 +88,7 @@
           </p>
           <p class="control">
             <figure class="image">
-              <img class="is-rounded" alt="user avatar" src={avatar} />
+              <img class="is-rounded" alt="user avatar" src={actorAvatar} />
             </figure>
           </p>
         </div>

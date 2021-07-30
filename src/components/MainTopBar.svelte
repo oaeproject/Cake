@@ -8,6 +8,7 @@
   const DEFAULT_LOGO = '/shared/oae/img';
   const log = anylogger('maintopbar');
   let tenantLogo;
+  const user_avatar = '/assets/images/avatar.jpg';
 
   // Dynamic User Avatar
   export let activityItem;
@@ -20,18 +21,19 @@
 
     try {
       const response = await fetch('/api/ui/logo');
-      const text = await response.text();
+      const tenantLogoUrl = await response.text();
 
       // TODO we need to change the backend to deliver the correct filepath if default
-      const isDefaultLogo = pipe(split('/'), init, join('/'), equals(DEFAULT_LOGO))(text);
+      const isDefaultLogo = pipe(split('/'), init, join('/'), equals(DEFAULT_LOGO))(tenantLogoUrl);
 
-      let logoToDisplay;
-      if (isDefaultLogo) {
-        logoToDisplay = 'assets/logos/oae-logo.svg';
-      } else {
-        logoToDisplay = text;
+      switch (isDefaultLogo) {
+        case true:
+          tenantLogo = 'assets/logos/oae-logo.svg';
+          break;
+        default:
+          tenantLogo = tenantLogoUrl;
+          break;
       }
-      tenantLogo = logoToDisplay;
     } catch (error) {
       log.error(`Error fetching the tenant logo`, error);
     }
@@ -82,13 +84,13 @@
           <p class="control">
             <span class="button notifications-button">
               <span class="icon">
-                <i class="fa fa-bell fas fa-lg" style="color: #ebeffb;" />
+                <i class="fa fa-bell fas fa-lg" style="color: #131614;" />
               </span>
             </span>
           </p>
           <p class="control">
             <figure class="image">
-              <img class="is-rounded" alt="user avatar" src={actorAvatar} />
+              <img class="is-rounded" alt="user avatar" src={user_avatar} />
             </figure>
           </p>
         </div>
@@ -114,7 +116,8 @@
   }
 
   .notifications-button {
-    background-color: #212d62;
+    // background-color: grey; TO REVISE LATER
     border-radius: 45px;
+    border: none;
   }
 </style>

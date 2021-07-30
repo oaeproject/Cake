@@ -9,6 +9,7 @@ Experimental new frontend for OAE
 [![CodeFactor](https://www.codefactor.io/repository/github/oaeproject/cake/badge)](https://www.codefactor.io/repository/github/oaeproject/cake)
 [![Depfu](https://badges.depfu.com/badges/a370cfe7f14430c3faace6ebe5b8a6c7/overview.svg)](https://depfu.com/github/oaeproject/Cake?project_id=29893)
 [![Depfu](https://badges.depfu.com/badges/a370cfe7f14430c3faace6ebe5b8a6c7/count.svg)](https://depfu.com/github/oaeproject/Cake?project_id=29893)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fbrecke%2FCake.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fbrecke%2FCake?ref=badge_shield)
 
 ## Project standards
 

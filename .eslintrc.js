@@ -19,7 +19,7 @@ module.exports = {
   ignorePatterns: ['public/build/'],
   settings: { 'svelte3/ignore-styles': () => true },
   plugins: ['svelte3'],
-  extends: 'eslint:recommended',
+  extends: ['eslint:recommended', 'plugin:cypress/recommended'],
   overrides: [
     {
       files: ['*.svelte'],

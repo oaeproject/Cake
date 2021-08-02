@@ -1,6 +1,6 @@
 // @ts-check
 import { Tenant } from './tenant';
-import { pipe, when, has, prop, isNil, compose, any, path, not } from 'ramda';
+import { last, split, concat, pipe, when, has, prop, isNil, compose, any, path, not } from 'ramda';
 
 const includesTenantData = compose(not, isNil, prop('tenant'));
 const exists = compose(not, isNil);
@@ -12,6 +12,9 @@ const transferAttributeTo =
     return object;
     // return deleteOldAttribute(oldAttribute)(copyToNewAttribute(oldAttribute, newAttribute, object));
   };
+
+/** @type {String} */
+const USER_API_PREFFIX = '/api/user/';
 
 /** @type {String} */
 const USER = 'user';
@@ -211,7 +214,12 @@ export class User {
 
     this.resourceType = userData?.resourceType;
     this.visibility = userData?.visibility;
-    this.apiUrl = userData?.apiUrl;
+
+    this.apiUrl = when(
+      data => has(API_URL, data),
+      compose(data => concat(USER_API_PREFFIX, String(data)), last, split('/'), prop(API_URL)),
+    )(userData);
+
     this.url = userData?.url;
     this.id = userData?.id;
     this.profilePath = userData?.profilePath;

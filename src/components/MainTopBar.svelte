@@ -4,22 +4,16 @@
   import { pipe, init, join, split, equals } from 'ramda';
   import { defaultToTemplateAvatar } from '../helpers/utils';
   import { cachedFetch } from '../stores/users';
+  import { user } from '../stores/user';
 
   const DEFAULT_LOGO = '/shared/oae/img';
   const log = anylogger('maintopbar');
   let tenantLogo;
-  const user_avatar = '/assets/images/avatar.jpg';
-
-  // Dynamic User Avatar
-  export let activityItem;
-  let actorAvatar;
+  let userAvatar;
 
   onMount(async () => {
-    // Dynamic User Avatar
-    let activityActor = activityItem.getPrimaryActor();
-    actorAvatar = defaultToTemplateAvatar((await cachedFetch(activityActor.id, activityActor.apiUrl)).small);
-
     try {
+      userAvatar = defaultToTemplateAvatar((await cachedFetch($user.id, $user.apiUrl)).small);
       const response = await fetch('/api/ui/logo');
       const tenantLogoUrl = await response.text();
 
@@ -90,7 +84,7 @@
           </p>
           <p class="control">
             <figure class="image">
-              <img class="is-rounded" alt="user avatar" src={user_avatar} />
+              <img class="is-rounded" alt="user avatar" src={userAvatar} />
             </figure>
           </p>
         </div>

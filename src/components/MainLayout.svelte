@@ -19,6 +19,10 @@
 </div>
 
 <style lang="scss">
+  .sidebar {
+    border-right: 1px solid #d7d7d7 !important;
+  }
+
   .right-sidebar {
     position: sticky;
   }

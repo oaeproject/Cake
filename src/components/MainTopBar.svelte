@@ -65,9 +65,6 @@
           <span class="icon is-small is-left">
             <i class="fas fa-search" />
           </span>
-          <span class="icon is-small is-right">
-            <i class="fas fa-filter" />
-          </span>
         </div>
       </div>
     </div>

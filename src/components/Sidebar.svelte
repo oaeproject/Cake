@@ -91,10 +91,6 @@
 </aside>
 
 <style lang="scss">
-  .sidebar {
-    border-right: 1px solid #D7D7D7 !important;
-  }
-
   .sidebar-topList {
     margin-top: 8%;
   }
@@ -106,17 +102,28 @@
     height: 45px;
     display: flex;
     align-items: center;
+
     &:hover {
       color: white;
       background-color: #0060df;
     }
+
     &:active {
       color: #0060df;
       background-color: #0060df;
     }
+
     &:focus {
       color: #0060df;
       background-color: #0060df;
+    }
+  }
+
+  a {
+    padding-left: 1.3em;
+
+    &:hover {
+      color: #0060df;
     }
   }
 
@@ -133,13 +140,6 @@
     padding-left: 3%;
   }
 
-  a {
-    padding-left: 1.3em;
-    &:hover {
-      color: #0060df;
-    }
-  }
-
   .sidebar-label {
     margin-top: 8%;
     color: #aeadae;
@@ -147,22 +147,6 @@
     font-size: 0.8em;
     margin-left: 3%;
     font-weight: 600;
-  }
-
-  .sidebar-dropdown {
-    padding: 1%;
-    margin-left: 1%;
-    margin-bottom: 5%;
-  }
-
-  // Sidebar Dropdown
-  button.button.dropdown-sidebar {
-    background-color: white;
-  }
-
-  button.button.dropdown-sidebar {
-    background-color: transparent;
-    border: none;
   }
 
   .logout-button {
@@ -173,15 +157,6 @@
   .logout-button-text {
     padding-left: 10px;
     text-transform: capitalize;
-  }
-
-  .level.sidebar-dropdown {
-    margin-bottom: 0;
-  }
-
-  // Sidebar Avatar
-  .sidebar-avatar-logout {
-    padding-left: 2%;
   }
 
   // Footer

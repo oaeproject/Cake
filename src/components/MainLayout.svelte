@@ -23,6 +23,10 @@
     border-right: 1px solid #d7d7d7 !important;
   }
 
+  .main-content {
+    padding: 1em 4em 1em 4em;
+  }
+
   .right-sidebar {
     position: sticky;
   }

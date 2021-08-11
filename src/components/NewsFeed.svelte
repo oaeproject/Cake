@@ -1,10 +1,4 @@
 <script>
-  import '@polymer/iron-icons/iron-icons.js';
-  import '@polymer/iron-icons/social-icons.js';
-  import '@polymer/iron-icons/av-icons.js';
-  import '@polymer/iron-icons/hardware-icons.js';
-  import '@polymer/iron-icons/communication-icons.js';
-
   import NewsFeedComment from '../components/NewsFeedComment.svelte';
   import { _ } from 'svelte-i18n';
   import { formatDistance } from 'date-fns';
@@ -47,6 +41,9 @@
             <section>
               <p class="user-info">
                 {@html decodeURIComponent(activitySummary)}
+                <span class="icon">
+                  <i class="far fa-file-image" />
+                </span>
               </p>
               <p>
                 {formatDistance(activityItem.published, new Date(), {
@@ -63,15 +60,20 @@
     {#each activityItem.allObjects as eachObject}
       <!-- I have no idea what the markup should be, so here it goes -->
       {#if eachObject.image}
-        <p>This image is {eachObject.visibility}</p>
-        <div>
-          <img
-            alt="object-thumbnail"
-            max-height={eachObject?.image?.height}
-            max-width={eachObject?.image?.width}
-            src={eachObject?.image?.url}
-          />
-        </div>
+        <section class="news-content">
+          <p>This image is {eachObject.visibility}</p>
+          <div>
+            <img
+              alt="object-thumbnail"
+              max-height={eachObject?.image?.height}
+              max-width={eachObject?.image?.width}
+              src={eachObject?.image?.url}
+            />
+            <span class="icon">
+              <i class="fas fa-2x fa-file-download" alt="download-file" />
+            </span>
+          </div>
+        </section>
       {/if}
     {/each}
 
@@ -162,6 +164,10 @@
 
   .news-feed {
     padding: 10px;
+  }
+
+  .news-content {
+    margin-left: 10px;
   }
 
   .news-feed-top {

@@ -11,8 +11,6 @@
   const { logout } = askAuthAPI;
 
   const log = anylogger('sidebar');
-  const oaeLogo = '/assets/logos/oae-logo.svg';
-  // TODO use default image if no avatar defined
 
   const didLogout = equals(200);
 
@@ -33,37 +31,6 @@
 </script>
 
 <aside class="menu">
-  <nav class="level sidebar-dropdown">
-    <div class="level-left">
-      <div class="level-item">
-        <figure class="image is-64x64">
-          <img alt="oae-logo" src={oaeLogo} />
-        </figure>
-      </div>
-      <div class="level-item">
-        <div class="dropdown is-hoverable">
-          <div class="dropdown-trigger">
-            <button class="button dropdown-sidebar" aria-haspopup="true" aria-controls="dropdown-menu4">
-              <span>Home</span>
-              <span class="icon is-small">
-                <i class="fas fa-angle-down" aria-hidden="true" />
-              </span>
-            </button>
-          </div>
-          <div class="dropdown-menu" id="dropdown-menu4" role="menu">
-            <div class="dropdown-content">
-              <div class="dropdown-item">
-                <p>
-                  You can insert <strong>any type of content</strong> within the dropdown menu.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </nav>
-
   <ul class="menu-list sidebar-topList">
     <li>
       <span class="icon sidebar-icon fa-lg">
@@ -135,17 +102,28 @@
     height: 45px;
     display: flex;
     align-items: center;
+
     &:hover {
       color: white;
       background-color: #0060df;
     }
+
     &:active {
       color: #0060df;
       background-color: #0060df;
     }
+
     &:focus {
       color: #0060df;
       background-color: #0060df;
+    }
+  }
+
+  a {
+    padding-left: 1.3em;
+
+    &:hover {
+      color: #0060df;
     }
   }
 
@@ -162,13 +140,6 @@
     padding-left: 3%;
   }
 
-  a {
-    padding-left: 1.3em;
-    &:hover {
-      color: #0060df;
-    }
-  }
-
   .sidebar-label {
     margin-top: 8%;
     color: #aeadae;
@@ -176,22 +147,6 @@
     font-size: 0.8em;
     margin-left: 3%;
     font-weight: 600;
-  }
-
-  .sidebar-dropdown {
-    padding: 1%;
-    margin-left: 1%;
-    margin-bottom: 5%;
-  }
-
-  // Sidebar Dropdown
-  button.button.dropdown-sidebar {
-    background-color: white;
-  }
-
-  button.button.dropdown-sidebar {
-    background-color: transparent;
-    border: none;
   }
 
   .logout-button {
@@ -202,15 +157,6 @@
   .logout-button-text {
     padding-left: 10px;
     text-transform: capitalize;
-  }
-
-  .level.sidebar-dropdown {
-    margin-bottom: 0;
-  }
-
-  // Sidebar Avatar
-  .sidebar-avatar-logout {
-    padding-left: 2%;
   }
 
   // Footer
